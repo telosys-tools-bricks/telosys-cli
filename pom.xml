@@ -1,0 +1,115 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.telosys</groupId>
+	<artifactId>telosys-cli</artifactId>
+	<version>0.0.2</version>
+	<packaging>jar</packaging>
+
+	<name>telosys-cli</name>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.7</java.version>
+		<telosys.groupId>org.telosys</telosys.groupId>
+		<telosys.version>3.0.0-SNAPSHOT</telosys.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>jline</groupId>
+			<artifactId>jline</artifactId>
+			<version>2.12</version>
+		</dependency>
+		<!-- TELOSYS DEPENDENCIES -->
+		<dependency>
+			<groupId>${telosys.groupId}</groupId>
+			<artifactId>telosys-tools-api</artifactId>
+			<version>${telosys.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${telosys.groupId}</groupId>
+			<artifactId>telosys-tools-commons</artifactId>
+			<version>${telosys.version}</version>
+		</dependency>
+	 	<dependency>
+			<groupId>${telosys.groupId}</groupId>
+		  	<artifactId>telosys-tools-repository</artifactId>
+			<version>${telosys.version}</version>
+	 	</dependency>
+	 	<dependency>
+			<groupId>${telosys.groupId}</groupId>
+		  	<artifactId>telosys-tools-dsl-parser</artifactId>
+			<version>${telosys.version}</version>
+	 	</dependency>
+	 	<dependency>
+			<groupId>${telosys.groupId}</groupId>
+		  	<artifactId>telosys-tools-generic-model</artifactId>
+			<version>${telosys.version}</version>
+	 	</dependency>
+ 	 	<dependency>
+			<groupId>${telosys.groupId}</groupId>
+		  	<artifactId>telosys-tools-generator</artifactId>
+			<version>${telosys.version}</version>
+	 	</dependency>
+		
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>org.telosys.tools.cli.Main</mainClass>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<!-- Run shade goal on package phase -->
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+								<!-- add Main-Class to manifest file -->
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>org.telosys.tools.cli.Main</mainClass>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

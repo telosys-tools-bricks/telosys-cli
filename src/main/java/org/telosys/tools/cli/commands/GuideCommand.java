@@ -1,0 +1,70 @@
+package org.telosys.tools.cli.commands;
+
+
+import java.io.PrintWriter;
+
+import org.telosys.tools.cli.Command;
+import org.telosys.tools.cli.Environment;
+
+public class GuideCommand extends Command {
+	
+	/**
+	 * Constructor
+	 * @param out
+	 */
+	public GuideCommand(PrintWriter out) {
+		super(out);
+	}
+	
+	@Override
+	public String getName() {
+		return "guide";
+	}
+
+	@Override
+	public String getShortName() {
+		return null ;
+	}
+	
+	@Override
+	public String getDescription() {
+		return "Guide ";
+	}
+
+	@Override
+	public String execute(Environment environment, String[] args) {
+		return guide(environment, (String) args[0]);
+	}
+	
+	private String guide(Environment environment, final String parameter) {
+		StringBuffer sb = new StringBuffer();
+		
+		appendLine(sb, "1) Initialize the project environment");
+		appendLine(sb, " . cd [project-directory]");
+		appendLine(sb, " . init");
+		
+		appendLine(sb, "2) Configure the project (edit the properties)");
+		appendLine(sb, " . cd [project-directory]");
+		appendLine(sb, " . edit telosys-tools.cfg");
+
+		appendLine(sb, "3) Copy JDBC jar files in [project-directory/TelosysTools/lib]");
+
+		appendLine(sb, "4) Configure the databases ");
+		appendLine(sb, " . cd [project-directory/TelosysTools]");
+		appendLine(sb, " . edit databases.dbcfg");
+		
+		appendLine(sb, "5) Check the database configuration");
+		appendLine(sb, " . dbtest [db-id]");
+
+		appendLine(sb, "6) Generate the database model");
+		
+		
+		return sb.toString();
+	}
+
+//	private void append(StringBuffer sb, String s) {
+//		sb.append(s);
+//		sb.append(OsUtils.LINE_SEPARATOR);
+//	}
+	
+}

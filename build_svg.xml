@@ -1,0 +1,41 @@
+<project default="save">
+	
+	<property file="build.properties"/>
+	
+	<tstamp>
+	    <format property="DSTAMP" pattern="yyyy-MM-dd" />
+	</tstamp>
+
+	<property name="dest_dir"  value="../(backup)/${DSTAMP}" />
+	
+	<property name="zip_file"  value="${dest_dir}/${project.name}-${DSTAMP}-${TSTAMP}.zip" />
+
+	<!-- ============================================================================== -->
+	<target name="save" >
+		<echo message="Project name : ${project.name}  " />
+		
+		<echo message="DSTAMP : ${DSTAMP}  TSTAMP : ${TSTAMP}  " />
+		
+		<echo message="Create dir : ${dest_dir} " />
+		<mkdir dir="${dest_dir}"/>
+		
+		<echo message="Zip file : ${zip_file}  " />
+		<!--
+		<delete file="${zip_file}" />
+		-->
+		<zip destfile="${zip_file}"  >	
+			<zipfileset dir="./src"         prefix="src"      excludes="**/*.class"   />		
+			<!--
+			<zipfileset dir="./doc"         prefix="doc"         />
+			-->
+			<zipfileset dir="." >
+				<filename name="*.xml"/>  <!-- build*.xml, pom.xml -->
+			</zipfileset>
+			
+			<zipfileset dir="." >
+				<filename name="*.properties"/>  
+			</zipfileset>	
+		</zip>
+	</target>
+
+</project>
