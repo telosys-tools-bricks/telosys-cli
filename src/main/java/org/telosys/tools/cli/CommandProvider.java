@@ -18,6 +18,7 @@ import org.telosys.tools.cli.commands.HelpCommand;
 import org.telosys.tools.cli.commands.HomeCommand;
 import org.telosys.tools.cli.commands.InitCommand;
 import org.telosys.tools.cli.commands.InstallBundlesCommand;
+import org.telosys.tools.cli.commands.ListBundlesCommand;
 import org.telosys.tools.cli.commands.LsCommand;
 import org.telosys.tools.cli.commands.ModelCommand;
 import org.telosys.tools.cli.commands.NewModelCommand;
@@ -97,7 +98,7 @@ public class CommandProvider {
 		//   ib java rest : install all the bundles containing "java" or "rest"
 		//   if already exists : prompt "overwrite ? [y/n] : "
 		
-		// lb (list installed bundles)
+		register(new ListBundlesCommand(consoleReader)); // lb (list installed bundles)	
 		// b : set/print current bundle ( "b bundle-name" --> set , "b" --> print )
 		// eb (edit bundle --> edit templates.cfg )
 		// et (edit template --> .vm )
