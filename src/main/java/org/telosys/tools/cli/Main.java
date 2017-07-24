@@ -19,11 +19,16 @@ public class Main {
 		try {
 
 			ConsoleReader consoleReader = new ConsoleReader();
-			consoleReader.setPrompt(PROMPT);
+			//consoleReader.setPrompt(PROMPT);
+			consoleReader.setPrompt(Color.colorize(PROMPT, Color.GREEN) );
 			
 			PrintWriter out = new PrintWriter(consoleReader.getOutput());
 			//out.println(new Banner().banner2());
-			out.println(new Banner().bannerSlant());
+			String banner = new Banner().bannerSlant();
+			//out.println( Color.colorize(banner, Color.MAGENTA_BRIGHT));
+			//out.println( Color.colorize(banner, Color.YELLOW_BRIGHT));
+			//out.println( Color.colorize(banner, Color.BLUE_BRIGHT));
+			out.println( Color.colorize(banner, Color.CYAN_BRIGHT));
 
 			CommandLineProcessor inputParser = new CommandLineProcessor( consoleReader ) ;
 			

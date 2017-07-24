@@ -1,7 +1,8 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
-import java.io.PrintWriter;
+
+import jline.console.ConsoleReader;
 
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
@@ -14,8 +15,8 @@ public class NewModelCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public NewModelCommand(PrintWriter out) {
-		super(out);
+	public NewModelCommand(ConsoleReader consoleReader) {
+		super(consoleReader);
 	}
 	
 	@Override

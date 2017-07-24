@@ -1,6 +1,6 @@
 package org.telosys.tools.cli.commands;
 
-import java.io.PrintWriter;
+import jline.console.ConsoleReader;
 
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
@@ -11,8 +11,8 @@ public class EnvCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public EnvCommand(PrintWriter out) {
-		super(out);
+	public EnvCommand(ConsoleReader consoleReader) {
+		super(consoleReader);
 	}
 
 	@Override

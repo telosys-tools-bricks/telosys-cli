@@ -1,7 +1,8 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
-import java.io.PrintWriter;
+
+import jline.console.ConsoleReader;
 
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
@@ -14,8 +15,8 @@ public class ModelCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public ModelCommand(PrintWriter out) {
-		super(out);
+	public ModelCommand(ConsoleReader consoleReader) {
+		super(consoleReader);
 	}
 	
 	@Override
@@ -65,13 +66,9 @@ public class ModelCommand extends Command {
 					return "Model '" + modelName + "' not found";
 				}
 			} catch (TelosysToolsException e) {
-				return "Error: " + e.getMessage();
+				printError(e);
 			}
 		}
-		else {
-			return getLastErrorMessage();
-		}
-		
-
+		return null ;
 	}
 }

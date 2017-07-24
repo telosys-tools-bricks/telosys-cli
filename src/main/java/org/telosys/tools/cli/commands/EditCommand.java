@@ -1,7 +1,8 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
-import java.io.PrintWriter;
+
+import jline.console.ConsoleReader;
 
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Const;
@@ -15,8 +16,8 @@ public class EditCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public EditCommand(PrintWriter out) {
-		super(out);
+	public EditCommand(ConsoleReader consoleReader) {
+		super(consoleReader);
 	}
 
 

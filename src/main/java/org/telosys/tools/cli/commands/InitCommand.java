@@ -1,6 +1,6 @@
 package org.telosys.tools.cli.commands;
 
-import java.io.PrintWriter;
+import jline.console.ConsoleReader;
 
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
@@ -12,8 +12,8 @@ public class InitCommand  extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public InitCommand(PrintWriter out) {
-		super(out);
+	public InitCommand(ConsoleReader consoleReader) {
+		super(consoleReader);
 	}
 	
 	@Override

@@ -3,18 +3,21 @@ package org.telosys.tools.cli;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import jline.console.ConsoleReader;
+
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.commons.StrUtil;
 
 public abstract class Command {
 
+	private final ConsoleReader consoleReader ;
 	private final PrintWriter out ;
-	private String lastErrorMessage ;
 	
-	
-	public Command(PrintWriter out) {
+	public Command(ConsoleReader consoleReader) {
 		super();
-		this.out = out;
+		//this.out = out;
+		this.consoleReader = consoleReader ;
+		this.out = new PrintWriter(consoleReader.getOutput()) ;
 	}
 	public abstract String getName();
 	public abstract String getShortName();
@@ -30,9 +33,9 @@ public abstract class Command {
 		sb.append(Environment.LINE_SEPARATOR);
 	}
 
-	protected String getLastErrorMessage() {
-		return lastErrorMessage;
-	}
+//	protected String getLastErrorMessage() {
+//		return lastErrorMessage;
+//	}
 
 	protected String invalidUsage(String message) {
 		return "Invalid usage : " + message ;
@@ -71,9 +74,14 @@ public abstract class Command {
 		}
 	}
 
+	/**
+	 * Returns the current Telosys project, or null if HOME is not defined
+	 * @param environment
+	 * @return
+	 */
 	protected TelosysProject getTelosysProject(Environment environment) {
 		if ( environment.getHomeDirectory() == null ) {
-			lastErrorMessage = "Home directory must be set before using this command!" ;
+			print( "Home directory must be set before using this command!" ) ;
 			return null ;
 		}
 		

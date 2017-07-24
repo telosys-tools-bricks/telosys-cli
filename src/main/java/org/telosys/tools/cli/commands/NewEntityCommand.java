@@ -1,44 +1,41 @@
 package org.telosys.tools.cli.commands;
 
-import java.io.File;
-
 import jline.console.ConsoleReader;
 
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.TelosysToolsException;
 
-public class EditEntityCommand extends Command {
+public class NewEntityCommand extends Command {
 
 	/**
 	 * Constructor
 	 * @param out
 	 */
-	public EditEntityCommand(ConsoleReader consoleReader) {
+	public NewEntityCommand(ConsoleReader consoleReader) {
 		super(consoleReader);
 	}
 
 	@Override
 	public String getName() {
-		return "editentity";
+		return "newentity";
 	}
 
 	@Override
 	public String getShortName() {
-		return "ee" ;
+		return "ne" ;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Edit an entity file ( 'ee [entity-name]' ) ";
+		return "Creates a new entity in the current model ( 'ne [entity-name]' ) ";
 	}
 	
 	@Override
 	public String execute(Environment environment, String[] args) {
 		if ( args.length > 1 ) {
 			if ( environment.getCurrentModel() != null ) {
-				return editEntity(environment, args[1]);
+				return newEntity(environment, args[1]);
 			}
 			else {
 				print("No current model!");
@@ -50,17 +47,20 @@ public class EditEntityCommand extends Command {
 		}
 	}
 
-	private String editEntity(Environment environment, String entityName) {
+	private String newEntity(Environment environment, String entityName) {
 
 		TelosysProject telosysProject = getTelosysProject(environment);
 		if ( telosysProject != null ) {
-			File file;
-			try {
-				file = telosysProject.getDslEntityFile(environment.getCurrentModel(), entityName);
-				return launchEditor(environment, file.getAbsolutePath() );
-			} catch (TelosysToolsException e) {
-				printError(e);
-			}
+			
+// TODO			
+//			telosysProject.createNewDslEntity(xxxx);
+//			File file;
+//			try {
+//				file = telosysProject.getDslEntityFile(environment.getCurrentModel(), entityName);
+//				return launchEditor(environment, file.getAbsolutePath() );
+//			} catch (TelosysToolsException e) {
+//				printError(e);
+//			}
 		}
 		return null ;
 	}

@@ -2,7 +2,8 @@ package org.telosys.tools.cli.commands;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.PrintWriter;
+
+import jline.console.ConsoleReader;
 
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
@@ -14,8 +15,8 @@ public class LsCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public LsCommand(PrintWriter out) {
-		super(out);
+	public LsCommand(ConsoleReader consoleReader) {
+		super(consoleReader);
 	}
 
 	@Override

@@ -1,10 +1,15 @@
 package org.telosys.tools.cli.commands;
 
 
-import java.io.PrintWriter;
+import java.util.LinkedList;
+import java.util.List;
+
+import jline.console.ConsoleReader;
 
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
+
+import tests.SelectionList;
 
 public class GuideCommand extends Command {
 	
@@ -12,8 +17,8 @@ public class GuideCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public GuideCommand(PrintWriter out) {
-		super(out);
+	public GuideCommand(ConsoleReader consoleReader) {
+		super(consoleReader);
 	}
 	
 	@Override
@@ -33,7 +38,15 @@ public class GuideCommand extends Command {
 
 	@Override
 	public String execute(Environment environment, String[] args) {
-		return guide(environment, (String) args[0]);
+//		return guide(environment, (String) args[0]);
+
+		List<String> items = new LinkedList<>();
+		for ( int i = 0 ; i < 20 ; i++ ) {
+			items.add("Item #" + i);
+		}
+		SelectionList list = new SelectionList(items);
+		list.show();
+		return null ;
 	}
 	
 	private String guide(Environment environment, final String parameter) {

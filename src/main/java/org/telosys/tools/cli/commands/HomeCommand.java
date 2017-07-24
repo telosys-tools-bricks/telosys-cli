@@ -1,6 +1,6 @@
 package org.telosys.tools.cli.commands;
 
-import java.io.PrintWriter;
+import jline.console.ConsoleReader;
 
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
@@ -11,8 +11,8 @@ public class HomeCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public HomeCommand(PrintWriter out) {
-		super(out);
+	public HomeCommand(ConsoleReader consoleReader) {
+		super(consoleReader);
 	}
 	
 	@Override

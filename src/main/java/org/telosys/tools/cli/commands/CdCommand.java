@@ -1,7 +1,8 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
-import java.io.PrintWriter;
+
+import jline.console.ConsoleReader;
 
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
@@ -12,8 +13,8 @@ public class CdCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public CdCommand(PrintWriter out) {
-		super(out);
+	public CdCommand(ConsoleReader consoleReader) {
+		super(consoleReader);
 	}
 
 	@Override

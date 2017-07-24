@@ -1,7 +1,8 @@
 package org.telosys.tools.cli.commands;
 
-import java.io.PrintWriter;
 import java.util.List;
+
+import jline.console.ConsoleReader;
 
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
@@ -12,8 +13,8 @@ public class HelpCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public HelpCommand(PrintWriter out) {
-		super(out);
+	public HelpCommand(ConsoleReader consoleReader) {
+		super(consoleReader);
 	}
 	
 	@Override
