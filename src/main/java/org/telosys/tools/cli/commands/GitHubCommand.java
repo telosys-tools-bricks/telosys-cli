@@ -76,9 +76,11 @@ public class GitHubCommand extends Command {
 
 	private String listContent(Environment environment, String[] args) {
 		
+		printDebug("Args : " + args.length );
 		List<String> bundles = getAllBundles(environment);
 		if ( bundles != null ) {
 			List<String> criteria = buildCriteria(args);
+			printDebug("Criteria : " + criteria );
 			bundles = BundlesFilter.filter(bundles, criteria);
 			return printBundles(environment.getCurrentGitHubStore(), bundles);
 		}

@@ -17,6 +17,7 @@ import org.telosys.tools.cli.commands.GuideCommand;
 import org.telosys.tools.cli.commands.HelpCommand;
 import org.telosys.tools.cli.commands.HomeCommand;
 import org.telosys.tools.cli.commands.InitCommand;
+import org.telosys.tools.cli.commands.InstallBundlesCommand;
 import org.telosys.tools.cli.commands.LsCommand;
 import org.telosys.tools.cli.commands.ModelCommand;
 import org.telosys.tools.cli.commands.NewModelCommand;
@@ -91,7 +92,7 @@ public class CommandProvider {
 //		   ib 1 2 
 //		 or 
 **/
-		//   ib : install all the bundles from GitHub
+		register(new InstallBundlesCommand(consoleReader)); // install  bundles from GitHub 		
 		//   ib * : install all bundles from GitHub
 		//   ib java rest : install all the bundles containing "java" or "rest"
 		//   if already exists : prompt "overwrite ? [y/n] : "
