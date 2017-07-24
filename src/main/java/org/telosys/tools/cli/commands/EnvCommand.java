@@ -42,11 +42,13 @@ public class EnvCommand extends Command {
 //		buf.append( ". Original directory : " + environment.getOriginalDirectory() );
 //		buf.append(OsUtils.LINE_SEPARATOR);
 
-		appendLine(sb, ". Operating System  : " + environment.getOperatingSystem() );		
-		appendLine(sb, ". Editor command    : " + environment.getEditorCommand() );
-		appendLine(sb, ". Current directory : " + environment.getCurrentDirectory() );
-		appendLine(sb, ". Home directory    : " + nullableString(environment.getHomeDirectory()) );
-		appendLine(sb, ". Current model     : " + nullableString(environment.getCurrentModel()) );
+		appendLine(sb, ". Operating System     : " + environment.getOperatingSystem() );		
+		appendLine(sb, ". Editor command       : " + environment.getEditorCommand() );
+		appendLine(sb, ". Current directory    : " + environment.getCurrentDirectory() );
+		appendLine(sb, ". Home directory       : " + nullableString(environment.getHomeDirectory()) );
+		appendLine(sb, ". Current GitHub store : " + nullableString(environment.getCurrentGitHubStore()) );
+		appendLine(sb, ". Current model        : " + nullableString(environment.getCurrentModel()) );
+		appendLine(sb, ". Current bundle       : " + nullableString(environment.getCurrentBundle()) );
 		
 		return sb.toString();
 	}

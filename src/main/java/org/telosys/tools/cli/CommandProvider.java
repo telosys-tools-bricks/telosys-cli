@@ -12,6 +12,7 @@ import org.telosys.tools.cli.commands.CdCommand;
 import org.telosys.tools.cli.commands.EditCommand;
 import org.telosys.tools.cli.commands.EditEntityCommand;
 import org.telosys.tools.cli.commands.EnvCommand;
+import org.telosys.tools.cli.commands.GitHubCommand;
 import org.telosys.tools.cli.commands.GuideCommand;
 import org.telosys.tools.cli.commands.HelpCommand;
 import org.telosys.tools.cli.commands.HomeCommand;
@@ -58,6 +59,7 @@ public class CommandProvider {
 		// TODO : de (delete entity)
 		
 		// GitHub store management
+		register(new GitHubCommand(consoleReader)); // gh : gh [store-name] 
 		// gh : set/print current github repo ( "gh store-name" --> set , "gh" --> print )
 		// gh -l : list github bundles : print bundles available in the store
 		//         > gh -l   --> all

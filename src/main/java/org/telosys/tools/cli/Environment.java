@@ -6,12 +6,14 @@ public class Environment {
 	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
 	private final CommandProvider commandProvider ;
-	private final String originalDirectory ;
-	private       String currentDirectory ;
-	private       String currentModel ;
-	private       String homeDirectory ;
 	private final String osName ;
 	private final String editorCommand ;
+	private final String originalDirectory ;
+	private       String homeDirectory ;
+	private       String currentDirectory ;
+	private       String currentGitHubStore = "telosys-templates-v3";
+	private       String currentModel ;
+	private       String currentBundle ;
 	
 	/**
 	 * Constructor
@@ -24,6 +26,7 @@ public class Environment {
 		this.currentDirectory = originalDirectory ;
 		this.homeDirectory    = null ;
 		this.currentModel     = null ;
+		this.currentBundle    = null ;
 		osName = System.getProperty("os.name");
 		if ( osName.contains("windows") || osName.contains("Windows") ) {
 			editorCommand = "notepad.exe" ;
@@ -98,6 +101,25 @@ public class Environment {
 	}
 
 	//---------------------------------------------------------------------------------
+	// Current GITHUB STORE
+	//---------------------------------------------------------------------------------
+	/**
+	 * Returns the current model name
+	 * @return
+	 */
+	public String getCurrentGitHubStore() {
+		return currentGitHubStore;
+	}
+
+	/**
+	 * Set the current model name
+	 * @param github
+	 */
+	public void setCurrentGitHubStore(String github) {
+		this.currentGitHubStore = github;
+	}
+
+	//---------------------------------------------------------------------------------
 	// Current MODEL
 	//---------------------------------------------------------------------------------
 	/**
@@ -116,4 +138,24 @@ public class Environment {
 		this.currentModel = modelName;
 	}
 
+	//---------------------------------------------------------------------------------
+	// Current BUNDLE
+	//---------------------------------------------------------------------------------
+	/**
+	 * Returns the current bundle name
+	 * @return
+	 */
+	public String getCurrentBundle() {
+		return currentBundle ;
+	}
+
+	/**
+	 * Set the current bundle name
+	 * @param bundleName
+	 */
+	public void setCurrentBundle(String bundleName) {
+		this.currentBundle = bundleName;
+	}
+
+	
 }
