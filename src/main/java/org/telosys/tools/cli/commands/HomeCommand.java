@@ -33,6 +33,7 @@ public class HomeCommand extends Command {
 	@Override
 	public String execute(Environment environment, String[] args) {
 		environment.setHomeDirectory();
+		updatePrompt(environment);
 		return "Home set ('" + environment.getHomeDirectory() + "')" ;	
 	}
 	

@@ -46,6 +46,7 @@ public abstract class Command {
 		out.flush();
 	}
 	protected void printError(Exception ex) {
+		LastError.setError(ex);
 		out.println("[ERROR] Exception : "+ ex.getMessage());
 		out.flush();
 	}
@@ -54,6 +55,18 @@ public abstract class Command {
 			out.println("[DEBUG] "+message);
 			out.flush();
 		}
+	}
+	
+	protected void updatePrompt(Environment environment) {
+		String prompt = Const.PROMPT_TEXT ;
+		if ( environment.getHomeDirectory() != null ) {
+			prompt = prompt + "#" ;
+		}
+		if ( environment.getCurrentModel() != null ) {
+			prompt = prompt + "(" + environment.getCurrentModel() + ")" ;
+		}
+		prompt = prompt + Const.PROMPT_CHAR ;
+		consoleReader.setPrompt(Color.colorize(prompt, Const.PROMPT_COLOR));
 	}
 	
 	protected String launchEditor(Environment environment, String fileFullPath) {

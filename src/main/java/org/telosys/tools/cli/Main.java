@@ -7,8 +7,6 @@ import jline.console.ConsoleReader;
 
 public class Main {
 	
-	private final static String PROMPT = "telosys>" ;
-
 	/**
 	 * 
 	 * @param args
@@ -20,7 +18,7 @@ public class Main {
 
 			ConsoleReader consoleReader = new ConsoleReader();
 			//consoleReader.setPrompt(PROMPT);
-			consoleReader.setPrompt(Color.colorize(PROMPT, Color.GREEN) );
+			consoleReader.setPrompt(Color.colorize(Const.INITIAL_PROMPT, Const.PROMPT_COLOR) );
 			
 			PrintWriter out = new PrintWriter(consoleReader.getOutput());
 			//out.println(new Banner().banner2());

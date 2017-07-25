@@ -60,6 +60,7 @@ public class ModelCommand extends Command {
 				File file = telosysProject.getDslModelFile(modelName);
 				if (file.exists()) {
 					environment.setCurrentModel(modelName);
+					updatePrompt(environment);
 					return "Current model is now '" + environment.getCurrentModel() + "'";
 				}
 				else {

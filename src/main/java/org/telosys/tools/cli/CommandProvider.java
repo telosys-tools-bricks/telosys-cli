@@ -1,6 +1,5 @@
 package org.telosys.tools.cli;
 
-import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +11,7 @@ import org.telosys.tools.cli.commands.CdCommand;
 import org.telosys.tools.cli.commands.EditCommand;
 import org.telosys.tools.cli.commands.EditEntityCommand;
 import org.telosys.tools.cli.commands.EnvCommand;
+import org.telosys.tools.cli.commands.ErrorCommand;
 import org.telosys.tools.cli.commands.GitHubCommand;
 import org.telosys.tools.cli.commands.GuideCommand;
 import org.telosys.tools.cli.commands.HelpCommand;
@@ -46,6 +46,7 @@ public class CommandProvider {
 		register(new LsCommand(consoleReader)); // ls
 		register(new PwdCommand(consoleReader)); // pwd
 		register(new QuitCommand(consoleReader)); // q
+		register(new ErrorCommand(consoleReader)); // err
 
 		// Model management
 		register(new ModelCommand(consoleReader)); // m : m [model-name] // TODO : "m" --> print 
