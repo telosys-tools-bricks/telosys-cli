@@ -172,4 +172,19 @@ public abstract class Command {
 		TelosysProject telosysProject = new TelosysProject(projectFullPath);
 		return telosysProject ;
 	}
+	
+	/**
+	 * Returns the string as is if not null, or "(undefined)" if null 
+	 * @param s
+	 * @return
+	 */
+	protected String undefinedIfNull(String s) {
+		if ( s != null ) {
+			return s ;
+		}
+		else {
+			return "(undefined)";
+		}
+	}	
+
 }   

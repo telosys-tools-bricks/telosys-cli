@@ -48,20 +48,12 @@ public class EnvCommand extends Command {
 		appendLine(sb, ". Operating System     : " + environment.getOperatingSystem() );		
 		appendLine(sb, ". Editor command       : " + environment.getEditorCommand() );
 		appendLine(sb, ". Current directory    : " + environment.getCurrentDirectory() );
-		appendLine(sb, ". Home directory       : " + nullableString(environment.getHomeDirectory()) );
-		appendLine(sb, ". Current GitHub store : " + nullableString(environment.getCurrentGitHubStore()) );
-		appendLine(sb, ". Current model        : " + nullableString(environment.getCurrentModel()) );
-		appendLine(sb, ". Current bundle       : " + nullableString(environment.getCurrentBundle()) );
+		appendLine(sb, ". Home directory       : " + undefinedIfNull(environment.getHomeDirectory()) );
+		appendLine(sb, ". Current GitHub store : " + undefinedIfNull(environment.getCurrentGitHubStore()) );
+		appendLine(sb, ". Current model        : " + undefinedIfNull(environment.getCurrentModel()) );
+		appendLine(sb, ". Current bundle       : " + undefinedIfNull(environment.getCurrentBundle()) );
 		
 		return sb.toString();
 	}
 	
-	private String nullableString(String s) {
-		if ( s != null ) {
-			return s ;
-		}
-		else {
-			return "(undefined)";
-		}
-	}	
 }

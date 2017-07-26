@@ -49,7 +49,8 @@ public class ModelCommand extends Command {
 			return tryToSetCurrentModel(args[1]);
 		}
 		else {
-			return invalidUsage("model-name argument expected");
+			//return invalidUsage("model-name argument expected");
+			return undefinedIfNull(getCurrentModel());
 		}
 	}
 	
