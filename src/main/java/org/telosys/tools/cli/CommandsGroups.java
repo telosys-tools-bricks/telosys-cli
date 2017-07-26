@@ -48,8 +48,9 @@ public class CommandsGroups {
 		String name = "Project commands" ;
 		commands.add("h");		
 		commands.add("init");
-		commands.add("epc"); // Edit Project config 
-		commands.add("lpc"); // List Project config 
+		commands.add("epc"); // Edit Project Config 
+		commands.add("epdb"); // Edit Project Databases 
+		// commands.add("lpc"); // List Project config 
 		
 		return new CommandsGroup(name, commands);
 	}

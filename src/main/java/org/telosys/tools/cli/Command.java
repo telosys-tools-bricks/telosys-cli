@@ -1,11 +1,13 @@
 package org.telosys.tools.cli;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 import jline.console.ConsoleReader;
 
 import org.telosys.tools.api.TelosysProject;
+import org.telosys.tools.commons.FileUtil;
 import org.telosys.tools.commons.StrUtil;
 
 public abstract class Command {
@@ -71,9 +73,20 @@ public abstract class Command {
 	protected String getCurrentDirectory() {
 		return environment.getCurrentDirectory();
 	}
+
 	//-------------------------------------------------------------------------
 	// Home directory 
 	//-------------------------------------------------------------------------
+	protected boolean checkHomeDirectoryDefined() {
+		if ( environment.getHomeDirectory() != null ) {
+			return true ;
+		}
+		else {
+			print( "Home directory must be set before using this command!" ) ;
+			return false ;
+		}
+	}	
+
 	protected void setCurrentHome() {
 		environment.setHomeDirectory();
 		updatePrompt();
@@ -98,6 +111,16 @@ public abstract class Command {
 	//-------------------------------------------------------------------------
 	// Model
 	//-------------------------------------------------------------------------
+	protected boolean checkModelDefined() {
+		if ( environment.getCurrentModel() != null ) {
+			return true ;
+		}
+		else {
+			print( "Model-name must be set before using this command!" ) ;
+			return false ;
+		}
+	}	
+
 	/**
 	 * Set the current model name in the current environment
 	 * @param modelName
@@ -139,7 +162,7 @@ public abstract class Command {
 		consoleReader.setPrompt(Color.colorize(prompt, Const.PROMPT_COLOR));
 	}
 	
-	protected String launchEditor(Environment environment, String fileFullPath) {
+	protected String launchEditor(String fileFullPath) {
 		String editorCommand = environment.getEditorCommand();
 		String fullCommand = editorCommand ;
 		if ( ! StrUtil.nullOrVoid(fileFullPath) ) {
@@ -163,16 +186,47 @@ public abstract class Command {
 	 * @return
 	 */
 	protected TelosysProject getTelosysProject() {
-		if ( environment.getHomeDirectory() == null ) {
-			print( "Home directory must be set before using this command!" ) ;
-			return null ;
+		if ( checkHomeDirectoryDefined() ) {
+			String projectFullPath = environment.getHomeDirectory();
+			TelosysProject telosysProject = new TelosysProject(projectFullPath);
+			return telosysProject ;
 		}
-		
-		String projectFullPath = environment.getHomeDirectory();
-		TelosysProject telosysProject = new TelosysProject(projectFullPath);
-		return telosysProject ;
+		return null ;
 	}
 	
+	protected String getTelosysToolsCfgFullPath() {
+		return getFileFullPath(Const.TELOSYS_TOOLS_CFG, Const.TELOSYS_TOOLS_FOLDER);
+	}
+
+	protected String getTelosysDbCfgFullPath() {
+		return getFileFullPath(Const.DATABASES_DBCFG, Const.TELOSYS_TOOLS_FOLDER);
+	}
+	
+	private String getFileFullPath(String fileName, String subDirectory) {
+
+//		// Try to get the file name in the HOME directory
+//		String fileFullPath = FileUtil.buildFilePath(environment.getHomeDirectory(), fileName);
+//		File file = new File(fileFullPath);
+//		if (file.exists()) {
+//			return fileFullPath;
+//		}
+
+		// Try to get the file in the 'home' directory
+		String shortPath = fileName; // e.g. 'telosys-tools.cfg' or 'databases.dbcfg'
+		if (subDirectory != null) {
+			shortPath = FileUtil.buildFilePath(subDirectory, fileName); // e.g.
+																		// 'TelosysTools/databases.dbcfg'
+		}
+		String fileFullPath = FileUtil.buildFilePath(environment.getHomeDirectory(), shortPath);
+		File file = new File(fileFullPath);
+		if (file.exists()) {
+			return fileFullPath;
+		}
+
+		// Not found
+		return null;
+	}
+
 	/**
 	 * Returns the string as is if not null, or "(undefined)" if null 
 	 * @param s

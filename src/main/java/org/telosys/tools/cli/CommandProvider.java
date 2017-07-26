@@ -10,6 +10,8 @@ import jline.console.ConsoleReader;
 import org.telosys.tools.cli.commands.CdCommand;
 import org.telosys.tools.cli.commands.EditCommand;
 import org.telosys.tools.cli.commands.EditEntityCommand;
+import org.telosys.tools.cli.commands.EditProjectCfgCommand;
+import org.telosys.tools.cli.commands.EditProjectDbCfgCommand;
 import org.telosys.tools.cli.commands.EnvCommand;
 import org.telosys.tools.cli.commands.ErrorCommand;
 import org.telosys.tools.cli.commands.GitHubCommand;
@@ -41,12 +43,17 @@ public class CommandProvider {
 		register(new EnvCommand(consoleReader, environment)); // env
 		register(new GuideCommand(consoleReader, environment)); // guide
 		register(new HelpCommand(consoleReader, environment, this)); // ? - help
-		register(new HomeCommand(consoleReader, environment)); // h 
-		register(new InitCommand(consoleReader, environment)); // init
 		register(new LsCommand(consoleReader, environment)); // ls
 		register(new PwdCommand(consoleReader, environment)); // pwd
 		register(new QuitCommand(consoleReader, environment)); // q
 		register(new ErrorCommand(consoleReader, environment)); // err
+		
+		// Project commands
+		register(new HomeCommand(consoleReader, environment)); // h 
+		register(new InitCommand(consoleReader, environment)); // init
+		register(new EditProjectCfgCommand(consoleReader, environment)); // epc
+		register(new EditProjectDbCfgCommand(consoleReader, environment)); // epdb
+		
 
 		// Model management
 		register(new ModelCommand(consoleReader, environment)); // m : m [model-name] // TODO : "m" --> print 

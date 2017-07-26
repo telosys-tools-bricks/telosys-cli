@@ -37,29 +37,27 @@ public class EditEntityCommand extends Command {
 	@Override
 	public String execute(String[] args) {
 		if ( args.length > 1 ) {
-			if ( getCurrentModel() != null ) {
+			if ( checkModelDefined() ) {
 				return editEntity(args[1]);
-			}
-			else {
-				print("No current model!");
-				return null ;
 			}
 		}
 		else {
 			return invalidUsage("entity-name expected");
 		}
+		return null ;
 	}
 
 	private String editEntity(String entityName) {
-		Environment environment = getEnvironment();
-		TelosysProject telosysProject = getTelosysProject();
-		if ( telosysProject != null ) {
-			File file;
-			try {
-				file = telosysProject.getDslEntityFile(environment.getCurrentModel(), entityName);
-				return launchEditor(environment, file.getAbsolutePath() );
-			} catch (TelosysToolsException e) {
-				printError(e);
+		if ( checkModelDefined() ) {
+			TelosysProject telosysProject = getTelosysProject();
+			if ( telosysProject != null ) {
+				File file;
+				try {
+					file = telosysProject.getDslEntityFile(getCurrentModel(), entityName);
+					return launchEditor(file.getAbsolutePath() );
+				} catch (TelosysToolsException e) {
+					printError(e);
+				}
 			}
 		}
 		return null ;
