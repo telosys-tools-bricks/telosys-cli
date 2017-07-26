@@ -27,8 +27,8 @@ public class InstallBundlesCommand extends Command {
 	}
 
 	@Override
-	public String getShortName() {
-		return null ;
+	public String getShortDescription() {
+		return "Install Bundle" ;
 	}
 	
 	@Override

@@ -27,13 +27,13 @@ public class GitHubCommand extends Command {
 	}
 
 	@Override
-	public String getShortName() {
-		return null ;
+	public String getShortDescription() {
+		return "GitHub" ;
 	}
 	
 	@Override
 	public String getDescription() {
-		return "Set the GitHub store name, or list its content ";
+		return "Set/print the GitHub store name ";
 	}
 	
 	@Override

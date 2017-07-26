@@ -22,13 +22,13 @@ public class InitCommand  extends Command {
 	}
 
 	@Override
-	public String getShortName() {
-		return null ;
+	public String getShortDescription() {
+		return "Initialization" ;
 	}
 	
 	@Override
 	public String getDescription() {
-		return "Init a Telosys project directory with all required files";
+		return "Init the Telosys directory with all required files";
 	}
 	
 	@Override

@@ -21,12 +21,12 @@ public class EditEntityCommand extends Command {
 
 	@Override
 	public String getName() {
-		return "editentity";
+		return "ee";
 	}
 
 	@Override
-	public String getShortName() {
-		return "ee" ;
+	public String getShortDescription() {
+		return "Edit Entity" ;
 	}
 
 	@Override

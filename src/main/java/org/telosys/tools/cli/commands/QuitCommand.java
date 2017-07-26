@@ -17,12 +17,12 @@ public class QuitCommand extends Command {
 	
 	@Override
 	public String getName() {
-		return "quit";
+		return "q";
 	}
 
 	@Override
-	public String getShortName() {
-		return "q" ;
+	public String getShortDescription() {
+		return "Quit" ;
 	}
 	
 	@Override

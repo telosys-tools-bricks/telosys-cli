@@ -31,17 +31,17 @@ public class CommandProvider {
 	
 	private final void register(Command command) {
 		commands.put(command.getName(), command);
-		if ( command.getShortName() != null ) {
-			commands.put(command.getShortName(), command);
-		}
+//		if ( command.getShortName() != null ) {
+//			commands.put(command.getShortName(), command);
+//		}
 	}
 	private final void init(ConsoleReader consoleReader, Environment environment) {
 		register(new CdCommand(consoleReader, environment)); // cd
 		register(new EditCommand(consoleReader, environment)); // e
 		register(new EnvCommand(consoleReader, environment)); // env
 		register(new GuideCommand(consoleReader, environment)); // guide
-		register(new HelpCommand(consoleReader, environment)); // ? - help
-		register(new HomeCommand(consoleReader, environment)); // h // TODO : h --> print , h . --> set . as home )
+		register(new HelpCommand(consoleReader, environment, this)); // ? - help
+		register(new HomeCommand(consoleReader, environment)); // h 
 		register(new InitCommand(consoleReader, environment)); // init
 		register(new LsCommand(consoleReader, environment)); // ls
 		register(new PwdCommand(consoleReader, environment)); // pwd
@@ -131,13 +131,14 @@ public class CommandProvider {
 	}
 
 	public final Command getCommand(String commandName) {
-		Command command = commands.get(commandName);
-		if ( command != null ) {
-			return command;
-		}
-		else {
-			throw new RuntimeException("Invalid command name '" + commandName + "'");
-		}
+//		Command command = commands.get(commandName);
+//		if ( command != null ) {
+//			return command;
+//		}
+//		else {
+//			throw new RuntimeException("Invalid command name '" + commandName + "'");
+//		}
+		return commands.get(commandName);
 	}
 	
 	public final List<Command> getAllCommands() {

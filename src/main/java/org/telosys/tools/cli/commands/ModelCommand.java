@@ -21,17 +21,17 @@ public class ModelCommand extends Command {
 	
 	@Override
 	public String getName() {
-		return "model";
+		return "m";
 	}
 
 	@Override
-	public String getShortName() {
-		return "m" ;
+	public String getShortDescription() {
+		return "Model" ;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Set the current model ( 'm [model-name]' )";
+		return "Set/print the current model ( 'm [model-name]' )";
 	}
 	
 //	protected boolean checkArgs(String[] args, int n, String message) {

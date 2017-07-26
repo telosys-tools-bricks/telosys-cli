@@ -22,8 +22,8 @@ public class EnvCommand extends Command {
 	}
 
 	@Override
-	public String getShortName() {
-		return null ;
+	public String getShortDescription() {
+		return "Environment" ;
 	}
 	
 	@Override

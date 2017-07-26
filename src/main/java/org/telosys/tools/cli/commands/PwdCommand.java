@@ -21,13 +21,13 @@ public class PwdCommand extends Command {
 	}
 
 	@Override
-	public String getShortName() {
-		return null ;
+	public String getShortDescription() {
+		return "Print Working Directory" ;
 	}
 	
 	@Override
 	public String getDescription() {
-		return "Print working directory (show the current directory)";
+		return "Print the current working directory";
 	}
 	
 	@Override

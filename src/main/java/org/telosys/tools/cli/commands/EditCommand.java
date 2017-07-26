@@ -23,12 +23,12 @@ public class EditCommand extends Command {
 
 	@Override
 	public String getName() {
-		return "edit";
+		return "e";
 	}
 
 	@Override
-	public String getShortName() {
-		return "e" ;
+	public String getShortDescription() {
+		return "Edit" ;
 	}
 
 	@Override

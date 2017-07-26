@@ -23,13 +23,13 @@ public class CdCommand extends Command {
 	}
 
 	@Override
-	public String getShortName() {
-		return null ;
+	public String getShortDescription() {
+		return "Change Directory" ;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Change directory";
+		return "Change the current directory ( 'cd [dir]' )";
 	}
 	
 	@Override

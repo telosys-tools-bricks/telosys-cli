@@ -6,6 +6,8 @@ public class Environment {
 	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
 	private final CommandProvider commandProvider ;
+	private final CommandsGroups  commandsGroups ;
+	
 	private final String osName ;
 	private final String editorCommand ;
 	private final String originalDirectory ;
@@ -22,6 +24,7 @@ public class Environment {
 	public Environment(CommandProvider commandProvider) {
 		super();
 		this.commandProvider = commandProvider ;
+		this.commandsGroups  = new CommandsGroups(commandProvider);
 		this.originalDirectory = System.getProperty("user.dir"); 
 		this.currentDirectory = originalDirectory ;
 		this.homeDirectory    = null ;
@@ -55,6 +58,11 @@ public class Environment {
 	public CommandProvider getCommandProvider() {
 		return commandProvider;
 	}
+	//---------------------------------------------------------------------------------
+	public CommandsGroups getCommandsGroups() {
+		return commandsGroups;
+	}
+
 
 	//---------------------------------------------------------------------------------
 	// HOME directory

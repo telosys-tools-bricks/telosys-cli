@@ -24,12 +24,12 @@ public abstract class Command {
 	
 	public abstract String getName();
 	
-	public abstract String getShortName();
+	public abstract String getShortDescription();
+	
+	public abstract String getDescription();
 	
 //	public abstract String execute(Environment environment, String[] args);
 	public abstract String execute(String[] args);
-	
-	public abstract String getDescription();
 	
 	protected Environment getEnvironment() {
 		return environment ;

@@ -21,12 +21,12 @@ public class NewModelCommand extends Command {
 	
 	@Override
 	public String getName() {
-		return "newmodel";
+		return "nm";
 	}
 
 	@Override
-	public String getShortName() {
-		return "nm" ;
+	public String getShortDescription() {
+		return "New Model" ;
 	}
 	
 	@Override

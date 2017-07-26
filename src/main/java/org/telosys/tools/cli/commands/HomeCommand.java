@@ -17,17 +17,17 @@ public class HomeCommand extends Command {
 	
 	@Override
 	public String getName() {
-		return "home";
+		return "h";
 	}
 
 	@Override
-	public String getShortName() {
-		return "h";
+	public String getShortDescription() {
+		return "Home" ;
 	}
 	
 	@Override
 	public String getDescription() {
-		return "Set the HOME directory with the current directory";
+		return "Set/print the HOME directory ('h [dir]')";
 	}
 	
 	@Override

@@ -25,8 +25,8 @@ public class ListBundlesCommand extends Command {
 	}
 
 	@Override
-	public String getShortName() {
-		return null ;
+	public String getShortDescription() {
+		return "List Bundle" ;
 	}
 
 	@Override

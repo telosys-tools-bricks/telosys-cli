@@ -18,12 +18,12 @@ public class NewEntityCommand extends Command {
 
 	@Override
 	public String getName() {
-		return "newentity";
+		return "ne";
 	}
 
 	@Override
-	public String getShortName() {
-		return "ne" ;
+	public String getShortDescription() {
+		return "New Entity" ;
 	}
 
 	@Override

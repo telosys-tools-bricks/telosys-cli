@@ -27,8 +27,8 @@ public class GuideCommand extends Command {
 	}
 
 	@Override
-	public String getShortName() {
-		return null ;
+	public String getShortDescription() {
+		return "Guide" ;
 	}
 	
 	@Override
