@@ -15,8 +15,8 @@ public class EditEntityCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public EditEntityCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public EditEntityCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 
 	@Override
@@ -35,10 +35,10 @@ public class EditEntityCommand extends Command {
 	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
+	public String execute(String[] args) {
 		if ( args.length > 1 ) {
-			if ( environment.getCurrentModel() != null ) {
-				return editEntity(environment, args[1]);
+			if ( getCurrentModel() != null ) {
+				return editEntity(args[1]);
 			}
 			else {
 				print("No current model!");
@@ -50,9 +50,9 @@ public class EditEntityCommand extends Command {
 		}
 	}
 
-	private String editEntity(Environment environment, String entityName) {
-
-		TelosysProject telosysProject = getTelosysProject(environment);
+	private String editEntity(String entityName) {
+		Environment environment = getEnvironment();
+		TelosysProject telosysProject = getTelosysProject();
 		if ( telosysProject != null ) {
 			File file;
 			try {

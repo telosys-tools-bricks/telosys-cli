@@ -15,8 +15,8 @@ public class ModelCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public ModelCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public ModelCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 	
 	@Override
@@ -43,25 +43,25 @@ public class ModelCommand extends Command {
 //	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
+	public String execute(String[] args) {
 		
 		if ( args.length > 1 ) {
-			return setCurrentModel(environment, args[1]);
+			return tryToSetCurrentModel(args[1]);
 		}
 		else {
 			return invalidUsage("model-name argument expected");
 		}
 	}
 	
-	private String setCurrentModel(Environment environment, String modelName) {
-		TelosysProject telosysProject = getTelosysProject(environment); 
+	private String tryToSetCurrentModel(String modelName) {
+//		TelosysProject telosysProject = getTelosysProject(environment); 
+		TelosysProject telosysProject = getTelosysProject(); 
 		if ( telosysProject != null ) {
 			try {
 				File file = telosysProject.getDslModelFile(modelName);
 				if (file.exists()) {
-					environment.setCurrentModel(modelName);
-					updatePrompt(environment);
-					return "Current model is now '" + environment.getCurrentModel() + "'";
+					setCurrentModel(modelName);
+					return "Current model is now '" + getCurrentModel() + "'";
 				}
 				else {
 					return "Model '" + modelName + "' not found";

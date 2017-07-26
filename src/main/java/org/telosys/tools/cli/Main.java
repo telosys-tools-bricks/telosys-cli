@@ -17,6 +17,7 @@ public class Main {
 		try {
 
 			ConsoleReader consoleReader = new ConsoleReader();
+			CommandProvider commandProvider = new CommandProvider(consoleReader);
 			//consoleReader.setPrompt(PROMPT);
 			consoleReader.setPrompt(Color.colorize(Const.INITIAL_PROMPT, Const.PROMPT_COLOR) );
 			
@@ -28,7 +29,7 @@ public class Main {
 			//out.println( Color.colorize(banner, Color.BLUE_BRIGHT));
 			out.println( Color.colorize(banner, Color.CYAN_BRIGHT));
 
-			CommandLineProcessor inputParser = new CommandLineProcessor( consoleReader ) ;
+			CommandLineProcessor inputParser = new CommandLineProcessor( consoleReader, commandProvider ) ;
 			
 			//String line;
 			//while ((line = consoleReader.readLine()) != null) {

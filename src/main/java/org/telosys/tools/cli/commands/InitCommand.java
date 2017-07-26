@@ -12,8 +12,8 @@ public class InitCommand  extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public InitCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public InitCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 	
 	@Override
@@ -32,14 +32,15 @@ public class InitCommand  extends Command {
 	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
+	public String execute(String[] args) {
 		
-		if ( environment.getHomeDirectory() == null ) {
-			return "Home directory must be set before" ;
-		}
+//		if ( environment.getHomeDirectory() == null ) {
+//			return "Home directory must be set before" ;
+//		}
 
-		String projectFullPath = environment.getHomeDirectory();
-		TelosysProject telosysProject = new TelosysProject(projectFullPath);
+//		String projectFullPath = environment.getHomeDirectory();
+//		TelosysProject telosysProject = new TelosysProject(projectFullPath);
+		TelosysProject telosysProject = getTelosysProject();
 		String result = telosysProject.initProject();
 		return result ;
 	}

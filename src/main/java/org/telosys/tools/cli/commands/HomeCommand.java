@@ -11,8 +11,8 @@ public class HomeCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public HomeCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public HomeCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 	
 	@Override
@@ -31,10 +31,12 @@ public class HomeCommand extends Command {
 	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
-		environment.setHomeDirectory();
-		updatePrompt(environment);
-		return "Home set ('" + environment.getHomeDirectory() + "')" ;	
+	public String execute(String[] args) {
+//		environment.setHomeDirectory();
+//		updatePrompt(environment);
+		setCurrentHome();
+//		return "Home set ('" + environment.getHomeDirectory() + "')" ;	
+		return "Home set ('" + getHomeDirectory() + "')" ;	
 	}
 	
 }

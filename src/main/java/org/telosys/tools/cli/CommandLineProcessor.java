@@ -8,17 +8,18 @@ public class CommandLineProcessor {
 	
 	private final PrintWriter     out ;
 	private final CommandProvider commandProvider ;
-	private final Environment     environment ;
+	//private final Environment     environment ;
 	
 	/**
 	 * Constructor
 	 * @param consoleReader
 	 */
-	public CommandLineProcessor(ConsoleReader consoleReader) {
+	public CommandLineProcessor(ConsoleReader consoleReader, CommandProvider commandProvider) {
 		super();
 		this.out = new PrintWriter(consoleReader.getOutput());
-		this.commandProvider = new CommandProvider(consoleReader);
-		this.environment = new Environment(this.commandProvider);
+		//this.commandProvider = new CommandProvider(consoleReader);
+		this.commandProvider = commandProvider;
+		//this.environment = new Environment(this.commandProvider);
 	}
 
 	public void processLine( String line ) {
@@ -38,7 +39,8 @@ public class CommandLineProcessor {
 //			}
 			Command command = commandProvider.getCommand(commandName);
 			if ( command != null ) {
-				result = command.execute(environment, args);
+//				result = command.execute(environment, args);
+				result = command.execute(args);
 				print(result);
 			}
 			else {

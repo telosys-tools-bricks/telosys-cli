@@ -17,8 +17,8 @@ public class GuideCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public GuideCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public GuideCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class GuideCommand extends Command {
 	}
 
 	@Override
-	public String execute(Environment environment, String[] args) {
+	public String execute(String[] args) {
 //		return guide(environment, (String) args[0]);
 
 		List<String> items = new LinkedList<>();
@@ -49,7 +49,7 @@ public class GuideCommand extends Command {
 		return null ;
 	}
 	
-	private String guide(Environment environment, final String parameter) {
+	private String guide(final String parameter) {
 		StringBuffer sb = new StringBuffer();
 		
 		appendLine(sb, "1) Initialize the project environment");

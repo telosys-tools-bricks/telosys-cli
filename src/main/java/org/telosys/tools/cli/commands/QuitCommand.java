@@ -11,8 +11,8 @@ public class QuitCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public QuitCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public QuitCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 	
 	@Override
@@ -32,7 +32,7 @@ public class QuitCommand extends Command {
 	
 
 	@Override
-	public String execute(Environment environment, String[] args) {
+	public String execute(String[] args) {
 		print("bye...");
 		System.exit(0);
 		return "";

@@ -12,8 +12,8 @@ public class ErrorCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public ErrorCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public ErrorCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 	
 	@Override
@@ -32,7 +32,7 @@ public class ErrorCommand extends Command {
 	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
+	public String execute(String[] args) {
 		
 		if ( LastError.hasError() ) {
 			StringBuffer sb = new StringBuffer();			

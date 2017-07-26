@@ -17,8 +17,8 @@ public class GitHubCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public GitHubCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public GitHubCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 	
 	@Override
@@ -37,19 +37,19 @@ public class GitHubCommand extends Command {
 	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
+	public String execute(String[] args) {
 		if ( islistOption(args) ) {
 			// gh -l 
-			return listContent(environment, args);
+			return listContent(args);
 		}
 		else {
 			if ( args.length == 1 ) {
 				// gh 
-				return getCurrentGitHub(environment);
+				return getCurrentGitHub();
 			}
 			else if ( args.length == 2 ) {
 				// gh xxxx 
-				return setCurrentGitHub(environment, args[1]);
+				return setCurrentGitHub(args[1]);
 			}
 			else {
 				// gh xxx yyy 
@@ -65,19 +65,22 @@ public class GitHubCommand extends Command {
 		return false ;
 	}
 	
-	private String getCurrentGitHub(Environment environment) {
+	private String getCurrentGitHub() {
+		Environment environment = getEnvironment();
 		return environment.getCurrentGitHubStore();
 	}
 	
-	private String setCurrentGitHub(Environment environment, String newValue) {
+	private String setCurrentGitHub(String newValue) {
+		Environment environment = getEnvironment();
 		environment.setCurrentGitHubStore(newValue);
 		return "GitHub store is now '" + newValue + "'";
 	}
 
-	private String listContent(Environment environment, String[] args) {
+	private String listContent(String[] args) {
 		
+		Environment environment = getEnvironment();
 		printDebug("Args : " + args.length );
-		List<String> bundles = getAllBundles(environment);
+		List<String> bundles = getAllBundles();
 		if ( bundles != null ) {
 			List<String> criteria = buildCriteria(args);
 			printDebug("Criteria : " + criteria );
@@ -87,8 +90,9 @@ public class GitHubCommand extends Command {
 		return null ;
 	}
 	
-	private List<String> getAllBundles(Environment environment) {
-		TelosysProject telosysProject = getTelosysProject(environment);
+	private List<String> getAllBundles() {
+		TelosysProject telosysProject = getTelosysProject();
+		Environment environment = getEnvironment();
 		try {
 			return telosysProject.getBundlesList(environment.getCurrentGitHubStore());
 		} catch (TelosysToolsException e) {

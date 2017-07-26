@@ -9,10 +9,11 @@ public class EnvCommand extends Command {
 	
 	/**
 	 * Constructor
-	 * @param out
+	 * @param consoleReader
+	 * @param environment
 	 */
-	public EnvCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public EnvCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 
 	@Override
@@ -31,11 +32,13 @@ public class EnvCommand extends Command {
 	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
-		return env(environment);
+	public String execute(String[] args) {
+		return env();
 	}
 	
-	private String env(Environment environment) {
+	private String env() {
+		Environment environment = getEnvironment();
+		
 		StringBuffer sb = new StringBuffer();
 		
 		appendLine(sb, "ENVIRONMENT : ");

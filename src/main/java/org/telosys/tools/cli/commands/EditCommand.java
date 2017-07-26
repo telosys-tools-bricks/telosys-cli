@@ -16,8 +16,8 @@ public class EditCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public EditCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public EditCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 
 
@@ -37,17 +37,17 @@ public class EditCommand extends Command {
 	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
+	public String execute(String[] args) {
 		if ( args.length > 1 ) {
-			return edit(environment, args[1]);
+			return edit(args[1]);
 		}
 		else {
-			return edit(environment, "");
+			return edit("");
 		}
 	}
 
-	private String edit(Environment environment, String arg) {
-
+	private String edit(String arg) {
+		Environment environment = getEnvironment() ;
 		if ( "cfg".equals(arg) || "db".equals(arg) ) {
 			if ( environment.getHomeDirectory() == null ) {
 				return "Home directory must be set before" ;

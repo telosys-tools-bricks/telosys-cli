@@ -15,8 +15,8 @@ public class LsCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public LsCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public LsCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 
 	@Override
@@ -35,23 +35,25 @@ public class LsCommand extends Command {
 	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
+	public String execute(String[] args) {
 		if ( args.length > 1 ) {
-			return ls(environment, args[1]);
+			return ls(args[1]);
 		}
 		else {
-			return ls(environment, null);
+			return ls(null);
 		}
 	}
 
-	private String ls(Environment environment, final String parameter) {
-		File currentDir = new File(environment.getCurrentDirectory());
+	private String ls(final String parameter) {
+		//File currentDir = new File(environment.getCurrentDirectory());
+		File currentDir = new File(getCurrentDirectory());
 		if (parameter == null) {
 			// --- No parameter => list current directory
 			return buildFilesList(currentDir, currentDir.listFiles());
 		} else {
 			// --- Parameter : is it a directory ?
-			File argFile = new File(FileUtil.buildFilePath(environment.getCurrentDirectory(), parameter));
+//			File argFile = new File(FileUtil.buildFilePath(environment.getCurrentDirectory(), parameter));
+			File argFile = new File(FileUtil.buildFilePath(getCurrentDirectory(), parameter));
 			if (argFile.exists() && argFile.isDirectory()) {
 				// --- List parameter directory
 				return buildFilesList(argFile, argFile.listFiles());

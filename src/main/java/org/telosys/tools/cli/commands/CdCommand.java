@@ -13,8 +13,8 @@ public class CdCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public CdCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public CdCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader,environment);
 	}
 
 	@Override
@@ -33,13 +33,13 @@ public class CdCommand extends Command {
 	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
+	public String execute(String[] args) {
 		
 		if ( args.length > 1 ) {
-			return cd(environment, args[1]);
+			return cd(args[1]);
 		}
 		else {
-			return cd(environment, null);
+			return cd(null);
 		}
 //		if (args[0].equals("..")) {
 //			String currentDir = environment.getCurrentDirectory();
@@ -51,7 +51,8 @@ public class CdCommand extends Command {
 //		return cd(environment, (String) args[0]);
 	}
 
-	private String cd(Environment environment, String destination) {
+	private String cd(String destination) {
+		Environment environment = getEnvironment();
 		if (destination != null) {
 			if ("..".equals(destination)) {
 				File current = new File(environment.getCurrentDirectory());

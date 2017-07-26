@@ -12,18 +12,29 @@ public abstract class Command {
 
 	private final ConsoleReader consoleReader ;
 	private final PrintWriter out ;
+	private final Environment environment ;
 	
-	public Command(ConsoleReader consoleReader) {
+	public Command(ConsoleReader consoleReader, Environment environment ) {
 		super();
 		//this.out = out;
 		this.consoleReader = consoleReader ;
 		this.out = new PrintWriter(consoleReader.getOutput()) ;
+		this.environment = environment ;
 	}
+	
 	public abstract String getName();
+	
 	public abstract String getShortName();
-	public abstract String execute(Environment environment, String[] args);
+	
+//	public abstract String execute(Environment environment, String[] args);
+	public abstract String execute(String[] args);
+	
 	public abstract String getDescription();
 	
+	protected Environment getEnvironment() {
+		return environment ;
+	}
+
 	protected void appendLine(StringBuffer sb, String s) {
 		sb.append(s);
 		sb.append(Environment.LINE_SEPARATOR);
@@ -56,8 +67,67 @@ public abstract class Command {
 			out.flush();
 		}
 	}
+
+	protected String getCurrentDirectory() {
+		return environment.getCurrentDirectory();
+	}
+	//-------------------------------------------------------------------------
+	// Home directory 
+	//-------------------------------------------------------------------------
+	protected void setCurrentHome() {
+		environment.setHomeDirectory();
+		updatePrompt();
+	}
 	
-	protected void updatePrompt(Environment environment) {
+	/**
+	 * @param directory
+	 */
+	protected void setCurrentHome(String directory) {
+		environment.setHomeDirectory(directory);
+		updatePrompt();
+	}
+	
+	/**
+	 * Returns the current home directory
+	 * @return
+	 */
+	protected String getCurrentHome() {
+		return environment.getHomeDirectory();
+	}
+
+	//-------------------------------------------------------------------------
+	// Model
+	//-------------------------------------------------------------------------
+	/**
+	 * Set the current model name in the current environment
+	 * @param modelName
+	 */
+	protected void setCurrentModel(String modelName) {
+		environment.setCurrentModel(modelName);
+		updatePrompt();
+	}
+	
+	/**
+	 * Returns the current model in the environment
+	 */
+	protected String getCurrentModel() {
+		return environment.getCurrentModel();
+	}
+	
+	protected String getCurrentGitHubStore() {
+		return environment.getCurrentGitHubStore();
+	}
+	
+	
+	/**
+	 * Returns the current home directory
+	 * @return
+	 */
+	protected String getHomeDirectory() {
+		return environment.getHomeDirectory();
+	}
+
+	protected void updatePrompt() {
 		String prompt = Const.PROMPT_TEXT ;
 		if ( environment.getHomeDirectory() != null ) {
 			prompt = prompt + "#" ;
@@ -92,7 +162,7 @@ public abstract class Command {
 	 * @param environment
 	 * @return
 	 */
-	protected TelosysProject getTelosysProject(Environment environment) {
+	protected TelosysProject getTelosysProject() {
 		if ( environment.getHomeDirectory() == null ) {
 			print( "Home directory must be set before using this command!" ) ;
 			return null ;

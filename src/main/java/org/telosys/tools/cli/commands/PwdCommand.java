@@ -11,8 +11,8 @@ public class PwdCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public PwdCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public PwdCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 	
 	@Override
@@ -31,8 +31,8 @@ public class PwdCommand extends Command {
 	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
-		return environment.getCurrentDirectory();
+	public String execute(String[] args) {
+		return getCurrentDirectory();
 	}
 
 }

@@ -12,8 +12,8 @@ public class NewEntityCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public NewEntityCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public NewEntityCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 
 	@Override
@@ -32,10 +32,10 @@ public class NewEntityCommand extends Command {
 	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
+	public String execute(String[] args) {
 		if ( args.length > 1 ) {
-			if ( environment.getCurrentModel() != null ) {
-				return newEntity(environment, args[1]);
+			if ( getCurrentModel() != null ) {
+				return newEntity(args[1]);
 			}
 			else {
 				print("No current model!");
@@ -47,9 +47,9 @@ public class NewEntityCommand extends Command {
 		}
 	}
 
-	private String newEntity(Environment environment, String entityName) {
+	private String newEntity(String entityName) {
 
-		TelosysProject telosysProject = getTelosysProject(environment);
+		TelosysProject telosysProject = getTelosysProject();
 		if ( telosysProject != null ) {
 			
 // TODO			

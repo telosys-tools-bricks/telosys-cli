@@ -13,8 +13,8 @@ public class HelpCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public HelpCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public HelpCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 	
 	@Override
@@ -33,9 +33,10 @@ public class HelpCommand extends Command {
 	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
-		StringBuffer sb = new StringBuffer();
+	public String execute(String[] args) {
+		Environment environment = getEnvironment();
 		List<Command> commands = environment.getCommandProvider().getAllCommands();
+		StringBuffer sb = new StringBuffer();
 		for ( Command c : commands ) {
 			sb.append(" . " + c.getName() ) ; 
 			if ( c.getShortName() != null ) {

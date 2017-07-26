@@ -15,8 +15,8 @@ public class ListBundlesCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public ListBundlesCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public ListBundlesCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 
 	@Override
@@ -35,12 +35,13 @@ public class ListBundlesCommand extends Command {
 	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
-		return listBundles(environment);
+	public String execute(String[] args) {
+		return listBundles();
 	}
 
-	private String listBundles(Environment environment) {
-		TelosysProject telosysProject = getTelosysProject(environment);
+	private String listBundles() {
+		//TelosysProject telosysProject = getTelosysProject(environment);
+		TelosysProject telosysProject = getTelosysProject();
 		try {
 			List<String> bundles = telosysProject.getInstalledBundles();
 			StringBuffer sb = new StringBuffer();

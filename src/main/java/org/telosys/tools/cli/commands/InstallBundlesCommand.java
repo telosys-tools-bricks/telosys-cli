@@ -17,8 +17,8 @@ public class InstallBundlesCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public InstallBundlesCommand(ConsoleReader consoleReader) {
-		super(consoleReader);
+	public InstallBundlesCommand(ConsoleReader consoleReader, Environment environment) {
+		super(consoleReader, environment);
 	}
 	
 	@Override
@@ -37,10 +37,10 @@ public class InstallBundlesCommand extends Command {
 	}
 	
 	@Override
-	public String execute(Environment environment, String[] args) {
+	public String execute(String[] args) {
 		if ( args.length > 1 ) {
 			// ib aaa aaa  
-			return install(environment, args);
+			return install(args);
 		}
 		else {
 			// ib 
@@ -48,10 +48,12 @@ public class InstallBundlesCommand extends Command {
 		}
 	}
 		
-	private String install(Environment environment, String[] args) {
+	private String install(String[] args) {
 		
-		TelosysProject telosysProject = getTelosysProject(environment);
-		List<String> bundles = getAllBundles(telosysProject, environment);
+		//TelosysProject telosysProject = getTelosysProject(environment);
+		TelosysProject telosysProject = getTelosysProject();
+		//List<String> bundles = getAllBundles(telosysProject, environment);
+		List<String> bundles = getAllBundles(telosysProject);
 		if ( bundles != null ) {
 			if ( bundles.size() > 0 ) {
 				List<String> criteria = buildCriteria(args);
@@ -60,7 +62,8 @@ public class InstallBundlesCommand extends Command {
 					print( "Installing " + bundles.size() + " bundle(s) from GitHub... ");
 					for ( String bundleName : bundles ) {
 						try {
-							telosysProject.downloadAndInstallBundle(environment.getCurrentGitHubStore(), bundleName);
+//							telosysProject.downloadAndInstallBundle(environment.getCurrentGitHubStore(), bundleName);
+							telosysProject.downloadAndInstallBundle(getCurrentGitHubStore(), bundleName);
 							print( " . '" + bundleName + "' : installed. ");
 						} catch (TelosysToolsException e) {
 							print( " . '" + bundleName + "' : ERROR (cannot install) : "+ e.getMessage() );
@@ -78,9 +81,10 @@ public class InstallBundlesCommand extends Command {
 		return null ;
 	}
 	
-	private List<String> getAllBundles(TelosysProject telosysProject, Environment environment) {
+	private List<String> getAllBundles(TelosysProject telosysProject) {
 		try {
-			return telosysProject.getBundlesList(environment.getCurrentGitHubStore());
+			//return telosysProject.getBundlesList(environment.getCurrentGitHubStore());
+			return telosysProject.getBundlesList(getCurrentGitHubStore());
 		} catch (TelosysToolsException e) {
 			printError(e);
 			return null ;

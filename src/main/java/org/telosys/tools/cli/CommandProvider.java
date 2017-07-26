@@ -35,22 +35,22 @@ public class CommandProvider {
 			commands.put(command.getShortName(), command);
 		}
 	}
-	private final void init(ConsoleReader consoleReader) {
-		register(new CdCommand(consoleReader)); // cd
-		register(new EditCommand(consoleReader)); // e
-		register(new EnvCommand(consoleReader)); // env
-		register(new GuideCommand(consoleReader)); // guide
-		register(new HelpCommand(consoleReader)); // ? - help
-		register(new HomeCommand(consoleReader)); // h // TODO : h --> print , h . --> set . as home )
-		register(new InitCommand(consoleReader)); // init
-		register(new LsCommand(consoleReader)); // ls
-		register(new PwdCommand(consoleReader)); // pwd
-		register(new QuitCommand(consoleReader)); // q
-		register(new ErrorCommand(consoleReader)); // err
+	private final void init(ConsoleReader consoleReader, Environment environment) {
+		register(new CdCommand(consoleReader, environment)); // cd
+		register(new EditCommand(consoleReader, environment)); // e
+		register(new EnvCommand(consoleReader, environment)); // env
+		register(new GuideCommand(consoleReader, environment)); // guide
+		register(new HelpCommand(consoleReader, environment)); // ? - help
+		register(new HomeCommand(consoleReader, environment)); // h // TODO : h --> print , h . --> set . as home )
+		register(new InitCommand(consoleReader, environment)); // init
+		register(new LsCommand(consoleReader, environment)); // ls
+		register(new PwdCommand(consoleReader, environment)); // pwd
+		register(new QuitCommand(consoleReader, environment)); // q
+		register(new ErrorCommand(consoleReader, environment)); // err
 
 		// Model management
-		register(new ModelCommand(consoleReader)); // m : m [model-name] // TODO : "m" --> print 
-		register(new NewModelCommand(consoleReader)); // nm
+		register(new ModelCommand(consoleReader, environment)); // m : m [model-name] // TODO : "m" --> print 
+		register(new NewModelCommand(consoleReader, environment)); // nm
 		// TODO : em (edit model)
 		// TODO : dm (delete model)
 		// TODO : lm (list models)
@@ -58,11 +58,11 @@ public class CommandProvider {
 		// Entity management
 		// TODO : le (list entities)
 		// TODO : ne (new entity)
-		register(new EditEntityCommand(consoleReader)); // ee 		
+		register(new EditEntityCommand(consoleReader, environment)); // ee 		
 		// TODO : de (delete entity)
 		
 		// GitHub store management
-		register(new GitHubCommand(consoleReader)); // gh : gh [store-name] 
+		register(new GitHubCommand(consoleReader, environment)); // gh : gh [store-name] 
 		// gh : set/print current github repo ( "gh store-name" --> set , "gh" --> print )
 		// gh -l : list github bundles : print bundles available in the store
 		//         > gh -l   --> all
@@ -94,12 +94,12 @@ public class CommandProvider {
 //		   ib 1 2 
 //		 or 
 **/
-		register(new InstallBundlesCommand(consoleReader)); // install  bundles from GitHub 		
+		register(new InstallBundlesCommand(consoleReader, environment)); // install  bundles from GitHub 		
 		//   ib * : install all bundles from GitHub
 		//   ib java rest : install all the bundles containing "java" or "rest"
 		//   if already exists : prompt "overwrite ? [y/n] : "
 		
-		register(new ListBundlesCommand(consoleReader)); // lb (list installed bundles)	
+		register(new ListBundlesCommand(consoleReader, environment)); // lb (list installed bundles)	
 		// b : set/print current bundle ( "b bundle-name" --> set , "b" --> print )
 		// eb (edit bundle --> edit templates.cfg )
 		// et (edit template --> .vm )
@@ -126,7 +126,8 @@ public class CommandProvider {
 	 */
 	public CommandProvider(ConsoleReader consoleReader) {
 		super();
-		init(consoleReader);
+		Environment environment = new Environment(this); 
+		init(consoleReader, environment);
 	}
 
 	public final Command getCommand(String commandName) {
