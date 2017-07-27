@@ -8,6 +8,7 @@ import java.util.Map;
 import jline.console.ConsoleReader;
 
 import org.telosys.tools.cli.commands.CdCommand;
+import org.telosys.tools.cli.commands.DeleteModelCommand;
 import org.telosys.tools.cli.commands.EditCommand;
 import org.telosys.tools.cli.commands.EditEntityCommand;
 import org.telosys.tools.cli.commands.EditProjectCfgCommand;
@@ -21,11 +22,13 @@ import org.telosys.tools.cli.commands.HomeCommand;
 import org.telosys.tools.cli.commands.InitCommand;
 import org.telosys.tools.cli.commands.InstallBundlesCommand;
 import org.telosys.tools.cli.commands.ListBundlesCommand;
+import org.telosys.tools.cli.commands.ListModelsCommand;
 import org.telosys.tools.cli.commands.LsCommand;
 import org.telosys.tools.cli.commands.ModelCommand;
 import org.telosys.tools.cli.commands.NewModelCommand;
 import org.telosys.tools.cli.commands.PwdCommand;
 import org.telosys.tools.cli.commands.QuitCommand;
+import org.telosys.tools.cli.commands.ThrowExceptionCommand;
 
 public class CommandProvider {
 
@@ -38,6 +41,9 @@ public class CommandProvider {
 //		}
 	}
 	private final void init(ConsoleReader consoleReader, Environment environment) {
+		
+		register(new ThrowExceptionCommand(consoleReader, environment)); // tex : FOR TESTS ONLY !
+		
 		register(new CdCommand(consoleReader, environment)); // cd
 		register(new EditCommand(consoleReader, environment)); // e
 		register(new EnvCommand(consoleReader, environment)); // env
@@ -58,9 +64,10 @@ public class CommandProvider {
 		// Model management
 		register(new ModelCommand(consoleReader, environment)); // m : m [model-name] // TODO : "m" --> print 
 		register(new NewModelCommand(consoleReader, environment)); // nm
+		register(new ListModelsCommand(consoleReader, environment)); // lm : list models
+		register(new DeleteModelCommand(consoleReader, environment)); // dm : delete model
 		// TODO : em (edit model)
-		// TODO : dm (delete model)
-		// TODO : lm (list models)
+		
 
 		// Entity management
 		// TODO : le (list entities)

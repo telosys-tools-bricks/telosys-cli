@@ -6,9 +6,11 @@ import java.io.PrintWriter;
 
 import jline.console.ConsoleReader;
 
+import org.telosys.tools.api.ApiUtil;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.commons.FileUtil;
 import org.telosys.tools.commons.StrUtil;
+import org.telosys.tools.commons.TelosysToolsException;
 
 public abstract class Command {
 
@@ -60,7 +62,8 @@ public abstract class Command {
 	}
 	protected void printError(Exception ex) {
 		LastError.setError(ex);
-		out.println("[ERROR] Exception : "+ ex.getMessage());
+		out.println("[ERROR] Exception class   : " + ex.getClass().getSimpleName() );
+		out.println("[ERROR] Exception message : " + ex.getMessage() );
 		out.flush();
 	}
 	protected void printDebug(String message) {
@@ -194,37 +197,95 @@ public abstract class Command {
 		return null ;
 	}
 	
+	/**
+	 * Returns the file full path for 'telosys-tools.cfg' if the file exists, else returns null
+	 * @return
+	 */
 	protected String getTelosysToolsCfgFullPath() {
-		return getFileFullPath(Const.TELOSYS_TOOLS_CFG, Const.TELOSYS_TOOLS_FOLDER);
+		return getFileFullPathIfExists(Const.TELOSYS_TOOLS_CFG, Const.TELOSYS_TOOLS_FOLDER);
 	}
 
+	/**
+	 * Returns the file full path for 'databases.dbcfg' if the file exists, else returns null
+	 * @return
+	 */
 	protected String getTelosysDbCfgFullPath() {
-		return getFileFullPath(Const.DATABASES_DBCFG, Const.TELOSYS_TOOLS_FOLDER);
+		return getFileFullPathIfExists(Const.DATABASES_DBCFG, Const.TELOSYS_TOOLS_FOLDER);
 	}
 	
-	private String getFileFullPath(String fileName, String subDirectory) {
+	/**
+	 * Returns the File corresponding to the given model name ( .model / .dbrep / .dbmodel file )
+	 * @param modelName
+	 * @return
+	 * @throws TelosysToolsException if more than 1 file is found for the given name
+	 */
+	protected File getModelFile(String modelName) throws TelosysToolsException {
+		File file1 = getFileInHomeDir( modelName + ApiUtil.MODEL_SUFFIX,   Const.TELOSYS_TOOLS_FOLDER) ;
+		File file2 = getFileInHomeDir( modelName + ApiUtil.DBREP_SUFFIX,   Const.TELOSYS_TOOLS_FOLDER) ;
+		File file3 = getFileInHomeDir( modelName + ApiUtil.DBMODEL_SUFFIX, Const.TELOSYS_TOOLS_FOLDER) ;
+		int n = 0 ;
+		File file = null ;
+		if ( file1.exists() ) {
+			file = file1 ;
+			n++ ;
+		}
+		if ( file2.exists() ) {
+			file = file2 ;
+			n++ ;
+		}
+		if ( file3.exists() ) {
+			file = file3 ;
+			n++ ;
+		}
+		if ( n == 0 ) {
+			// no model (not found)
+			return null ;
+		}
+		else if ( n == 1 ) {
+			// unique model found 
+			return file ;
+		}
+		else {
+			// more than one !
+			throw new TelosysToolsException("Model name is not unique");
+		}
+	}
+	
+	/**
+	 * Returns the file full path or null is the file doesn't exist
+	 * @param fileName
+	 * @param subDirectory
+	 * @return
+	 */
+	private String getFileFullPathIfExists(String fileName, String subDirectory) {
 
-//		// Try to get the file name in the HOME directory
-//		String fileFullPath = FileUtil.buildFilePath(environment.getHomeDirectory(), fileName);
-//		File file = new File(fileFullPath);
-//		if (file.exists()) {
-//			return fileFullPath;
+//		// Try to get the file in the 'home' directory
+//		String shortPath = fileName; // e.g. 'telosys-tools.cfg' or 'databases.dbcfg'
+//		if (subDirectory != null) {
+//			shortPath = FileUtil.buildFilePath(subDirectory, fileName); 
+//			// e.g. 'TelosysTools/databases.dbcfg'
 //		}
+//		String fileFullPath = FileUtil.buildFilePath(environment.getHomeDirectory(), shortPath);
+//		File file = new File(fileFullPath);
+		
+		File file = getFileInHomeDir(fileName, subDirectory);
+		if (file.exists()) {
+			return file.getAbsolutePath();
+		}
+		// Not found
+		return null;
+	}
+
+	private File getFileInHomeDir(String fileName, String subDirectory) {
 
 		// Try to get the file in the 'home' directory
 		String shortPath = fileName; // e.g. 'telosys-tools.cfg' or 'databases.dbcfg'
 		if (subDirectory != null) {
-			shortPath = FileUtil.buildFilePath(subDirectory, fileName); // e.g.
-																		// 'TelosysTools/databases.dbcfg'
+			shortPath = FileUtil.buildFilePath(subDirectory, fileName); 
+			// e.g. 'TelosysTools/databases.dbcfg'
 		}
 		String fileFullPath = FileUtil.buildFilePath(environment.getHomeDirectory(), shortPath);
-		File file = new File(fileFullPath);
-		if (file.exists()) {
-			return fileFullPath;
-		}
-
-		// Not found
-		return null;
+		return new File(fileFullPath);
 	}
 
 	/**

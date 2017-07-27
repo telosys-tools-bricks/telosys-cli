@@ -8,7 +8,6 @@ public class CommandLineProcessor {
 	
 	private final PrintWriter     out ;
 	private final CommandProvider commandProvider ;
-	//private final Environment     environment ;
 	
 	/**
 	 * Constructor
@@ -17,11 +16,13 @@ public class CommandLineProcessor {
 	public CommandLineProcessor(ConsoleReader consoleReader, CommandProvider commandProvider) {
 		super();
 		this.out = new PrintWriter(consoleReader.getOutput());
-		//this.commandProvider = new CommandProvider(consoleReader);
 		this.commandProvider = commandProvider;
-		//this.environment = new Environment(this.commandProvider);
 	}
 
+	/**
+	 * Processes the given line (try to interpret and execute the command) 
+	 * @param line
+	 */
 	public void processLine( String line ) {
 		debug("(line='"+line+"')");
 		if ( line.trim().length() == 0 ) {
@@ -33,13 +34,8 @@ public class CommandLineProcessor {
 			debug("(args length = " + args.length +")");
 			String commandName = args[0];
 			debug("(commandName = '" + commandName +"')");
-//			if ( "q".equalsIgnoreCase(commandName)) {
-//				print("bye...");
-//				System.exit(0);
-//			}
 			Command command = commandProvider.getCommand(commandName);
 			if ( command != null ) {
-//				result = command.execute(environment, args);
 				result = command.execute(args);
 				print(result);
 			}
@@ -47,7 +43,7 @@ public class CommandLineProcessor {
 				print("Invalid command '" + commandName + "'");
 			}
 		} catch (Exception e) {
-			print(e.getMessage());
+			printException(e);
 		}
 	}
 	
@@ -62,5 +58,11 @@ public class CommandLineProcessor {
 			out.println(message);
 			out.flush();
 		}
+	}
+	private void printException(Exception e) {
+		out.println("ERROR - Unexpected exception : " + e.getClass().getSimpleName() );
+		out.println("  Message : " + e.getMessage() );
+		e.printStackTrace(out);
+		out.flush();
 	}
 }
