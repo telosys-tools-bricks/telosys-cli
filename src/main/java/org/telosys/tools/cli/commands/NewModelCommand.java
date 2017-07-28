@@ -35,30 +35,27 @@ public class NewModelCommand extends Command {
 	}
 	
 	@Override
-//	public String execute(Environment environment, String[] args) {
 	public String execute(String[] args) {
 				
 		if ( args.length > 1 ) {
-//			return newModel(environment, args[1]);
-			return newModel(args[1]);
+			if ( checkHomeDirectoryDefined() ) {
+				return newModel(args[1]);
+			}
+			else {
+				return null ;
+			}
 		}
 		else {
 			return "No model name";
 		}
 	}
 
-//	private String newModel(Environment environment, String modelName) {
 	private String newModel(String modelName) {
 
-		if ( getHomeDirectory() == null ) {
-			return "Home directory must be set before creating a new model" ;
-		}
-		
-		String projectFullPath = getHomeDirectory();
+		String projectFullPath = getCurrentHome();
 		TelosysProject telosysProject = new TelosysProject(projectFullPath);
 		try {
 			File file = telosysProject.createNewDslModel(modelName);
-			//environment.setCurrentModel(modelName);
 			setCurrentModel(modelName);
 			return "Model '" + modelName + "' created (" + file.getName() + "), current model is now '" 
 					+ modelName + "'" ;

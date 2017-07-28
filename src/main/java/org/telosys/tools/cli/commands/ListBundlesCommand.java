@@ -44,15 +44,35 @@ public class ListBundlesCommand extends Command {
 		TelosysProject telosysProject = getTelosysProject();
 		try {
 			List<String> bundles = telosysProject.getInstalledBundles();
-			StringBuffer sb = new StringBuffer();
-			for ( String b : bundles ) {
-				appendLine(sb, " . " + b);
-			}
-			return sb.toString();
+//			StringBuffer sb = new StringBuffer();
+//			for ( String b : bundles ) {
+//				appendLine(sb, " . " + b);
+//			}
+//			return sb.toString();
+			return printBundles(bundles);
 		} catch (TelosysToolsException e) {
 			printError(e);
 		}
 		return null ;
+	}
+	
+	/**
+	 * Prints the given bundles
+	 * @param bundles
+	 * @return
+	 */
+	private String printBundles(List<String> bundles) {
+		StringBuffer sb = new StringBuffer();
+		if ( bundles != null && bundles.size() > 0 ) {
+			appendLine(sb, "Bundles installed in the current project : ");
+			for ( String s : bundles ) {
+				appendLine(sb, " . " + s);
+			}
+		}
+		else {
+			appendLine(sb, "No bundle found in the current project.");
+		}
+		return sb.toString();
 	}
 
 }

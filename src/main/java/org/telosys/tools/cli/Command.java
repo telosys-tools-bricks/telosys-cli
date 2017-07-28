@@ -110,6 +110,16 @@ public abstract class Command {
 	protected String getCurrentHome() {
 		return environment.getHomeDirectory();
 	}
+	
+//	/**
+//	 * Returns the current home directory
+//	 * @return
+//	 */
+//	protected String getHomeDirectory() {
+//		return environment.getHomeDirectory();
+//	}
+
+	//-------------------------------------------------------------------------
 
 	//-------------------------------------------------------------------------
 	// Model
@@ -140,19 +150,30 @@ public abstract class Command {
 		return environment.getCurrentModel();
 	}
 	
+	//-------------------------------------------------------------------------
+	// GitHub store
+	//-------------------------------------------------------------------------
+	protected boolean checkGitHubStoreDefined() {
+		if ( environment.getCurrentGitHubStore() != null ) {
+			return true ;
+		}
+		else {
+			print( "GitHub store must be set before using this command!" ) ;
+			return false ;
+		}
+	}	
+	
+	protected void setCurrentGitHubStore(String storeName) {
+		environment.setCurrentGitHubStore(storeName);
+	}
+
 	protected String getCurrentGitHubStore() {
 		return environment.getCurrentGitHubStore();
 	}
 	
+	//-------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	
-	/**
-	 * Returns the current home directory
-	 * @return
-	 */
-	protected String getHomeDirectory() {
-		return environment.getHomeDirectory();
-	}
-
 	protected void updatePrompt() {
 		String prompt = Const.PROMPT_TEXT ;
 		if ( environment.getHomeDirectory() != null ) {

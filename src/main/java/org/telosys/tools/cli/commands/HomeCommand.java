@@ -50,7 +50,7 @@ public class HomeCommand extends Command {
 	private String tryToSetHome(String dir) {
 		if ( ".".equals(dir) ) {
 			setCurrentHome();
-			return "Home set ('" + getHomeDirectory() + "')" ;	
+			return "Home set ('" + getCurrentHome() + "')" ;	
 		}
 		else {
 			return "Invalid directory";

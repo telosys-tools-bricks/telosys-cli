@@ -1,4 +1,4 @@
-package org.telosys.tools.cli;
+package org.telosys.tools.cli.commons;
 
 import java.util.LinkedList;
 import java.util.List;

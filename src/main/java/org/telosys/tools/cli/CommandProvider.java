@@ -22,6 +22,7 @@ import org.telosys.tools.cli.commands.HomeCommand;
 import org.telosys.tools.cli.commands.InitCommand;
 import org.telosys.tools.cli.commands.InstallBundlesCommand;
 import org.telosys.tools.cli.commands.ListBundlesCommand;
+import org.telosys.tools.cli.commands.ListGitHubCommand;
 import org.telosys.tools.cli.commands.ListModelsCommand;
 import org.telosys.tools.cli.commands.LsCommand;
 import org.telosys.tools.cli.commands.ModelCommand;
@@ -77,6 +78,7 @@ public class CommandProvider {
 		
 		// GitHub store management
 		register(new GitHubCommand(consoleReader, environment)); // gh : gh [store-name] 
+		register(new ListGitHubCommand(consoleReader, environment)); // lgh [filter-criteria] 
 		// gh : set/print current github repo ( "gh store-name" --> set , "gh" --> print )
 		// gh -l : list github bundles : print bundles available in the store
 		//         > gh -l   --> all
