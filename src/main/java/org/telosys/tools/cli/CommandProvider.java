@@ -8,6 +8,7 @@ import java.util.Map;
 import jline.console.ConsoleReader;
 
 import org.telosys.tools.cli.commands.CdCommand;
+import org.telosys.tools.cli.commands.CheckModelCommand;
 import org.telosys.tools.cli.commands.DeleteModelCommand;
 import org.telosys.tools.cli.commands.EditCommand;
 import org.telosys.tools.cli.commands.EditEntityCommand;
@@ -22,6 +23,7 @@ import org.telosys.tools.cli.commands.HomeCommand;
 import org.telosys.tools.cli.commands.InitCommand;
 import org.telosys.tools.cli.commands.InstallBundlesCommand;
 import org.telosys.tools.cli.commands.ListBundlesCommand;
+import org.telosys.tools.cli.commands.ListEntitiesCommand;
 import org.telosys.tools.cli.commands.ListGitHubCommand;
 import org.telosys.tools.cli.commands.ListModelsCommand;
 import org.telosys.tools.cli.commands.LsCommand;
@@ -67,11 +69,12 @@ public class CommandProvider {
 		register(new NewModelCommand(consoleReader, environment)); // nm
 		register(new ListModelsCommand(consoleReader, environment)); // lm : list models
 		register(new DeleteModelCommand(consoleReader, environment)); // dm : delete model
+		register(new CheckModelCommand(consoleReader, environment)); // cm : check model
 		// TODO : em (edit model)
 		
 
 		// Entity management
-		// TODO : le (list entities)
+		register(new ListEntitiesCommand(consoleReader, environment)); // le : list entities [model-name]
 		// TODO : ne (new entity)
 		register(new EditEntityCommand(consoleReader, environment)); // ee 		
 		// TODO : de (delete entity)

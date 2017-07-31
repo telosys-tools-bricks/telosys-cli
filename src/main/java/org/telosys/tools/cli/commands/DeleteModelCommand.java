@@ -6,11 +6,11 @@ import jline.console.ConsoleReader;
 
 import org.telosys.tools.api.ApiUtil;
 import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.Command;
+import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.TelosysToolsException;
 
-public class DeleteModelCommand extends Command {
+public class DeleteModelCommand extends CommandWithModel {
 
 	/**
 	 * Constructor
@@ -59,13 +59,14 @@ public class DeleteModelCommand extends Command {
 
 	private String deleteModel(String modelName) {
 		printDebug("deleteModel('" + modelName + "')");
-		File modelFile = null ;
-		try {
-			modelFile = getModelFile(modelName);
-		} catch (TelosysToolsException e) {
-			printError(e);
-		} 
+//		File modelFile = null ;
+//		try {
+//			modelFile = getModelFile(modelName);
+//		} catch (TelosysToolsException e) {
+//			printError(e);
+//		} 
 
+		File modelFile = getModelFile(modelName);
 		if ( modelFile != null ) {
 			printDebug("modelFile = " + modelFile.getAbsolutePath() );
 			deleteModel(modelFile );
@@ -74,9 +75,9 @@ public class DeleteModelCommand extends Command {
 				setCurrentModel(null);
 			}
 		}
-		else {
-			print("Model " + modelName + " not found");
-		}
+//		else {
+//			print("Model " + modelName + " not found");
+//		}
 		return null ;
 	}
 	

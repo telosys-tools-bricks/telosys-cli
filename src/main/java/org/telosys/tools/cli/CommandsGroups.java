@@ -64,6 +64,7 @@ public class CommandsGroups {
 		commands.add("lm");
 		commands.add("em");
 		commands.add("dm");
+		commands.add("cm");
 		
 		return new CommandsGroup(name, commands);
 	}
