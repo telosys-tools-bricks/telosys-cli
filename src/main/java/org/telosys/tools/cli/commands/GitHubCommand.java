@@ -31,6 +31,11 @@ public class GitHubCommand extends Command {
 	}
 	
 	@Override
+	public String getUsage() {
+		return "gh [github-store-name]";
+	}
+		
+	@Override
 	public String execute(String[] args) {
 		if ( args.length == 1 ) {
 			// gh 

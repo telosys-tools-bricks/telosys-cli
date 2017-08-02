@@ -29,7 +29,12 @@ public class NewEntityCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "Creates a new entity in the current model ( 'ne [entity-name]' ) ";
+		return "Creates a new entity in the current model";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "ne [entity-name]";
 	}
 	
 	@Override

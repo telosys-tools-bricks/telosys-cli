@@ -38,24 +38,11 @@ public class HelpCommand extends Command {
 		return "Print help (list of all available commands)";
 	}
 	
-//	@Override
-//	public String execute(String[] args) {
-//		Environment environment = getEnvironment();
-//		List<Command> commands = environment.getCommandProvider().getAllCommands();
-//		StringBuffer sb = new StringBuffer();
-//		for ( Command c : commands ) {
-//			sb.append(" . " + c.getName() ) ; 
-//			if ( c.getShortName() != null ) {
-//				sb.append(" / " + c.getShortName() ) ;
-//			}
-//			// sb.append(" (" + c.getClass().getSimpleName() +")") ;
-//			sb.append(" : " + c.getDescription() ) ;
-//			//sb.append("\n") ;
-//			appendEndOfLine(sb);
-//		}
-//		return sb.toString();
-//	}
-	
+	@Override
+	public String getUsage() {
+		return "?";
+	}
+
 	@Override
 	public String execute(String[] args) {
 		printHelp();
@@ -78,7 +65,7 @@ public class HelpCommand extends Command {
 				print(formatCommand(c)) ;
 			}
 			else {
-				print(". " + padding(commandName, PADDING) + " Unknown !!!") ;
+				print(". " + padding(commandName, PADDING) + " ( TODO ) not yet implemented") ;
 			}
 		}
 	}

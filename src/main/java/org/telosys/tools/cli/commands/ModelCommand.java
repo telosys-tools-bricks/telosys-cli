@@ -31,16 +31,13 @@ public class ModelCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "Set/print the current model ( 'm [model-name]' )";
+		return "Set/print the current model";
 	}
 	
-//	protected boolean checkArgs(String[] args, int n, String message) {
-//		if ( ! ( args.length > n ) ) {
-//			print(message);
-//			return false;
-//		}
-//		return true;
-//	}
+	@Override
+	public String getUsage() {
+		return "m [model-name]";
+	}
 	
 	@Override
 	public String execute(String[] args) {

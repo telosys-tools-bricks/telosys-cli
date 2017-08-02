@@ -36,6 +36,11 @@ public class InstallBundlesCommand extends Command {
 	}
 	
 	@Override
+	public String getUsage() {
+		return "ib [name-part1 name-part2 ...]";
+	}
+	
+	@Override
 	public String execute(String[] args) {
 		
 		if ( args.length > 1 ) {
@@ -53,39 +58,6 @@ public class InstallBundlesCommand extends Command {
 		}
 	}
 		
-//	private String install(String[] args) {
-//		
-//		//TelosysProject telosysProject = getTelosysProject(environment);
-//		TelosysProject telosysProject = getTelosysProject();
-//		//List<String> bundles = getAllBundles(telosysProject, environment);
-//		List<String> bundles = getAllBundles(telosysProject);
-//		if ( bundles != null ) {
-//			if ( bundles.size() > 0 ) {
-//				List<String> criteria = buildCriteria(args);
-//				bundles = BundlesFilter.filter(bundles, criteria);
-//				if ( bundles.size() > 0 ) {
-//					print( "Installing " + bundles.size() + " bundle(s) from GitHub... ");
-//					for ( String bundleName : bundles ) {
-//						try {
-////							telosysProject.downloadAndInstallBundle(environment.getCurrentGitHubStore(), bundleName);
-//							telosysProject.downloadAndInstallBundle(getCurrentGitHubStore(), bundleName);
-//							print( " . '" + bundleName + "' : installed. ");
-//						} catch (TelosysToolsException e) {
-//							print( " . '" + bundleName + "' : ERROR (cannot install) : "+ e.getMessage() );
-//						}
-//					}
-//				}
-//				else {
-//					print("No bundle matching the given criteria.") ;
-//				}
-//			}
-//			else {
-//				print("No bundle available on GitHub.") ;
-//			}
-//		}
-//		return null ;
-//	}
-
 	private String install(String[] args) {
 		TelosysProject telosysProject = getTelosysProject();
 		List<String> bundles = getBundles(getCurrentGitHubStore(), args);

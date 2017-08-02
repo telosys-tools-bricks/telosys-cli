@@ -31,9 +31,14 @@ public class LsCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "List the content of a directory ( 'ls' or 'ls [dir]' ) ";
+		return "List the content of a directory";
 	}
 	
+	@Override
+	public String getUsage() {
+		return "ls [directory]";
+	}
+
 	@Override
 	public String execute(String[] args) {
 		if ( args.length > 1 ) {

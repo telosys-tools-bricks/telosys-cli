@@ -31,9 +31,14 @@ public class EditEntityCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "Edit an entity file ( 'ee [entity-name]' ) ";
+		return "Edit an entity file";
 	}
 	
+	@Override
+	public String getUsage() {
+		return "ee entity-name";
+	}
+
 	@Override
 	public String execute(String[] args) {
 		if ( args.length > 1 ) {

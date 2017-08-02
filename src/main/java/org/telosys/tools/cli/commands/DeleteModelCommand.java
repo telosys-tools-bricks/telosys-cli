@@ -32,9 +32,14 @@ public class DeleteModelCommand extends CommandWithModel {
 
 	@Override
 	public String getDescription() {
-		return "Delete the current/given model ( 'dm [model-name]' ) ";
+		return "Delete the current/given model";
 	}
 	
+	@Override
+	public String getUsage() {
+		return "dm [model-name]";
+	}
+
 	@Override
 	public String execute(String[] args) {
 		if ( args.length > 1 ) {			

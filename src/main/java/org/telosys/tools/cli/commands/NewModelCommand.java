@@ -31,7 +31,12 @@ public class NewModelCommand extends Command {
 	
 	@Override
 	public String getDescription() {
-		return "New Telosys model ( 'nm [model-name]' ) ";
+		return "New Telosys DSL model";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "nm [model-name]";
 	}
 	
 	@Override

@@ -35,8 +35,16 @@ public class ListBundlesCommand extends Command {
 	}
 	
 	@Override
+	public String getUsage() {
+		return "lb";
+	}
+	
+	@Override
 	public String execute(String[] args) {
-		return listBundles();
+		if ( checkHomeDirectoryDefined() ) {
+			return listBundles();
+		}
+		return null ;
 	}
 
 	private String listBundles() {

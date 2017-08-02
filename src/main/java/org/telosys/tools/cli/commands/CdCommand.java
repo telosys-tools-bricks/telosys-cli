@@ -29,7 +29,12 @@ public class CdCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "Change the current directory ( 'cd [dir]' )";
+		return "Change the current directory";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "cd [directory]";
 	}
 	
 	@Override

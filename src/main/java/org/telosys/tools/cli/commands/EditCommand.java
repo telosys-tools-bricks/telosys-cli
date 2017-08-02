@@ -30,9 +30,14 @@ public class EditCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "Open an external editor ( 'e [file-name]' ) ";
+		return "Open an external editor";
 	}
 	
+	@Override
+	public String getUsage() {
+		return "e [file-name]";
+	}
+
 	@Override
 	public String execute(String[] args) {
 		if ( args.length > 1 ) {

@@ -30,7 +30,12 @@ public class CheckModelCommand extends CommandWithModel {
 
 	@Override
 	public String getDescription() {
-		return "Check the current/given model ( 'cm [model-name]' )";
+		return "Check the current/given model";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "cm [model-name]";
 	}
 	
 	@Override

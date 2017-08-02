@@ -32,6 +32,11 @@ public class EnvCommand extends Command {
 	}
 	
 	@Override
+	public String getUsage() {
+		return "env";
+	}
+	
+	@Override
 	public String execute(String[] args) {
 		return env();
 	}

@@ -32,6 +32,11 @@ public class InitCommand  extends Command {
 	}
 	
 	@Override
+	public String getUsage() {
+		return "init";
+	}
+	
+	@Override
 	public String execute(String[] args) {
 		
 //		if ( environment.getHomeDirectory() == null ) {

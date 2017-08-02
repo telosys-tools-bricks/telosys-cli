@@ -32,6 +32,11 @@ public class ErrorCommand extends Command {
 	}
 	
 	@Override
+	public String getUsage() {
+		return "err";
+	}
+	
+	@Override
 	public String execute(String[] args) {
 		
 		if ( LastError.hasError() ) {

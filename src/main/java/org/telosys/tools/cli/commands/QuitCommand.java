@@ -27,9 +27,13 @@ public class QuitCommand extends Command {
 	
 	@Override
 	public String getDescription() {
-		return "Quit";
+		return "Quit Telosys command line interface";
 	}
-	
+
+	@Override
+	public String getUsage() {
+		return "q";
+	}
 
 	@Override
 	public String execute(String[] args) {

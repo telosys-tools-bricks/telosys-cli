@@ -30,7 +30,8 @@ public abstract class Command {
 	
 	public abstract String getDescription();
 	
-//	public abstract String execute(Environment environment, String[] args);
+	public abstract String getUsage();
+	
 	public abstract String execute(String[] args);
 	
 	protected Environment getEnvironment() {

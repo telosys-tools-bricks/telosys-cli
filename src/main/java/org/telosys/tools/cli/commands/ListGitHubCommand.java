@@ -36,6 +36,11 @@ public class ListGitHubCommand extends Command {
 	}
 	
 	@Override
+	public String getUsage() {
+		return "lgh [name-part1 name-part2 ...]";
+	}
+	
+	@Override
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
 			if ( checkGitHubStoreDefined() ) {
@@ -47,29 +52,8 @@ public class ListGitHubCommand extends Command {
 	
 	private String listContent(String githubStoreName, String[] args) {
 		
-//		printDebug("Args : " + args.length );
-//		List<String> bundles = getAllBundles(githubStoreName);
-//		if ( bundles != null ) {
-//			List<String> criteria = buildCriteria(args);
-//			printDebug("Criteria : " + criteria );
-//			bundles = BundlesFilter.filter(bundles, criteria);
-//			return printBundles(githubStoreName, bundles);
-//		}
-//		return null ;
-
-//		List<String> criteria = GitHubBundlesUtil.buildCriteria(args);
-//		TelosysProject telosysProject = getTelosysProject();
-//		try {
-//			List<String> bundles = GitHubBundlesUtil.getBundles(telosysProject, githubStoreName, criteria);
-//			return printBundles(githubStoreName, bundles);
-//		} catch (TelosysToolsException e) {
-//			printError(e);
-//			return null ;
-//		}
-		
 		List<String> bundles = getBundles(githubStoreName, args) ;
 		return printBundles(githubStoreName, bundles);
-		
 	}
 	
 	private List<String> getBundles(String githubStoreName, String[] args) {

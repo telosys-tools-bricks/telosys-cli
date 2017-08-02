@@ -36,8 +36,16 @@ public class ListModelsCommand extends Command {
 	}
 	
 	@Override
+	public String getUsage() {
+		return "lm";
+	}
+
+	@Override
 	public String execute(String[] args) {
-		return listModels();
+		if ( checkHomeDirectoryDefined() ) {
+			return listModels();
+		}
+		return null ;
 	}
 
 	private String listModels() {

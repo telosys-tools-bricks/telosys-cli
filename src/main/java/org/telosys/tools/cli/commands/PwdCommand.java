@@ -31,6 +31,11 @@ public class PwdCommand extends Command {
 	}
 	
 	@Override
+	public String getUsage() {
+		return "pwd";
+	}
+	
+	@Override
 	public String execute(String[] args) {
 		return getCurrentDirectory();
 	}

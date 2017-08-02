@@ -31,6 +31,11 @@ public class EditProjectCfgCommand extends Command {
 	public String getDescription() {
 		return "Open an editor to edit the '.cfg' file ";
 	}
+
+	@Override
+	public String getUsage() {
+		return "epc";
+	}
 	
 	@Override
 	public String execute(String[] args) {

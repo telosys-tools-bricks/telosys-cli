@@ -27,9 +27,14 @@ public class HomeCommand extends Command {
 	
 	@Override
 	public String getDescription() {
-		return "Set/print the HOME directory ('h [dir]')";
+		return "Set/print the 'HOME' directory";
 	}
 	
+	@Override
+	public String getUsage() {
+		return "h [directory]";
+	}
+			
 	@Override
 	public String execute(String[] args) {
 //		environment.setHomeDirectory();

@@ -35,6 +35,12 @@ public class GuideCommand extends Command {
 	public String getDescription() {
 		return "Guide ";
 	}
+	
+	@Override
+	public String getUsage() {
+		return "guide";
+	}
+		
 
 	@Override
 	public String execute(String[] args) {

@@ -32,7 +32,12 @@ public class ListEntitiesCommand extends CommandWithModel {
 
 	@Override
 	public String getDescription() {
-		return "List the entities for the current/given model ( 'le [model-name]' )";
+		return "List the entities for the current/given model";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "le [model-name]";
 	}
 	
 	@Override

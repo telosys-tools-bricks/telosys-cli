@@ -33,6 +33,11 @@ public class EditProjectDbCfgCommand extends Command {
 	}
 	
 	@Override
+	public String getUsage() {
+		return "epdb";
+	}
+	
+	@Override
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
 			String fileToBeEdited = getTelosysDbCfgFullPath();
