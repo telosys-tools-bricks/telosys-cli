@@ -28,6 +28,7 @@ import org.telosys.tools.cli.commands.ListGitHubCommand;
 import org.telosys.tools.cli.commands.ListModelsCommand;
 import org.telosys.tools.cli.commands.LsCommand;
 import org.telosys.tools.cli.commands.ModelCommand;
+import org.telosys.tools.cli.commands.NewEntityCommand;
 import org.telosys.tools.cli.commands.NewModelCommand;
 import org.telosys.tools.cli.commands.PwdCommand;
 import org.telosys.tools.cli.commands.QuitCommand;
@@ -75,7 +76,7 @@ public class CommandProvider {
 
 		// Entity management
 		register(new ListEntitiesCommand(consoleReader, environment)); // le : list entities [model-name]
-		// TODO : ne (new entity)
+		register(new NewEntityCommand(consoleReader, environment)); // ne : new entity
 		register(new EditEntityCommand(consoleReader, environment)); // ee 		
 		// TODO : de (delete entity)
 		

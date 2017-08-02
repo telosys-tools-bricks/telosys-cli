@@ -5,6 +5,7 @@ import jline.console.ConsoleReader;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.commons.TelosysToolsException;
 
 public class NewEntityCommand extends Command {
 
@@ -33,34 +34,28 @@ public class NewEntityCommand extends Command {
 	
 	@Override
 	public String execute(String[] args) {
-		if ( args.length > 1 ) {
-			if ( getCurrentModel() != null ) {
+		if ( checkModelDefined() ) {
+			if ( args.length > 1 ) {
 				return newEntity(args[1]);
 			}
 			else {
-				print("No current model!");
-				return null ;
+				return invalidUsage("entity-name expected");
 			}
 		}
-		else {
-			return invalidUsage("entity-name expected");
-		}
+		return null ;
 	}
 
 	private String newEntity(String entityName) {
 
 		TelosysProject telosysProject = getTelosysProject();
+		String modelName = getCurrentModel();
 		if ( telosysProject != null ) {
-			
-// TODO			
-//			telosysProject.createNewDslEntity(xxxx);
-//			File file;
-//			try {
-//				file = telosysProject.getDslEntityFile(environment.getCurrentModel(), entityName);
-//				return launchEditor(environment, file.getAbsolutePath() );
-//			} catch (TelosysToolsException e) {
-//				printError(e);
-//			}
+			try {
+				telosysProject.createNewDslEntity(modelName, entityName);
+				print("Entity '"+ entityName + "' created.");
+			} catch (TelosysToolsException e) {
+				printError(e);
+			}
 		}
 		return null ;
 	}

@@ -48,16 +48,14 @@ public class EditEntityCommand extends Command {
 	}
 
 	private String editEntity(String entityName) {
-		if ( checkModelDefined() ) {
-			TelosysProject telosysProject = getTelosysProject();
-			if ( telosysProject != null ) {
-				File file;
-				try {
-					file = telosysProject.getDslEntityFile(getCurrentModel(), entityName);
-					return launchEditor(file.getAbsolutePath() );
-				} catch (TelosysToolsException e) {
-					printError(e);
-				}
+		TelosysProject telosysProject = getTelosysProject();
+		if ( telosysProject != null ) {
+			File file;
+			try {
+				file = telosysProject.buildDslEntityFile(getCurrentModel(), entityName);
+				return launchEditor(file.getAbsolutePath() );
+			} catch (TelosysToolsException e) {
+				printError(e);
 			}
 		}
 		return null ;

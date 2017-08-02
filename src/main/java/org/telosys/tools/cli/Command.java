@@ -236,44 +236,6 @@ public abstract class Command {
 		return getFileFullPathIfExists(Const.DATABASES_DBCFG, Const.TELOSYS_TOOLS_FOLDER);
 	}
 	
-//	/**
-//	 * Returns the File corresponding to the given model name ( .model / .dbrep / .dbmodel file )
-//	 * @param modelName
-//	 * @return
-//	 * @throws TelosysToolsException if more than 1 file is found for the given name
-//	 */
-//	protected File getModelFile(String modelName) throws TelosysToolsException {
-//		File file1 = getFileInHomeDir( modelName + ApiUtil.MODEL_SUFFIX,   Const.TELOSYS_TOOLS_FOLDER) ;
-//		File file2 = getFileInHomeDir( modelName + ApiUtil.DBREP_SUFFIX,   Const.TELOSYS_TOOLS_FOLDER) ;
-//		File file3 = getFileInHomeDir( modelName + ApiUtil.DBMODEL_SUFFIX, Const.TELOSYS_TOOLS_FOLDER) ;
-//		int n = 0 ;
-//		File file = null ;
-//		if ( file1.exists() ) {
-//			file = file1 ;
-//			n++ ;
-//		}
-//		if ( file2.exists() ) {
-//			file = file2 ;
-//			n++ ;
-//		}
-//		if ( file3.exists() ) {
-//			file = file3 ;
-//			n++ ;
-//		}
-//		if ( n == 0 ) {
-//			// no model (not found)
-//			return null ;
-//		}
-//		else if ( n == 1 ) {
-//			// unique model found 
-//			return file ;
-//		}
-//		else {
-//			// more than one !
-//			throw new TelosysToolsException("Model name is not unique");
-//		}
-//	}
-	
 	/**
 	 * Returns the file full path or null is the file doesn't exist
 	 * @param fileName
