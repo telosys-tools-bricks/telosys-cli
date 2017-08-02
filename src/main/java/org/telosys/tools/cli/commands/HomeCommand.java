@@ -27,7 +27,7 @@ public class HomeCommand extends Command {
 	
 	@Override
 	public String getDescription() {
-		return "Set/print the 'HOME' directory";
+		return "Print or set the 'HOME' directory";
 	}
 	
 	@Override

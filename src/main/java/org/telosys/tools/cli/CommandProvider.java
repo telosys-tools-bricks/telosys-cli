@@ -7,6 +7,7 @@ import java.util.Map;
 
 import jline.console.ConsoleReader;
 
+import org.telosys.tools.cli.commands.BundleCommand;
 import org.telosys.tools.cli.commands.CdCommand;
 import org.telosys.tools.cli.commands.CheckModelCommand;
 import org.telosys.tools.cli.commands.DeleteEntityCommand;
@@ -120,8 +121,8 @@ public class CommandProvider {
 		//   ib java rest : install all the bundles containing "java" or "rest"
 		//   TODO if already exists : prompt "overwrite ? [y/n] : "
 		
-		register(new ListBundlesCommand(consoleReader, environment)); // lb (list installed bundles)	
-		// b : set/print current bundle ( "b bundle-name" --> set , "b" --> print )
+		register(new ListBundlesCommand(consoleReader, environment)); // lb (list installed bundles)
+		register(new BundleCommand(consoleReader, environment)); // b set/print current bundle
 		// eb (edit bundle --> edit templates.cfg )
 		// et (edit template --> .vm )
 		// db (delete bundle)

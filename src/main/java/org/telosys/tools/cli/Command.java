@@ -154,6 +154,35 @@ public abstract class Command {
 	}
 	
 	//-------------------------------------------------------------------------
+	// Bundle
+	//-------------------------------------------------------------------------
+	protected boolean checkBundleDefined() {
+		if ( environment.getCurrentBundle() != null ) {
+			return true ;
+		}
+		else {
+			print( "Bundle-name must be set before using this command!" ) ;
+			return false ;
+		}
+	}	
+
+	/**
+	 * Set the current bundle name in the current environment
+	 * @param bundleName
+	 */
+	protected void setCurrentBundle(String bundleName) {
+		environment.setCurrentBundle(bundleName);
+		updatePrompt();
+	}
+	
+	/**
+	 * Returns the current bundle in the environment
+	 */
+	protected String getCurrentBundle() {
+		return environment.getCurrentBundle();
+	}
+	
+	//-------------------------------------------------------------------------
 	// GitHub store
 	//-------------------------------------------------------------------------
 	protected boolean checkGitHubStoreDefined() {
@@ -184,6 +213,9 @@ public abstract class Command {
 		}
 		if ( environment.getCurrentModel() != null ) {
 			prompt = prompt + "(" + environment.getCurrentModel() + ")" ;
+		}
+		if ( environment.getCurrentBundle() != null ) {
+			prompt = prompt + "[" + environment.getCurrentBundle() + "]" ;
 		}
 		prompt = prompt + Const.PROMPT_CHAR ;
 		consoleReader.setPrompt(Color.colorize(prompt, Const.PROMPT_COLOR));
