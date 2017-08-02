@@ -7,6 +7,7 @@ import jline.console.ConsoleReader;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.cli.commons.BundlesFilter;
 import org.telosys.tools.cli.commons.GitHubBundlesUtil;
 import org.telosys.tools.commons.TelosysToolsException;
 
@@ -57,7 +58,8 @@ public class ListGitHubCommand extends Command {
 	}
 	
 	private List<String> getBundles(String githubStoreName, String[] args) {
-		List<String> criteria = GitHubBundlesUtil.buildCriteria(args);
+		//List<String> criteria = GitHubBundlesUtil.buildCriteria(args);
+		List<String> criteria = BundlesFilter.buildCriteriaFromArgs(args);
 		TelosysProject telosysProject = getTelosysProject();
 		try {
 			return GitHubBundlesUtil.getBundles(telosysProject, githubStoreName, criteria);

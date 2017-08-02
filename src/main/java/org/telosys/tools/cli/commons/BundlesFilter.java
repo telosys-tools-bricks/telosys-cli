@@ -5,6 +5,25 @@ import java.util.List;
 
 public class BundlesFilter {
 	
+	/**
+	 * Builds a list of criteria from the given command line arguments
+	 * @param commandArgs 
+	 * @return
+	 */
+	public final static List<String> buildCriteriaFromArgs( String[] commandArgs) {
+		List<String> tokens = new LinkedList<>();
+		for ( int i = 1 ; i < commandArgs.length ; i++ ) {
+				tokens.add(commandArgs[i]);
+		}
+		return tokens ;
+	}
+
+	/**
+	 * Filter the given list with the given criteria
+	 * @param bundles
+	 * @param criteria
+	 * @return
+	 */
 	public static List<String> filter(List<String> bundles, List<String> criteria) {
 
 		if ( criteria == null )  {

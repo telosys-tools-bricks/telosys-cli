@@ -7,6 +7,7 @@ import jline.console.ConsoleReader;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.cli.commons.BundlesFilter;
 import org.telosys.tools.cli.commons.GitHubBundlesUtil;
 import org.telosys.tools.commons.TelosysToolsException;
 
@@ -79,7 +80,8 @@ public class InstallBundlesCommand extends Command {
 	}
 	
 	private List<String> getBundles(String githubStoreName, String[] args) {
-		List<String> criteria = GitHubBundlesUtil.buildCriteria(args);
+		//List<String> criteria = GitHubBundlesUtil.buildCriteria(args);
+		List<String> criteria = BundlesFilter.buildCriteriaFromArgs(args);
 		TelosysProject telosysProject = getTelosysProject();
 		try {
 			return GitHubBundlesUtil.getBundles(telosysProject, githubStoreName, criteria);
@@ -89,20 +91,4 @@ public class InstallBundlesCommand extends Command {
 		}
 	}
 
-//	private List<String> getAllBundles(TelosysProject telosysProject) {
-//		try {
-//			//return telosysProject.getBundlesList(environment.getCurrentGitHubStore());
-//			return telosysProject.getBundlesList(getCurrentGitHubStore());
-//		} catch (TelosysToolsException e) {
-//			printError(e);
-//			return null ;
-//		}
-//	}
-//	private List<String> buildCriteria( String[] args) {
-//		List<String> tokens = new LinkedList<>();
-//		for ( int i = 1 ; i < args.length ; i++ ) {
-//			tokens.add(args[i]);
-//		}
-//		return tokens ;
-//	}
 }

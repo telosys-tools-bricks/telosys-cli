@@ -9,6 +9,7 @@ import jline.console.ConsoleReader;
 
 import org.telosys.tools.cli.commands.CdCommand;
 import org.telosys.tools.cli.commands.CheckModelCommand;
+import org.telosys.tools.cli.commands.DeleteEntityCommand;
 import org.telosys.tools.cli.commands.DeleteModelCommand;
 import org.telosys.tools.cli.commands.EditCommand;
 import org.telosys.tools.cli.commands.EditEntityCommand;
@@ -66,19 +67,19 @@ public class CommandProvider {
 		
 
 		// Model management
-		register(new ModelCommand(consoleReader, environment)); // m : m [model-name] // TODO : "m" --> print 
-		register(new NewModelCommand(consoleReader, environment)); // nm
-		register(new ListModelsCommand(consoleReader, environment)); // lm : list models
-		register(new DeleteModelCommand(consoleReader, environment)); // dm : delete model
-		register(new CheckModelCommand(consoleReader, environment)); // cm : check model
+		register(new ModelCommand(consoleReader, environment));       // m 
+		register(new NewModelCommand(consoleReader, environment));    // nm
+		register(new ListModelsCommand(consoleReader, environment));  // lm 
+		register(new DeleteModelCommand(consoleReader, environment)); // dm 
+		register(new CheckModelCommand(consoleReader, environment));  // cm
 		// TODO : em (edit model)
 		
 
 		// Entity management
 		register(new ListEntitiesCommand(consoleReader, environment)); // le : list entities [model-name]
 		register(new NewEntityCommand(consoleReader, environment)); // ne : new entity
-		register(new EditEntityCommand(consoleReader, environment)); // ee 		
-		// TODO : de (delete entity)
+		register(new EditEntityCommand(consoleReader, environment)); // ee 
+		register(new DeleteEntityCommand(consoleReader, environment)); // de 
 		
 		// GitHub store management
 		register(new GitHubCommand(consoleReader, environment)); // gh : gh [store-name] 
@@ -114,10 +115,10 @@ public class CommandProvider {
 //		   ib 1 2 
 //		 or 
 **/
-		register(new InstallBundlesCommand(consoleReader, environment)); // install  bundles from GitHub 		
+		register(new InstallBundlesCommand(consoleReader, environment)); // ib : install  bundles from GitHub 		
 		//   ib * : install all bundles from GitHub
 		//   ib java rest : install all the bundles containing "java" or "rest"
-		//   if already exists : prompt "overwrite ? [y/n] : "
+		//   TODO if already exists : prompt "overwrite ? [y/n] : "
 		
 		register(new ListBundlesCommand(consoleReader, environment)); // lb (list installed bundles)	
 		// b : set/print current bundle ( "b bundle-name" --> set , "b" --> print )

@@ -101,6 +101,8 @@ public class CommandsGroups {
 		commands.add("eb");
 		commands.add("db");
 
+		commands.add("t");
+		commands.add("lt");
 		commands.add("et");
 		commands.add("dt");
 		

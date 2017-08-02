@@ -7,6 +7,7 @@ import jline.console.ConsoleReader;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.cli.commons.BundlesFilter;
 import org.telosys.tools.commons.TelosysToolsException;
 
 public class ListBundlesCommand extends Command {
@@ -26,7 +27,7 @@ public class ListBundlesCommand extends Command {
 
 	@Override
 	public String getShortDescription() {
-		return "List Bundle" ;
+		return "List Bundles" ;
 	}
 
 	@Override
@@ -36,28 +37,27 @@ public class ListBundlesCommand extends Command {
 	
 	@Override
 	public String getUsage() {
-		return "lb";
+		return "lb [name-part1 name-part2 ...]";
 	}
 	
 	@Override
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
-			return listBundles();
+			return listBundles(args);
 		}
 		return null ;
 	}
 
-	private String listBundles() {
-		//TelosysProject telosysProject = getTelosysProject(environment);
+	private String listBundles(String[] args) {
+		List<String> criteria = BundlesFilter.buildCriteriaFromArgs(args);
 		TelosysProject telosysProject = getTelosysProject();
 		try {
+			// get all installed bundles
 			List<String> bundles = telosysProject.getInstalledBundles();
-//			StringBuffer sb = new StringBuffer();
-//			for ( String b : bundles ) {
-//				appendLine(sb, " . " + b);
-//			}
-//			return sb.toString();
-			return printBundles(bundles);
+			// filter with criteria if any
+			List<String> filteredBundles = BundlesFilter.filter(bundles, criteria);
+			return printBundles(filteredBundles);
+			
 		} catch (TelosysToolsException e) {
 			printError(e);
 		}
@@ -72,13 +72,13 @@ public class ListBundlesCommand extends Command {
 	private String printBundles(List<String> bundles) {
 		StringBuffer sb = new StringBuffer();
 		if ( bundles != null && bundles.size() > 0 ) {
-			appendLine(sb, "Bundles installed in the current project : ");
+			//appendLine(sb, "Bundles installed in the current project : ");
 			for ( String s : bundles ) {
 				appendLine(sb, " . " + s);
 			}
 		}
 		else {
-			appendLine(sb, "No bundle found in the current project.");
+			appendLine(sb, "No bundle found.");
 		}
 		return sb.toString();
 	}

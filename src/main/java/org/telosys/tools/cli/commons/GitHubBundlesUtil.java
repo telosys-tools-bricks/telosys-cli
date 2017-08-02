@@ -1,6 +1,5 @@
 package org.telosys.tools.cli.commons;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.telosys.tools.api.TelosysProject;
@@ -28,29 +27,4 @@ public class GitHubBundlesUtil {
 			return null ;
 		}
 	}	
-	
-//	/**
-//	 * Returns all the bundles available in the given store
-//	 * @param githubStoreName
-//	 * @return
-//	 */
-//	private final static List<String> getAllBundles(TelosysProject telosysProject, String githubStoreName) throws TelosysToolsException {
-//		return telosysProject.getBundlesList(githubStoreName);
-//	}
-	
-	/**
-	 * Builds a list of criteria to filter the bundles
-	 * @param commandArgs 
-	 * @return
-	 */
-	public final static List<String> buildCriteria( String[] commandArgs) {
-		List<String> tokens = new LinkedList<>();
-		for ( int i = 1 ; i < commandArgs.length ; i++ ) {
-//			if ( ! ( "-l".equals(args[i]) ) ) {
-				tokens.add(commandArgs[i]);
-//			}
-		}
-		return tokens ;
-	}
-	
 }
