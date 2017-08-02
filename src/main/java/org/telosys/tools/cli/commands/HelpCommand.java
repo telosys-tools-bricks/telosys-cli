@@ -2,6 +2,7 @@ package org.telosys.tools.cli.commands;
 
 import jline.console.ConsoleReader;
 
+import org.telosys.tools.cli.Color;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.CommandProvider;
 import org.telosys.tools.cli.CommandsGroup;
@@ -45,11 +46,44 @@ public class HelpCommand extends Command {
 
 	@Override
 	public String execute(String[] args) {
-		printHelp();
+		printHelp(args);
 		return null ;
 	}
 	
-	private void printHelp() {
+	private void printHelp(String[] args) {
+		if ( args.length > 1 ) {
+			for ( int i = 1 ; i < args.length ; i++ ) {
+				printHelp(args[i]);
+			}
+		}
+		else {
+			printHelpForAllCommands();
+		}
+	}
+	
+	private void printHelp(String commandName) {
+		Environment environment = getEnvironment();
+		CommandProvider commandProvider = environment.getCommandProvider();
+		Command command = commandProvider.getCommand(commandName);
+		if ( command != null ) {
+			printHelp(command);
+		}
+		else {
+			print("Invalid command name '" + commandName + "'") ;
+		}
+	}
+
+	private void printHelp(Command command) {
+		print(Color.colorize(command.getName(), Color.CYAN_BRIGHT) + " : " + command.getShortDescription());
+		print("Description :");
+		print("  " + command.getDescription());
+		print("Usage :");
+		print("  " + command.getUsage());
+		print("");
+	}
+	
+	
+	private void printHelpForAllCommands() {
 		Environment environment = getEnvironment();
 		CommandsGroups commandsGroups = environment.getCommandsGroups();
 		for ( CommandsGroup cg : commandsGroups.getAll() ) {
