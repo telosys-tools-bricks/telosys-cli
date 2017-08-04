@@ -18,6 +18,8 @@ public class CommandsGroups {
 		all.add(getEntityCommands(commandProvider)) ;
 		all.add(getGitHubCommands(commandProvider)) ;
 		all.add(getBundleCommands(commandProvider)) ;
+		all.add(getTemplateCommands(commandProvider)) ;
+		all.add(getGenerationCommands(commandProvider)) ;
 		all.add(getLauncherCommands(commandProvider)) ;
 		
 	}
@@ -94,17 +96,33 @@ public class CommandsGroups {
 	private final CommandsGroup getBundleCommands(CommandProvider commandProvider) {
 		List<String> commands = new LinkedList<>() ;
 		
-		String name = "Bundle/template commands" ;
+		String name = "Bundle commands" ;
 		commands.add("ib");
 		commands.add("b");
 		commands.add("lb");
 		commands.add("eb");
 		commands.add("db");
 
+		return new CommandsGroup(name, commands);
+	}
+	
+	private final CommandsGroup getTemplateCommands(CommandProvider commandProvider) {
+		List<String> commands = new LinkedList<>() ;
+		
+		String name = "Template commands" ;
 		commands.add("t");
 		commands.add("lt");
 		commands.add("et");
 		commands.add("dt");
+		
+		return new CommandsGroup(name, commands);
+	}
+	
+	private final CommandsGroup getGenerationCommands(CommandProvider commandProvider) {
+		List<String> commands = new LinkedList<>() ;
+		
+		String name = "Generation commands" ;
+		commands.add("gen");
 		
 		return new CommandsGroup(name, commands);
 	}

@@ -11,6 +11,15 @@ import org.telosys.tools.cli.commons.BundlesFilter;
 import org.telosys.tools.cli.commons.GitHubBundlesUtil;
 import org.telosys.tools.commons.TelosysToolsException;
 
+/**
+ * Install Bundle(s) 
+ * Examples :
+ *    ib * 				--> install all bundles from GitHub
+ *    ib java rest 		--> install all the bundles containing "java" or "rest"
+ *    
+ * @author Laurent GUERIN
+ *
+ */
 public class InstallBundlesCommand extends Command {
 	
 	/**
@@ -45,7 +54,7 @@ public class InstallBundlesCommand extends Command {
 	public String execute(String[] args) {
 		
 		if ( args.length > 1 ) {
-			// ib aaa aaa  
+			// ib aaa bbb  
 			if ( checkHomeDirectoryDefined() ) {
 				if ( checkGitHubStoreDefined() ) {
 					return install(args);
@@ -60,6 +69,7 @@ public class InstallBundlesCommand extends Command {
 	}
 		
 	private String install(String[] args) {
+		//   TODO if already exists : prompt "overwrite ? [y/n] : "
 		TelosysProject telosysProject = getTelosysProject();
 		List<String> bundles = getBundles(getCurrentGitHubStore(), args);
 		if ( bundles != null && bundles.size() > 0 ) {
@@ -80,7 +90,6 @@ public class InstallBundlesCommand extends Command {
 	}
 	
 	private List<String> getBundles(String githubStoreName, String[] args) {
-		//List<String> criteria = GitHubBundlesUtil.buildCriteria(args);
 		List<String> criteria = BundlesFilter.buildCriteriaFromArgs(args);
 		TelosysProject telosysProject = getTelosysProject();
 		try {

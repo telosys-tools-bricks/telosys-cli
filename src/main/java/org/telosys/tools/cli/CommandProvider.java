@@ -18,6 +18,7 @@ import org.telosys.tools.cli.commands.EditProjectCfgCommand;
 import org.telosys.tools.cli.commands.EditProjectDbCfgCommand;
 import org.telosys.tools.cli.commands.EnvCommand;
 import org.telosys.tools.cli.commands.ErrorCommand;
+import org.telosys.tools.cli.commands.GenerateCommand;
 import org.telosys.tools.cli.commands.GitHubCommand;
 import org.telosys.tools.cli.commands.GuideCommand;
 import org.telosys.tools.cli.commands.HelpCommand;
@@ -28,6 +29,7 @@ import org.telosys.tools.cli.commands.ListBundlesCommand;
 import org.telosys.tools.cli.commands.ListEntitiesCommand;
 import org.telosys.tools.cli.commands.ListGitHubCommand;
 import org.telosys.tools.cli.commands.ListModelsCommand;
+import org.telosys.tools.cli.commands.ListTemplatesCommand;
 import org.telosys.tools.cli.commands.LsCommand;
 import org.telosys.tools.cli.commands.ModelCommand;
 import org.telosys.tools.cli.commands.NewEntityCommand;
@@ -50,6 +52,7 @@ public class CommandProvider {
 		
 		register(new ThrowExceptionCommand(consoleReader, environment)); // tex : FOR TESTS ONLY !
 		
+		// Global commands
 		register(new CdCommand(consoleReader, environment)); // cd
 		register(new EditCommand(consoleReader, environment)); // e
 		register(new EnvCommand(consoleReader, environment)); // env
@@ -66,8 +69,7 @@ public class CommandProvider {
 		register(new EditProjectCfgCommand(consoleReader, environment)); // epc
 		register(new EditProjectDbCfgCommand(consoleReader, environment)); // epdb
 		
-
-		// Model management
+		// Model commands
 		register(new ModelCommand(consoleReader, environment));       // m 
 		register(new NewModelCommand(consoleReader, environment));    // nm
 		register(new ListModelsCommand(consoleReader, environment));  // lm 
@@ -75,24 +77,15 @@ public class CommandProvider {
 		register(new CheckModelCommand(consoleReader, environment));  // cm
 		// TODO : em (edit model)
 		
-
-		// Entity management
+		// Entity commands
 		register(new ListEntitiesCommand(consoleReader, environment)); // le : list entities [model-name]
 		register(new NewEntityCommand(consoleReader, environment)); // ne : new entity
-		register(new EditEntityCommand(consoleReader, environment)); // ee 
-		register(new DeleteEntityCommand(consoleReader, environment)); // de 
+		register(new EditEntityCommand(consoleReader, environment)); // ee : edit entity
+		register(new DeleteEntityCommand(consoleReader, environment)); // de : delete entity
 		
 		// GitHub store management
 		register(new GitHubCommand(consoleReader, environment)); // gh : gh [store-name] 
 		register(new ListGitHubCommand(consoleReader, environment)); // lgh [filter-criteria] 
-		// gh : set/print current github repo ( "gh store-name" --> set , "gh" --> print )
-		// gh -l : list github bundles : print bundles available in the store
-		//         > gh -l   --> all
-		//         > gh -l java rest --> repos with "java" and "rest" in the name 
-		//        result :
-		//         1) java-persistence-jpa-T300 
-		//         2) java-web-rest-jaxrs1-T300
-		//         3) java-web-rest-jaxrs1-T300
 /**
 //		 or
 //		   sb (select bundle from GitHub) :
@@ -106,29 +99,22 @@ public class CommandProvider {
 //		   sb -1 -3 -4 --> unselect items 1 3 and 4 
 //		 
 **/
-//		 Templates/Bundles management
-/***
-//		   ib (install bundle) with a SWING/AWT SELECTION LIST to choose the bundle(s)
-//		   https://www.javatpoint.com/java-awt-list
-//		 or 
-//		   ib : install all the selected bundles
-//		   ib * : install all bundles from the current list
-//		   ib 1 2 
-//		 or 
-**/
-		register(new InstallBundlesCommand(consoleReader, environment)); // ib : install  bundles from GitHub 		
-		//   ib * : install all bundles from GitHub
-		//   ib java rest : install all the bundles containing "java" or "rest"
-		//   TODO if already exists : prompt "overwrite ? [y/n] : "
-		
+		// Bundles commands
+		register(new InstallBundlesCommand(consoleReader, environment)); // ib : install  bundle(s) from GitHub 				
 		register(new ListBundlesCommand(consoleReader, environment)); // lb (list installed bundles)
 		register(new BundleCommand(consoleReader, environment)); // b set/print current bundle
 		// eb (edit bundle --> edit templates.cfg )
-		// et (edit template --> .vm )
 		// db (delete bundle)
+
+		// Templates commands
+		register(new ListTemplatesCommand(consoleReader, environment)); // lt : list templates				
+		// et (edit template --> .vm ) : ee foo --> edit foo.vm
 		// dt (delete template)
 		
-
+		// Generation management
+		register(new GenerateCommand(consoleReader, environment)); // gen : generates entities with templates				
+		
+		
 		// Launcher management
 		// ll (list launchers )
 		// l (set/print current launcher : "l" 
@@ -138,8 +124,6 @@ public class CommandProvider {
 		// elt ( edit launcher templates --> .templates )
 		// dl (delete launcher : dl launcher-name )
 		
-		// Generation management
-		// lg (launch generation : lg launcher-name )
 		
 	}
 	

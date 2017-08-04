@@ -118,5 +118,19 @@ public abstract class CommandWithModel extends Command {
 		return null ; // Model cannot be loaded
 	}
 	
+	protected Model loadModel(String modelName) {
+		// 1) try to get the file 
+		File modelFile = getModelFile(modelName); 
+		if ( modelFile != null ) {
+			
+			// 2) try to load the model 
+			return loadModel(modelFile);
+		}
+		return null ;
+	}
+
+	protected Model loadCurrentModel() {
+		return loadModel(getCurrentModel());
+	}
 
 }

@@ -36,8 +36,14 @@ public class CommandLineProcessor {
 			debug("(commandName = '" + commandName +"')");
 			Command command = commandProvider.getCommand(commandName);
 			if ( command != null ) {
-				result = command.execute(args);
-				print(result);
+				try {
+					result = command.execute(args);
+					print(result);
+				} catch (CancelCommandException cancelCommandEx ) {
+					// The command has been canceled, for example due to invalid arguments 
+					// => just print the messsage and continue
+					print(cancelCommandEx.getMessage());
+				}
 			}
 			else {
 				print("Invalid command '" + commandName + "'");
