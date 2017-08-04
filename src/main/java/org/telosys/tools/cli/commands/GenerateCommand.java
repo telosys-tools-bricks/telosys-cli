@@ -73,7 +73,9 @@ public class GenerateCommand extends CommandWithModel {
 		GenerationTaskResult result ;
 		try {
 			result = generate(args[1], args[2]);
-			//printResult(result);
+			if ( result != null ) {
+				printResult(result);
+			}
 		} catch (TelosysToolsException e) {
 			printError(e);
 		} catch (GeneratorException e) {
@@ -82,7 +84,6 @@ public class GenerateCommand extends CommandWithModel {
 	}
 	
 	private GenerationTaskResult generate(String argEntityNames, String argTemplateNames) throws TelosysToolsException, GeneratorException {
-		TelosysProject telosysProject = getTelosysProject();
 		
 		// Loads the model for the current model name
 		Model model = loadCurrentModel();
@@ -95,11 +96,14 @@ public class GenerateCommand extends CommandWithModel {
 		print("Templates : ");
 		printList(templateNames);
 
-		print("TODO : confirm ? ");
-		// TODO : confirm 
-		
-		//return generate(model, entityNames, templateNames);
-		return null ;
+		if ( confirm("Do you want to launch the generation") ) {
+			print("Generation in progress...");
+			return generate(model, entityNames, templateNames);
+		}
+		else {
+			print("Generation canceled.");
+			return null ;
+		}
 	}
 
 	/**
@@ -187,6 +191,8 @@ public class GenerateCommand extends CommandWithModel {
 		String bundleName = getCurrentBundle() ;
 		List<TargetDefinition> targetsList = buildTargets(bundleName, templateNames);
 		boolean flagResources = false ; 
+		
+		print("targetsList : " + targetsList.size() );
 		
 		return telosysProject.launchGeneration(model, entityNames, bundleName, targetsList, flagResources);
 	}

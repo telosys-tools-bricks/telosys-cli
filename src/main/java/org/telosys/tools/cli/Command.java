@@ -10,12 +10,23 @@ import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.commons.FileUtil;
 import org.telosys.tools.commons.StrUtil;
 
+/**
+ * Command abstract class
+ * 
+ * @author Laurent GUERIN
+ *
+ */
 public abstract class Command {
 
 	private final ConsoleReader consoleReader ;
 	private final PrintWriter out ;
 	private final Environment environment ;
 	
+	/**
+	 * Constructor
+	 * @param consoleReader
+	 * @param environment
+	 */
 	public Command(ConsoleReader consoleReader, Environment environment ) {
 		super();
 		//this.out = out;
@@ -24,16 +35,39 @@ public abstract class Command {
 		this.environment = environment ;
 	}
 	
+	//----------------------------------------------------------------
+	/**
+	 * Returns the command name 
+	 * @return
+	 */
 	public abstract String getName();
 	
+	/**
+	 * Returns a short description
+	 * @return
+	 */
 	public abstract String getShortDescription();
 	
+	/**
+	 * Returns the command description
+	 * @return
+	 */
 	public abstract String getDescription();
 	
+	/**
+	 * Returns the usage 
+	 * @return
+	 */
 	public abstract String getUsage();
 	
+	/**
+	 * Executes the command with the given arguments
+	 * @param args
+	 * @return
+	 */
 	public abstract String execute(String[] args);
 	
+	//----------------------------------------------------------------
 	protected Environment getEnvironment() {
 		return environment ;
 	}
@@ -53,6 +87,62 @@ public abstract class Command {
 
 	protected String invalidUsage(String message) {
 		return "Invalid usage : " + message ;
+	}
+
+
+	protected int readChar() {
+		try {
+			return consoleReader.readCharacter();
+		} catch (IOException e) {
+			printError(e);
+			throw new CancelCommandException("IOException : readCharacter()");
+		}
+	}
+	protected void backspace() {
+		try {
+			consoleReader.backspace();
+		} catch (IOException e) {
+			printError(e);
+			throw new CancelCommandException("IOException : backspace()");
+		}
+	}
+	
+	protected String readResponse() {
+		StringBuffer sb = new StringBuffer();
+		while ( true ) {
+			char c = (char) readChar();
+			if ( c >= ' ' ) {
+				sb.append(c);
+				out.print(c);
+				out.flush();
+			}
+			else {
+				switch(c) {
+				case '\n' :
+				case '\r' :
+					out.println("");
+					out.flush();
+					return sb.toString();
+				case '\b' :
+					backspace();
+					if ( sb.length() > 0 ) {
+						sb.setLength(sb.length() - 1); // back (remove last char)
+						out.print('\b');
+						out.print(' ');
+						out.print('\b');
+						out.flush();
+					}
+					break ;
+				}
+			}			
+		}
+	}
+	
+	protected boolean confirm(String message) {
+		out.print( message + " [y/n] ? " );
+		out.flush();
+		String r = readResponse() ;
+		return "Y".equalsIgnoreCase(r) ;
 	}
 
 	protected void print(String message) {
@@ -276,16 +366,6 @@ public abstract class Command {
 	 * @return
 	 */
 	private String getFileFullPathIfExists(String fileName, String subDirectory) {
-
-//		// Try to get the file in the 'home' directory
-//		String shortPath = fileName; // e.g. 'telosys-tools.cfg' or 'databases.dbcfg'
-//		if (subDirectory != null) {
-//			shortPath = FileUtil.buildFilePath(subDirectory, fileName); 
-//			// e.g. 'TelosysTools/databases.dbcfg'
-//		}
-//		String fileFullPath = FileUtil.buildFilePath(environment.getHomeDirectory(), shortPath);
-//		File file = new File(fileFullPath);
-		
 		File file = getFileInHomeDir(fileName, subDirectory);
 		if (file.exists()) {
 			return file.getAbsolutePath();

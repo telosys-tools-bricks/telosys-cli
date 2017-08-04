@@ -46,12 +46,19 @@ public class GuideCommand extends Command {
 	public String execute(String[] args) {
 //		return guide(environment, (String) args[0]);
 
-		List<String> items = new LinkedList<>();
-		for ( int i = 0 ; i < 20 ; i++ ) {
-			items.add("Item #" + i);
+//		List<String> items = new LinkedList<>();
+//		for ( int i = 0 ; i < 20 ; i++ ) {
+//			items.add("Item #" + i);
+//		}
+//		SelectionList list = new SelectionList(items);
+//		list.show();
+
+		if ( confirm("Do you confirm") ) {
+			print("YES");
 		}
-		SelectionList list = new SelectionList(items);
-		list.show();
+		else {
+			print("NO");
+		}
 		return null ;
 	}
 	

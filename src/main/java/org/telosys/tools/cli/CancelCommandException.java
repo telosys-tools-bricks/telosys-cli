@@ -11,13 +11,13 @@ public class CancelCommandException extends RuntimeException {
 		super(message);
 	}
 
-	public CancelCommandException(Throwable cause) {
-		super(cause);
-	}
-
-	public CancelCommandException(String message, Throwable cause) {
-		super(message, cause);
-	}
+//	public CancelCommandException(Throwable cause) {
+//		super(cause);
+//	}
+//
+//	public CancelCommandException(String message, Throwable cause) {
+//		super(message, cause);
+//	}
 
 	public CancelCommandException(String message, Throwable cause,
 			boolean enableSuppression, boolean writableStackTrace) {
