@@ -1,7 +1,9 @@
 package org.telosys.tools.cli.commands;
 
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import jline.console.ConsoleReader;
 
@@ -83,22 +85,39 @@ public class GenerateCommand extends CommandWithModel {
 		}
 	}
 	
+	/**
+	 * @param argEntityNames argument for entities ( eg '*', 'Car', 'Car,Driver', etc )
+	 * @param argTemplateNames argument for templates ( eg '*', 'CacheFilter_java.vm', etc )
+	 * @return
+	 * @throws TelosysToolsException
+	 * @throws GeneratorException
+	 */
 	private GenerationTaskResult generate(String argEntityNames, String argTemplateNames) throws TelosysToolsException, GeneratorException {
 		
+		TelosysProject telosysProject = getTelosysProject();
 		// Loads the model for the current model name
 		Model model = loadCurrentModel();
 		List<String> entityNames = buildEntityNames(argEntityNames, model);
 		
-		List<String> templateNames = buildTemplateNames(argTemplateNames);
+		//List<String> templateNames = buildTemplateNames(argTemplateNames);
 
-		print("Entities : ");
+		String bundleName = getCurrentBundle() ;
+		List<TargetDefinition> targetDefinitions = buildTargetsList(argTemplateNames);
+		
+		print("Entities (model="+model.getName()+") : ");
 		printList(entityNames);
-		print("Templates : ");
-		printList(templateNames);
+		print("Templates (bundle="+bundleName+") : ");
+		//printList(templateNames);
+		printTargetDefinition(targetDefinitions);
 
 		if ( confirm("Do you want to launch the generation") ) {
 			print("Generation in progress...");
-			return generate(model, entityNames, templateNames);
+			
+			
+			//return generate(model, entityNames, templateNames);
+			
+			boolean flagResources = false ; 
+			return telosysProject.launchGeneration(model, entityNames, bundleName, targetDefinitions, flagResources);			
 		}
 		else {
 			print("Generation canceled.");
@@ -168,6 +187,48 @@ public class GenerateCommand extends CommandWithModel {
 		return list ;
 	}
 	
+	private List<TargetDefinition> buildTargetsList(String arg) throws TelosysToolsException {
+		
+		TargetsDefinitions targetsDefinitions = getTelosysProject().getTargetDefinitions(getCurrentBundle());
+		List<TargetDefinition> allTemplatesDefinitions = targetsDefinitions.getTemplatesTargets();
+		
+		if ( "*".equals(arg) ) {
+			// All targets
+			return allTemplatesDefinitions ;
+		}
+		else {
+			if ( arg.contains(",") ) {
+				// Many template patterns (eg 'template1,template2,template3')
+				Map<String,TargetDefinition> map = new Hashtable<String,TargetDefinition>();
+				String[] array = StrUtil.split(arg, ',' );
+				for ( String s : array ) {
+					String templateName = s.trim();
+					if ( templateName.length() > 0 ) {
+						List<TargetDefinition> list = getTargetDefinitionsForTemplatePattern(templateName);
+						for ( TargetDefinition td : list ) {
+							map.put(td.getTemplate(), td);
+						}
+					}
+				}
+				// Convert map values to list
+				List<TargetDefinition> list = new LinkedList<TargetDefinition>();
+				for ( TargetDefinition td : map.values() ) {
+					list.add(td);
+				}
+				return list;
+			}
+			else {
+				// Only 1 template pattern 
+				return getTargetDefinitionsForTemplatePattern(arg);
+			}
+		}
+	}
+	
+	private List<TargetDefinition> getTargetDefinitionsForTemplatePattern(String templateName) {
+		// TODO
+		return new LinkedList<TargetDefinition>();
+	}
+	
 	private List<TargetDefinition> buildTargets(String bundleName, List<String> templatesNames) throws TelosysToolsException {
 		TelosysProject telosysProject = getTelosysProject();
 		TargetsDefinitions targetDefinitions = telosysProject.getTargetDefinitions(bundleName);
@@ -202,6 +263,24 @@ public class GenerateCommand extends CommandWithModel {
 			print(" . " + s);
 		}
 	}
+	private void printTargetDefinition( List<TargetDefinition> targetDefinitions ) {
+		for ( TargetDefinition td : targetDefinitions ) {
+			//print(" . " + td.getTemplate() + " --> " + td.getFile() );
+			print(" . [" + getTargetType(td) + "] " + td.getTemplate() );
+		}
+	}
+	private String getTargetType(TargetDefinition td) {
+		if ( td.isOnce() ) {
+			return "1" ;
+		}
+		else if ( td.isResource() ) {
+			return "R" ;
+		}
+		else {
+			return "*" ;
+		}
+	}
+	
 	
 	private void printResult( GenerationTaskResult result ) {
 		print("Generation completed.");
