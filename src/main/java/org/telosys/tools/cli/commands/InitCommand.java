@@ -39,14 +39,10 @@ public class InitCommand  extends Command {
 	@Override
 	public String execute(String[] args) {
 		
-//		if ( environment.getHomeDirectory() == null ) {
-//			return "Home directory must be set before" ;
-//		}
-
-//		String projectFullPath = environment.getHomeDirectory();
-//		TelosysProject telosysProject = new TelosysProject(projectFullPath);
-		TelosysProject telosysProject = getTelosysProject();
-		String result = telosysProject.initProject();
-		return result ;
+		if ( checkHomeDirectoryDefined() ) {
+			TelosysProject telosysProject = getTelosysProject();
+			return telosysProject.initProject();
+		}
+		return null ;
 	}
 }
