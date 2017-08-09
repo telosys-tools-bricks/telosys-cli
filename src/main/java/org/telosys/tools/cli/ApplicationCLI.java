@@ -5,10 +5,16 @@ import java.io.PrintWriter;
 
 import jline.console.ConsoleReader;
 
-public class Main {
+/**
+ * Application entry point for CLI
+ * 
+ * @author Laurent GUERIN
+ *
+ */
+public class ApplicationCLI {
 	
 	/**
-	 * 
+	 * Main
 	 * @param args
 	 * @throws IOException
 	 */
@@ -27,6 +33,7 @@ public class Main {
 			//out.println( Color.colorize(banner, Color.YELLOW_BRIGHT));
 			//out.println( Color.colorize(banner, Color.BLUE_BRIGHT));
 			out.println( Color.colorize(banner, Color.CYAN_BRIGHT));
+			out.println("Enter ? for help");
 
 			CommandLineProcessor commandLineProcessor = new CommandLineProcessor( consoleReader, commandProvider ) ;
 			
