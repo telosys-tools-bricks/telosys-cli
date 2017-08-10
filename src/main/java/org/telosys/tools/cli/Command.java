@@ -327,6 +327,7 @@ public abstract class Command {
 	}
 	
 	protected String launchEditor(String fileFullPath) {
+		print("Edit file '" + fileFullPath + "'");
 		String editorCommand = environment.getEditorCommand();
 		String fullCommand = editorCommand ;
 		if ( ! StrUtil.nullOrVoid(fileFullPath) ) {

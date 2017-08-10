@@ -18,7 +18,7 @@ public class GitHubBundlesUtil {
 	public final static List<String> getBundles(TelosysProject telosysProject, String githubStoreName, List<String> criteria) throws TelosysToolsException {
 		
 		// Get all the bundles available in the GitHub store
-		List<String> bundles = telosysProject.getBundlesList(githubStoreName);
+		List<String> bundles = telosysProject.getGitHubBundlesList(githubStoreName);
 		if ( bundles != null ) {
 			// Filter with criteria
 			return BundlesFilter.filter(bundles, criteria);

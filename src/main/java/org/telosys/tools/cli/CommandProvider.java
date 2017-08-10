@@ -13,6 +13,7 @@ import org.telosys.tools.cli.commands.CheckModelCommand;
 import org.telosys.tools.cli.commands.DeleteBundleCommand;
 import org.telosys.tools.cli.commands.DeleteEntityCommand;
 import org.telosys.tools.cli.commands.DeleteModelCommand;
+import org.telosys.tools.cli.commands.EditBundleCommand;
 import org.telosys.tools.cli.commands.EditCommand;
 import org.telosys.tools.cli.commands.EditEntityCommand;
 import org.telosys.tools.cli.commands.EditProjectCfgCommand;
@@ -104,7 +105,7 @@ public class CommandProvider {
 		register(new InstallBundlesCommand(consoleReader, environment)); // ib : install  bundle(s) from GitHub 				
 		register(new ListBundlesCommand(consoleReader, environment)); // lb (list installed bundles)
 		register(new BundleCommand(consoleReader, environment)); // b set/print current bundle
-		// eb (edit bundle --> edit templates.cfg )
+		register(new EditBundleCommand(consoleReader, environment)); // eb : edit bundle
 		register(new DeleteBundleCommand(consoleReader, environment)); // db : delete bundle
 
 		// Templates commands
