@@ -3,10 +3,14 @@ package org.telosys.tools.cli.commons;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.telosys.tools.api.TelosysProject;
+import org.telosys.tools.commons.TelosysToolsException;
+
 public class BundlesFilter {
 	
 	/**
-	 * Builds a list of criteria from the given command line arguments
+	 * Builds a list of criteria from the given command line arguments <br>
+	 * taking all the arguments from 1 to N (except 0)
 	 * @param commandArgs 
 	 * @return
 	 */
@@ -52,6 +56,21 @@ public class BundlesFilter {
 			}
 			return result;
 		}
+	}
+
+	/**
+	 * Return a list with all the existing bundles matching the given command arguments 
+	 * @param telosysProject
+	 * @param commandArgs
+	 * @return
+	 * @throws TelosysToolsException
+	 */
+	public static List<String> getExistingBundles(TelosysProject telosysProject, String[] commandArgs) throws TelosysToolsException {
+		List<String> criteria = BundlesFilter.buildCriteriaFromArgs(commandArgs);
+		// get all installed bundles
+		List<String> bundles = telosysProject.getInstalledBundles();
+		// filter with criteria if any
+		return filter(bundles, criteria);
 	}
 
 }

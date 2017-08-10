@@ -3,6 +3,7 @@ package org.telosys.tools.cli;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import jline.console.ConsoleReader;
 
@@ -165,6 +166,20 @@ public abstract class Command {
 			out.flush();
 		}
 	}
+
+	/**
+	 * Prints the given list of strings with a ' . ' at the beginning 
+	 * @param strings
+	 * @return
+	 */
+	protected void printList(List<String> strings) {
+		if ( strings != null ) {
+			for ( String s : strings ) {
+				out.println(" . " + s);
+			}
+		}
+		out.flush();
+	}	
 
 	protected String getCurrentDirectory() {
 		return environment.getCurrentDirectory();

@@ -258,11 +258,6 @@ public class GenerateCommand extends CommandWithModel {
 		return telosysProject.launchGeneration(model, entityNames, bundleName, targetsList, flagResources);
 	}
 
-	private void printList( List<String> list ) {
-		for ( String s : list ) {
-			print(" . " + s);
-		}
-	}
 	private void printTargetDefinition( List<TargetDefinition> targetDefinitions ) {
 		for ( TargetDefinition td : targetDefinitions ) {
 			//print(" . " + td.getTemplate() + " --> " + td.getFile() );

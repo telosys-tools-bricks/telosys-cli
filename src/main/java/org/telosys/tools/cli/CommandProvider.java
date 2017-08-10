@@ -10,6 +10,7 @@ import jline.console.ConsoleReader;
 import org.telosys.tools.cli.commands.BundleCommand;
 import org.telosys.tools.cli.commands.CdCommand;
 import org.telosys.tools.cli.commands.CheckModelCommand;
+import org.telosys.tools.cli.commands.DeleteBundleCommand;
 import org.telosys.tools.cli.commands.DeleteEntityCommand;
 import org.telosys.tools.cli.commands.DeleteModelCommand;
 import org.telosys.tools.cli.commands.EditCommand;
@@ -104,7 +105,7 @@ public class CommandProvider {
 		register(new ListBundlesCommand(consoleReader, environment)); // lb (list installed bundles)
 		register(new BundleCommand(consoleReader, environment)); // b set/print current bundle
 		// eb (edit bundle --> edit templates.cfg )
-		// db (delete bundle)
+		register(new DeleteBundleCommand(consoleReader, environment)); // db : delete bundle
 
 		// Templates commands
 		register(new ListTemplatesCommand(consoleReader, environment)); // lt : list templates				
