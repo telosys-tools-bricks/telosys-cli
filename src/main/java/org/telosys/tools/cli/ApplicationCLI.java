@@ -33,6 +33,7 @@ public class ApplicationCLI {
 			//out.println( Color.colorize(banner, Color.YELLOW_BRIGHT));
 			//out.println( Color.colorize(banner, Color.BLUE_BRIGHT));
 			out.println( Color.colorize(banner, Color.CYAN_BRIGHT));
+//			out.println( getJarLocation() );
 			out.println("Enter ? for help");
 
 			CommandLineProcessor commandLineProcessor = new CommandLineProcessor( consoleReader, commandProvider ) ;
@@ -46,4 +47,15 @@ public class ApplicationCLI {
 			System.out.flush();
 		}
 	}
+	
+//	private static String getJarLocation() {
+//		URL url = ApplicationCLI.class.getProtectionDomain().getCodeSource().getLocation();
+//		try {
+//			URI uri = url.toURI();
+//			File file = new File( uri.getPath() ) ;
+//			return file.toString();
+//		} catch (URISyntaxException e) {
+//			throw new RuntimeException("Cannot get exe location (URISyntaxException)", e);
+//		}		
+//	}
 }

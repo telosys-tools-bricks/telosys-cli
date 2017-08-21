@@ -330,9 +330,23 @@ public abstract class Command {
 		print("Edit file '" + fileFullPath + "'");
 		String editorCommand = environment.getEditorCommand();
 		String fullCommand = editorCommand ;
-		if ( ! StrUtil.nullOrVoid(fileFullPath) ) {
-			fullCommand = editorCommand + " " + fileFullPath;
+		
+		String fileToEdit = fileFullPath ;
+		if ( StrUtil.nullOrVoid(fileToEdit) ) {
+			fileToEdit = "" ; // for replacement in "xxx $FILE"
 		}
+
+		// Replace $FILE or ${FILE] if present
+		if ( editorCommand.contains("$FILE") ) {
+			fullCommand = StrUtil.replaceVar(editorCommand, "$FILE", fileToEdit);
+		}
+		else if ( editorCommand.contains("${FILE}") ) {
+			fullCommand = StrUtil.replaceVar(editorCommand, "${FILE}", fileToEdit);
+		}
+		else {
+			fullCommand = editorCommand + " " + fileToEdit;
+		}
+
 		launchSystemCommand(fullCommand);
 		return fullCommand ;
 	}
