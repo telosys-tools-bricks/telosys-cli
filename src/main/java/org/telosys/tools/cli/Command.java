@@ -10,6 +10,8 @@ import jline.console.ConsoleReader;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.commons.FileUtil;
 import org.telosys.tools.commons.StrUtil;
+import org.telosys.tools.commons.TelosysToolsException;
+import org.telosys.tools.commons.bundles.TargetsDefinitions;
 
 /**
  * Command abstract class
@@ -228,6 +230,19 @@ public abstract class Command {
 //	}
 
 	//-------------------------------------------------------------------------
+	protected boolean checkArguments(String[] args, int ... n) {
+		boolean ok = false ;
+		int argsCount = args.length - 1 ;
+		for ( int i : n ) {
+			if ( argsCount == i ) {
+				ok = true ;
+			}
+		}
+		if ( ! ok ) {
+			print("Invalid usage : unexpected number of arguments");
+		}
+		return ok ;
+	}
 
 	//-------------------------------------------------------------------------
 	// Model
@@ -285,6 +300,20 @@ public abstract class Command {
 	 */
 	protected String getCurrentBundle() {
 		return environment.getCurrentBundle();
+	}
+
+	/**
+	 * Returns the TargetsDefinitions for the current bundle
+	 * @return
+	 */
+	protected TargetsDefinitions getCurrentTargetsDefinitions() {
+		TelosysProject telosysProject = getTelosysProject();
+		try {
+			return telosysProject.getTargetDefinitions( getCurrentBundle() );
+		} catch (TelosysToolsException e) {
+			printError(e);
+			throw new CancelCommandException("Cannot get TargetsDefinitions");
+		}
 	}
 	
 	//-------------------------------------------------------------------------

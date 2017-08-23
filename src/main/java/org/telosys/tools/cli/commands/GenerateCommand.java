@@ -1,9 +1,7 @@
 package org.telosys.tools.cli.commands;
 
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import jline.console.ConsoleReader;
 
@@ -11,6 +9,7 @@ import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CancelCommandException;
 import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.cli.commons.TargetUtil;
 import org.telosys.tools.commons.StrUtil;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.bundles.TargetDefinition;
@@ -71,6 +70,10 @@ public class GenerateCommand extends CommandWithModel {
 		return null ;
 	}
 
+	/**
+	 * Generation entry point
+	 * @param args all the arguments as provided by the command line (0 to N)
+	 */
 	private void generate(String[] args)  {
 		GenerationTaskResult result ;
 		try {
@@ -87,7 +90,7 @@ public class GenerateCommand extends CommandWithModel {
 	
 	/**
 	 * @param argEntityNames argument for entities ( eg '*', 'Car', 'Car,Driver', etc )
-	 * @param argTemplateNames argument for templates ( eg '*', 'CacheFilter_java.vm', etc )
+	 * @param argTemplateNames argument for templates ( eg '*', 'CacheFilter_java.vm', '_java,_xml', etc )
 	 * @return
 	 * @throws TelosysToolsException
 	 * @throws GeneratorException
@@ -107,8 +110,10 @@ public class GenerateCommand extends CommandWithModel {
 		print("Entities (model="+model.getName()+") : ");
 		printList(entityNames);
 		print("Templates (bundle="+bundleName+") : ");
-		//printList(templateNames);
-		printTargetDefinition(targetDefinitions);
+		
+		//printTargetDefinition(targetDefinitions);
+		print ( TargetUtil.buildListAsString(targetDefinitions) );
+
 
 		if ( confirm("Do you want to launch the generation") ) {
 			print("Generation in progress...");
@@ -164,118 +169,130 @@ public class GenerateCommand extends CommandWithModel {
 		}
 	}
 	
-	private List<String> buildTemplateNames(String arg) throws TelosysToolsException {
-		List<String> list = new LinkedList<String>();
-		if ( "*".equals(arg) ) {
-			// All  
-			return getTelosysProject().getTemplates(getCurrentBundle());
-		}
-		else if ( arg.contains(",") ) {
-			// Many entity names : eg 'template1,template2,template3'
-			String[] array = StrUtil.split(arg, ',' );
-			for ( String s : array ) {
-				String templateName = s.trim();
-				if ( templateName.length() > 0 ) {
-					list.add(s.trim());
-				}
-			}
-		}
-		else {
-			// Only 1 entity name
-			list.add(arg);
-		}
-		return list ;
-	}
+//	private List<String> buildTemplateNames(String arg) throws TelosysToolsException {
+//		List<String> list = new LinkedList<String>();
+//		if ( "*".equals(arg) ) {
+//			// All  
+//			return getTelosysProject().getTemplates(getCurrentBundle());
+//		}
+//		else if ( arg.contains(",") ) {
+//			// Many entity names : eg 'template1,template2,template3'
+//			String[] array = StrUtil.split(arg, ',' );
+//			for ( String s : array ) {
+//				String templateName = s.trim();
+//				if ( templateName.length() > 0 ) {
+//					list.add(s.trim());
+//				}
+//			}
+//		}
+//		else {
+//			// Only 1 entity name
+//			list.add(arg);
+//		}
+//		return list ;
+//	}
 	
+	/**
+	 * Returns a list of TargetDefinitions for the given argument <br>
+	 * 
+	 * @param arg can be '*' or a single 'pattern' or a list of 'patterns' ( eg '*' or 'record' or 'record,resource' )
+	 * @return
+	 * @throws TelosysToolsException
+	 */
 	private List<TargetDefinition> buildTargetsList(String arg) throws TelosysToolsException {
-		
-		TargetsDefinitions targetsDefinitions = getTelosysProject().getTargetDefinitions(getCurrentBundle());
-		List<TargetDefinition> allTemplatesDefinitions = targetsDefinitions.getTemplatesTargets();
-		
-		if ( "*".equals(arg) ) {
-			// All targets
-			return allTemplatesDefinitions ;
-		}
-		else {
-			if ( arg.contains(",") ) {
-				// Many template patterns (eg 'template1,template2,template3')
-				Map<String,TargetDefinition> map = new Hashtable<String,TargetDefinition>();
-				String[] array = StrUtil.split(arg, ',' );
-				for ( String s : array ) {
-					String templateName = s.trim();
-					if ( templateName.length() > 0 ) {
-						List<TargetDefinition> list = getTargetDefinitionsForTemplatePattern(templateName);
-						for ( TargetDefinition td : list ) {
-							map.put(td.getTemplate(), td);
-						}
-					}
-				}
-				// Convert map values to list
-				List<TargetDefinition> list = new LinkedList<TargetDefinition>();
-				for ( TargetDefinition td : map.values() ) {
-					list.add(td);
-				}
-				return list;
-			}
-			else {
-				// Only 1 template pattern 
-				return getTargetDefinitionsForTemplatePattern(arg);
-			}
-		}
-	}
-	
-	private List<TargetDefinition> getTargetDefinitionsForTemplatePattern(String templateName) {
-		// TODO
-		return new LinkedList<TargetDefinition>();
-	}
-	
-	private List<TargetDefinition> buildTargets(String bundleName, List<String> templatesNames) throws TelosysToolsException {
-		TelosysProject telosysProject = getTelosysProject();
-		TargetsDefinitions targetDefinitions = telosysProject.getTargetDefinitions(bundleName);
-		List<TargetDefinition> allTemplates = targetDefinitions.getTemplatesTargets();
-		List<TargetDefinition> selectedTemplates = new LinkedList<TargetDefinition>();
-		for ( String templateName : templatesNames ) {
-			// search template name in target definitions
-			for ( TargetDefinition targetDef : allTemplates ) {
-				if ( targetDef.getFile().equals(templateName) ) {
-					// Found
-					selectedTemplates.add( targetDef );
-				}
-			}
-		}		
-		return selectedTemplates ;
-	}
-	
-	private GenerationTaskResult generate(Model model, List<String> entityNames, List<String> templateNames) throws TelosysToolsException, GeneratorException {
-		TelosysProject telosysProject = getTelosysProject();
-		
-		String bundleName = getCurrentBundle() ;
-		List<TargetDefinition> targetsList = buildTargets(bundleName, templateNames);
-		boolean flagResources = false ; 
-		
-		print("targetsList : " + targetsList.size() );
-		
-		return telosysProject.launchGeneration(model, entityNames, bundleName, targetsList, flagResources);
-	}
 
-	private void printTargetDefinition( List<TargetDefinition> targetDefinitions ) {
-		for ( TargetDefinition td : targetDefinitions ) {
-			//print(" . " + td.getTemplate() + " --> " + td.getFile() );
-			print(" . [" + getTargetType(td) + "] " + td.getTemplate() );
-		}
-	}
-	private String getTargetType(TargetDefinition td) {
-		if ( td.isOnce() ) {
-			return "1" ;
-		}
-		else if ( td.isResource() ) {
-			return "R" ;
-		}
-		else {
-			return "*" ;
-		}
+		TargetsDefinitions targetDefinitions = getCurrentTargetsDefinitions();
+		List<String> criteria = TargetUtil.buildCriteriaFromArg(arg) ;
+		return TargetUtil.filter(targetDefinitions.getTemplatesTargets(), criteria);
+		
+//		
+//		// Get all the target definitions for the current bundle ( templates and resources )
+//		TargetsDefinitions targetsDefinitions = getTelosysProject().getTargetDefinitions(getCurrentBundle());
+//		// targetsDefinitions.getResourcesTargets()
+//		// targetsDefinitions.getTemplatesTargets()
+//		// Keep only the 'targets definitions' for real 'templates' (do not keep 'resources')
+//		List<TargetDefinition> allTemplatesDefinitions = targetsDefinitions.getTemplatesTargets();
+//		
+//		if ( "*".equals(arg) ) {
+//			// All targets
+//			return allTemplatesDefinitions ;
+//		}
+//		else {
+//			if ( arg.contains(",") ) {
+//				// Many template patterns (eg 'template1,template2,template3')
+//				
+//				// Store selected templates in a map for uniqueness, 
+//				// the ID is the Velocity template name ( ID String --> TargetDefinition )
+//				Map<String,TargetDefinition> map = new Hashtable<String,TargetDefinition>();
+//				String[] array = StrUtil.split(arg, ',' );
+//				for ( String s : array ) {
+//					String templateName = s.trim();
+//					if ( templateName.length() > 0 ) {
+//						List<TargetDefinition> list = getTargetDefinitionsForTemplatePattern(allTemplatesDefinitions, templateName);
+//						for ( TargetDefinition td : list ) {
+//							map.put(td.getId(), td); // eg 'ID-String' --> TargetDefinition
+//						}
+//					}
+//				}
+//				// Convert map values to list
+//				List<TargetDefinition> list = new LinkedList<TargetDefinition>();
+//				for ( TargetDefinition td : map.values() ) {
+//					list.add(td);
+//				}
+//				return list;
+//			}
+//			else {
+//				// Only 1 template pattern 
+//				return getTargetDefinitionsForTemplatePattern(allTemplatesDefinitions, arg);
+//			}
+//		}
 	}
 	
+//	/**
+//	 * Returns a list of TargetDefinitions matching the given template pattern 
+//	 * @param templateName
+//	 * @return
+//	 */
+//	private List<TargetDefinition> getTargetDefinitionsForTemplatePattern(List<TargetDefinition> allTemplatesDefinitions, String templatePattern) {
+//		List<TargetDefinition> selected = new LinkedList<TargetDefinition>();
+//		for ( TargetDefinition td : allTemplatesDefinitions ) {
+//			String template = td.getTemplate() ;
+//			if ( template.contains(templatePattern) ) {
+//				selected.add(td) ;
+//			}
+//		}
+//		return selected;
+//	}
+	
+//	private List<TargetDefinition> buildTargets(String bundleName, List<String> templatesNames) throws TelosysToolsException {
+//		TelosysProject telosysProject = getTelosysProject();
+//		TargetsDefinitions targetDefinitions = telosysProject.getTargetDefinitions(bundleName);
+//		List<TargetDefinition> allTemplates = targetDefinitions.getTemplatesTargets();
+//		List<TargetDefinition> selectedTemplates = new LinkedList<TargetDefinition>();
+//		for ( String templateName : templatesNames ) {
+//			// search template name in target definitions
+//			for ( TargetDefinition targetDef : allTemplates ) {
+//				if ( targetDef.getFile().equals(templateName) ) {
+//					// Found
+//					selectedTemplates.add( targetDef );
+//				}
+//			}
+//		}		
+//		return selectedTemplates ;
+//	}
+	
+//	private GenerationTaskResult generate(Model model, List<String> entityNames, List<String> templateNames) throws TelosysToolsException, GeneratorException {
+//		TelosysProject telosysProject = getTelosysProject();
+//		
+//		String bundleName = getCurrentBundle() ;
+//		List<TargetDefinition> targetsList = buildTargets(bundleName, templateNames);
+//		boolean flagResources = false ; 
+//		
+//		print("targetsList : " + targetsList.size() );
+//		
+//		return telosysProject.launchGeneration(model, entityNames, bundleName, targetsList, flagResources);
+//	}
+
 	
 	private void printResult( GenerationTaskResult result ) {
 		print("Generation completed.");
