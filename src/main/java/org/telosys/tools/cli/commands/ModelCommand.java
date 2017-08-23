@@ -6,10 +6,11 @@ import jline.console.ConsoleReader;
 
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
+import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.TelosysToolsException;
 
-public class ModelCommand extends Command {
+public class ModelCommand extends CommandWithModel {
 
 	/**
 	 * Constructor
@@ -51,23 +52,33 @@ public class ModelCommand extends Command {
 		}
 	}
 	
+//	private String tryToSetCurrentModel(String modelName) {
+//		TelosysProject telosysProject = getTelosysProject(); 
+//		if ( telosysProject != null ) {
+//			try {
+//				File file = telosysProject.getDslModelFile(modelName);
+//				if (file.exists()) {
+//					setCurrentModel(modelName);
+//					return "Current model is now '" + getCurrentModel() + "'";
+//				}
+//				else {
+//					return "Model '" + modelName + "' not found";
+//				}
+//			} catch (TelosysToolsException e) {
+//				printError(e);
+//			}
+//		}
+//		return null ;
+//	}
+
 	private String tryToSetCurrentModel(String modelName) {
-//		TelosysProject telosysProject = getTelosysProject(environment); 
-		TelosysProject telosysProject = getTelosysProject(); 
-		if ( telosysProject != null ) {
-			try {
-				File file = telosysProject.getDslModelFile(modelName);
-				if (file.exists()) {
-					setCurrentModel(modelName);
-					return "Current model is now '" + getCurrentModel() + "'";
-				}
-				else {
-					return "Model '" + modelName + "' not found";
-				}
-			} catch (TelosysToolsException e) {
-				printError(e);
-			}
+		File modelFile = getModelFile(modelName);
+		if ( modelFile != null ) {
+			setCurrentModel(modelFile.getName());
+			return "Current model is now '" + getCurrentModel() + "'";
 		}
-		return null ;
+		else {
+			return "Model '" + modelName + "' not found";
+		}		
 	}
 }
