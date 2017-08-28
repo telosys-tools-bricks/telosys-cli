@@ -18,10 +18,24 @@ public class EntityUtil {
 	private EntityUtil() {
 	}
 		
+	/**
+	 * Filters the given entities according with the given criteria
+	 * @param allEntities
+	 * @param criteria
+	 * @return
+	 */
 	public final static List<Entity> filter( List<Entity> allEntities, List<String> criteria ) {
 		List<Entity> list = select(allEntities, criteria);
 		sort(list);
 		return list;
+	}
+	
+	public final static List<String> toEntityNames( List<Entity> entities ) {
+		List<String> list = new LinkedList<String>();
+		for ( Entity e : entities ) {
+			list.add(e.getClassName());
+		}
+		return list ;
 	}
 	
 	/**
