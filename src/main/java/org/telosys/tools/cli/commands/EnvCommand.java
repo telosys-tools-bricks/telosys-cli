@@ -54,8 +54,8 @@ public class EnvCommand extends Command {
 		appendLine(sb, ". Editor command       : " + environment.getEditorCommand() );
 		appendLine(sb, ". '.jar' file          : " + environment.getJarLocation() );
 		appendLine(sb, ". Current directory    : " + environment.getCurrentDirectory() );
-		appendLine(sb, ". Home directory       : " + undefinedIfNull(environment.getHomeDirectory()) );
 		appendLine(sb, ". Current GitHub store : " + undefinedIfNull(environment.getCurrentGitHubStore()) );
+		appendLine(sb, ". Home directory       : " + undefinedIfNull(environment.getHomeDirectory()) );
 		appendLine(sb, ". Current model        : " + undefinedIfNull(environment.getCurrentModel()) );
 		appendLine(sb, ". Current bundle       : " + undefinedIfNull(environment.getCurrentBundle()) );
 		

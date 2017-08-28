@@ -47,14 +47,7 @@ public class Environment {
 		this.currentModel     = null ;
 		this.currentBundle    = null ;
 		this.osName = System.getProperty("os.name");
-//		if ( osName.contains("windows") || osName.contains("Windows") ) {
-//			editorCommand = "notepad.exe" ;
-//		}
-//		else {
-//			editorCommand = "vi" ;
-//		}
 		this.editorCommand = findEditorCommand();
-		
 	}
 	
 	/**
@@ -63,12 +56,12 @@ public class Environment {
 	 * @return
 	 */
 	private String findEditorCommand() {
-		String specificEditorCommand = getSpecificEditorCommand();
+		String specificEditorCommand = findSpecificEditorCommand();
 		if ( specificEditorCommand != null ) {
 			return specificEditorCommand ;
 		}
 		else {
-			return getDefaultEditorCommand();
+			return determineDefaultEditorCommand();
 		}
 	}
 	
@@ -95,6 +88,25 @@ public class Environment {
 		}		
 	}
 
+	/**
+	 * Tries to find a specific editor command defined in the configuration file
+	 * @return the specific command or null if nout found
+	 */
+	private String findSpecificEditorCommand() {
+		String cmd = null ;
+		File configFile = findConfigFile();
+		if ( configFile != null ) {
+			PropertiesManager pm = new PropertiesManager(configFile);
+			Properties p = pm.load();
+			cmd = p.getProperty(EDITOR_COMMAND);
+		}
+		return cmd ;
+	}
+
+	/**
+	 * Tries to find a configuration file 
+	 * @return the file or null if not found
+	 */
 	private File findConfigFile() {
 		File file = findJarFile();
 		if ( file.exists() ) {
@@ -108,18 +120,11 @@ public class Environment {
 		return null ;
 	}
 
-	private String getSpecificEditorCommand() {
-		String cmd = null ;
-		File configFile = findConfigFile();
-		if ( configFile.exists() ) {
-			PropertiesManager pm = new PropertiesManager(configFile);
-			Properties p = pm.load();
-			cmd = p.getProperty(EDITOR_COMMAND);
-		}
-		return cmd ;
-	}
-
-	private String getDefaultEditorCommand() {
+	/**
+	 * Determine the suitable command according with the current OS
+	 * @return
+	 */
+	private String determineDefaultEditorCommand() {
 		String osName = System.getProperty("os.name");
 		if ( osName.contains("windows") || osName.contains("Windows") ) {
 			// Windows
