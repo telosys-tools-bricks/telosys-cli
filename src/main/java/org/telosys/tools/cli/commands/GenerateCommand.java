@@ -9,6 +9,7 @@ import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CancelCommandException;
 import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.cli.commons.CriteriaUtil;
 import org.telosys.tools.cli.commons.TargetUtil;
 import org.telosys.tools.commons.StrUtil;
 import org.telosys.tools.commons.TelosysToolsException;
@@ -202,7 +203,7 @@ public class GenerateCommand extends CommandWithModel {
 	private List<TargetDefinition> buildTargetsList(String arg) throws TelosysToolsException {
 
 		TargetsDefinitions targetDefinitions = getCurrentTargetsDefinitions();
-		List<String> criteria = TargetUtil.buildCriteriaFromArg(arg) ;
+		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(arg) ;
 		return TargetUtil.filter(targetDefinitions.getTemplatesTargets(), criteria);
 		
 //		

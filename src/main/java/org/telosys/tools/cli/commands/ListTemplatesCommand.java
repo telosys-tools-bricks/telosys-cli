@@ -6,6 +6,7 @@ import jline.console.ConsoleReader;
 
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.cli.commons.CriteriaUtil;
 import org.telosys.tools.cli.commons.TargetUtil;
 import org.telosys.tools.commons.bundles.TargetDefinition;
 import org.telosys.tools.commons.bundles.TargetsDefinitions;
@@ -44,7 +45,7 @@ public class ListTemplatesCommand extends Command {
 	
 	@Override
 	public String getUsage() {
-		return "lt [name-part1,name-part2, ...]";
+		return "lt [*|pattern|pattern1,pattern2,...]";
 	}
 	
 	@Override
@@ -57,7 +58,8 @@ public class ListTemplatesCommand extends Command {
 	
 	private String listTemplates(String[] args) {
 		TargetsDefinitions targetDefinitions = getCurrentTargetsDefinitions();
-		List<String> criteria = TargetUtil.buildCriteriaFromArg(args.length > 1 ? args[1] : null) ;
+		//List<String> criteria = TargetUtil.buildCriteriaFromArg(args.length > 1 ? args[1] : null) ;
+		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(args.length > 1 ? args[1] : null) ;
 		List<TargetDefinition> selectedTargets = TargetUtil.filter(targetDefinitions.getTemplatesTargets(), criteria);
 		print ( TargetUtil.buildListAsString(selectedTargets) );
 		return null ;
