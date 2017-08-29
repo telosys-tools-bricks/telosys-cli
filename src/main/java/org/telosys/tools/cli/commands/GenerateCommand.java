@@ -58,13 +58,17 @@ public class GenerateCommand extends CommandWithModel {
 	@Override
 	public String execute(String[] args) {
 		if ( checkModelDefined() && checkBundleDefined() ) {
-			if ( args.length == 3 ) {
+			// Check arguments :
+			// 1 : gen -r
+			// 2 : gen * * 
+			// 3 : gen * * -r 
+			if ( checkArguments(args, 1, 2, 3 ) ) {
 				generate(args);
 				return null;
-			} 
-			else {
-				return invalidUsage("Usage : " + getUsage() );
 			}
+//			else {
+//				return invalidUsage("Usage : " + getUsage() );
+//			}
 		}
 		return null ;
 	}
@@ -74,9 +78,25 @@ public class GenerateCommand extends CommandWithModel {
 	 * @param args all the arguments as provided by the command line (0 to N)
 	 */
 	private void generate(String[] args)  {
-		GenerationTaskResult result ;
+		GenerationTaskResult result = null ;
 		try {
-			result = generate(args[1], args[2]);
+			if ( args.length == 3 ) {
+				// gen * * 
+				result = generate(args[1], args[2], false);
+			}
+			else if ( args.length == 4 ) {
+				// gen * * -r 
+				if ( checkResourcesOption(args[3]) ) {
+					result = generate(args[1], args[2], true);
+				}
+			}
+			else if ( args.length == 2 ) {
+				// gen -r 
+				if ( checkResourcesOption(args[1]) ) {
+					// TODO : result = generateResources();
+				}
+			}
+			
 			if ( result != null ) {
 				printResult(result);
 			}
@@ -87,14 +107,26 @@ public class GenerateCommand extends CommandWithModel {
 		}
 	}
 	
+	private boolean checkResourcesOption(String option) {
+		if ( "-r".equals(option) ) {
+			return true ;
+		}
+		else {
+			print("Invalid argument '" + option + "' ( '-r' expected ) ");
+			return false ;
+		}
+	}
+	
 	/**
 	 * @param argEntityNames argument for entities ( eg '*', 'Car', 'Car,Driver', etc )
 	 * @param argTemplateNames argument for templates ( eg '*', 'CacheFilter_java.vm', '_java,_xml', etc )
-	 * @return
+	 * @param flagResources resources generation flag : true = generate resources
+	 * @return 
 	 * @throws TelosysToolsException
 	 * @throws GeneratorException
 	 */
-	private GenerationTaskResult generate(String argEntityNames, String argTemplateNames) throws TelosysToolsException, GeneratorException {
+	private GenerationTaskResult generate(String argEntityNames, String argTemplateNames, 
+			boolean flagResources) throws TelosysToolsException, GeneratorException {
 		
 		TelosysProject telosysProject = getTelosysProject();
 		// Loads the model for the current model name
@@ -106,23 +138,27 @@ public class GenerateCommand extends CommandWithModel {
 		List<TargetDefinition> targetDefinitions = buildTargetsList(argTemplateNames);
 		
 		print("Entities ( model = '"+getCurrentModel()+"' ) : ");
-		//printList(entityNames);
 		print ( EntityUtil.buildListAsString(entities) );
 		List<String> entityNames = EntityUtil.toEntityNames(entities);
 
 		print("Templates ( bundle = '"+bundleName+"' ) : ");
 		print ( TargetUtil.buildListAsString(targetDefinitions) );
 
+		print("Copy resources : " + ( flagResources ? "yes" : "no" ));
 
-		if ( confirm("Do you want to launch the generation") ) {
-			print("Generation in progress...");
-			
-			boolean flagResources = false ; 
-			return telosysProject.launchGeneration(model, entityNames, bundleName, targetDefinitions, flagResources);			
+		if ( entityNames.size() == 0 || targetDefinitions.size() == 0 ) {
+			print("No entity or no templates => nothing to generate ");
+			return null ;
 		}
 		else {
-			print("Generation canceled.");
-			return null ;
+			if ( confirm("Do you want to launch the generation") ) {
+				print("Generation in progress...");
+				return telosysProject.launchGeneration(model, entityNames, bundleName, targetDefinitions, flagResources);			
+			}
+			else {
+				print("Generation canceled.");
+				return null ;
+			}
 		}
 	}
 

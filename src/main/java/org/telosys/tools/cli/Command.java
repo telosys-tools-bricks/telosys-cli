@@ -230,6 +230,12 @@ public abstract class Command {
 //	}
 
 	//-------------------------------------------------------------------------
+	/**
+	 * Check the number of arguments
+	 * @param args all the arguments retrieved from the command line
+	 * @param n list of acceptable number of arguments without the command itself (without args[0])
+	 * @return
+	 */
 	protected boolean checkArguments(String[] args, int ... n) {
 		boolean ok = false ;
 		int argsCount = args.length - 1 ;
