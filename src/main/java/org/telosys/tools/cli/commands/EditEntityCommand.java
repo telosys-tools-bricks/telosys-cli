@@ -43,7 +43,12 @@ public class EditEntityCommand extends Command {
 	public String execute(String[] args) {
 		if ( args.length > 1 ) {
 			if ( checkModelDefined() ) {
-				return editEntity(args[1]);
+				if ( getCurrentModel().endsWith(".model") ) {
+					return editEntityDSL(args[1]);
+				}
+				else {
+					editDBModelFile();
+				}
 			}
 		}
 		else {
@@ -52,7 +57,12 @@ public class EditEntityCommand extends Command {
 		return null ;
 	}
 
-	private String editEntity(String entityName) {
+	/**
+	 * Edit the ENTITY FILE  ( eg Car.entity ) 
+	 * @param entityName
+	 * @return
+	 */
+	private String editEntityDSL(String entityName) {
 		TelosysProject telosysProject = getTelosysProject();
 		if ( telosysProject != null ) {
 			try {
@@ -64,5 +74,23 @@ public class EditEntityCommand extends Command {
 		}
 		return null ;
 	}
+
+	/**
+	 * Edit the DBMODEL FILE ( eg bookstore.dbmodel / .dbrep )
+	 * @return
+	 */
+	private String editDBModelFile() {
+		TelosysProject telosysProject = getTelosysProject();
+		if ( telosysProject != null ) {
+			try {
+				File file = telosysProject.getModelFile(getCurrentModel());
+				return launchEditor(file.getAbsolutePath() );
+			} catch (TelosysToolsException e) {
+				printError(e);
+			}
+		}
+		return null ;
+	}
+
 
 }

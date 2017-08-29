@@ -41,12 +41,14 @@ public class ModelCommand extends CommandWithModel {
 	public String execute(String[] args) {
 		
 		if ( args.length > 1 ) {
-			return tryToSetCurrentModel(args[1]);
+			if ( checkHomeDirectoryDefined() ) {
+				return tryToSetCurrentModel(args[1]);
+			}
 		}
 		else {
-			//return invalidUsage("model-name argument expected");
 			return undefinedIfNull(getCurrentModel());
 		}
+		return null ;
 	}
 	
 	private String tryToSetCurrentModel(String modelName) {
@@ -55,8 +57,9 @@ public class ModelCommand extends CommandWithModel {
 			setCurrentModel(modelFile.getName());
 			return "Current model is now '" + getCurrentModel() + "'";
 		}
-		else {
-			return "Model '" + modelName + "' not found";
-		}		
+//		else {
+//			return "Model '" + modelName + "' not found";
+//		}	
+		return null ;
 	}
 }
