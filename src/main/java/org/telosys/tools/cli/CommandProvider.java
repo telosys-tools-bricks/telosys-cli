@@ -31,6 +31,7 @@ import org.telosys.tools.cli.commands.ListBundlesCommand;
 import org.telosys.tools.cli.commands.ListEntitiesCommand;
 import org.telosys.tools.cli.commands.ListGitHubCommand;
 import org.telosys.tools.cli.commands.ListModelsCommand;
+import org.telosys.tools.cli.commands.ListResourcesCommand;
 import org.telosys.tools.cli.commands.ListTemplatesCommand;
 import org.telosys.tools.cli.commands.LsCommand;
 import org.telosys.tools.cli.commands.ModelCommand;
@@ -110,6 +111,7 @@ public class CommandProvider {
 
 		// Templates commands
 		register(new ListTemplatesCommand(consoleReader, environment)); // lt : list templates				
+		register(new ListResourcesCommand(consoleReader, environment)); // lr : list resources				
 		// et (edit template --> .vm ) : ee foo --> edit foo.vm
 		// dt (delete template)
 		
