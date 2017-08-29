@@ -1,5 +1,6 @@
 package org.telosys.tools.cli.commands;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import jline.console.ConsoleReader;
@@ -93,7 +94,7 @@ public class GenerateCommand extends CommandWithModel {
 			else if ( args.length == 2 ) {
 				// gen -r 
 				if ( checkResourcesOption(args[1]) ) {
-					// TODO : result = generateResources();
+					result = generateResources();
 				}
 			}
 			
@@ -160,6 +161,32 @@ public class GenerateCommand extends CommandWithModel {
 				return null ;
 			}
 		}
+	}
+
+	private GenerationTaskResult generateResources() throws TelosysToolsException, GeneratorException {
+		
+		TelosysProject telosysProject = getTelosysProject();
+		
+		Model model = loadCurrentModel(); // Loads the model for the current model name
+		List<String> entityNames = new LinkedList<String>(); // Void list
+		
+		String bundleName = getCurrentBundle() ;
+		TargetsDefinitions targetsDefinitions = getCurrentTargetsDefinitions();
+		List<TargetDefinition> targetDefinitions = new LinkedList<TargetDefinition>(); // Void list
+		List<TargetDefinition> resources = targetsDefinitions.getResourcesTargets();
+		if ( resources.size() == 0 ) {
+			print("No resource in bundle '" + bundleName + "'");
+		}
+		else {
+			if ( confirm("Do you want to copy the resources from '" + bundleName + "'" ) ) {
+				print("Generation in progress...");
+				return telosysProject.launchGeneration(model, entityNames, bundleName, targetDefinitions, true);			
+			}
+			else {
+				print("Generation canceled.");
+			}
+		}
+		return null ;
 	}
 
 	/**

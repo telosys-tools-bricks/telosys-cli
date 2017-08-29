@@ -9,6 +9,7 @@ import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commons.BundlesFilter;
 import org.telosys.tools.commons.TelosysToolsException;
+import org.telosys.tools.commons.bundles.TargetsDefinitions;
 
 public class BundleCommand extends Command {
 	
@@ -48,7 +49,20 @@ public class BundleCommand extends Command {
 			}
 		}
 		else {
-			return undefinedIfNull(getCurrentBundle());
+			String bundleName = getCurrentBundle() ;
+			if ( bundleName != null ) {
+				TargetsDefinitions targetsDefinitions = getCurrentTargetsDefinitions();
+				int templatesCount = targetsDefinitions.getTemplatesTargets().size();
+				//int resourcesCount = targetsDefinitions.getResourcesTargets().size();
+				String resources = "no resource" ;
+				if ( targetsDefinitions.getResourcesTargets().size() > 0 ) {
+					resources = "contains resource(s)" ;
+				}
+				return bundleName + " : " + templatesCount + " template(s), " + resources ;
+			}
+			else {
+				return "Undefined (no current bundle)";
+			}
 		}
 		return null ;
 	}
