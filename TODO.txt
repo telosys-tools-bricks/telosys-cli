@@ -1,0 +1,54 @@
+Bug Fix : Exeption when HOME not set with 
+. dm
+. eb
+. 
+
+Confirm for all "delete" command : 
+ - "dm" 
+ - "de" 
+ - "db" 
+
+(X) gen -r 
+(X) gen * * -r 
+
+(X) lt : "lt",  "lt *",  "lt aa",  "lt aa,bb,cc"
+
+(X) le : "le",  "le *",  "le Ca",  "le Ca,Dr,Ty"  ( and not "le model" )  => check model defined
+
+(X) lr (new command) : "List Resources"
+    
+    ee : "available only for '.model' 
+    
+GENERAL COMMANDS :
+  cfg : print configuration ( telosys-tools.cfg )
+  var : print variables
+  
+  epc  --> ecfg
+  epdb --> edb 
+  
+  
+DB MODEL COMMANDS :
+
+db : print current db (with all info)
+db 1,2,3 : set current db
+
+ldb : list all databases
+
+edb : edit databases ( replace epdb ? ) 
+
+cdb : check db  ( or 'db' + option )
+ cdb [1] -t / t / tables  
+ cdb [1] -i / i / info   (par defaut ? )
+ cdb [1] -c / c / columns
+ cdb [1] -p / p / ping
+ cdb etc....
+
+db [1] -um / um / update model
+db [1] -gm / gm / genrate model
+
+gdbm : generate db model
+( ou ndbm : new db model )
+
+udbm : update db model
+
+

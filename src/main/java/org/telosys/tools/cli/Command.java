@@ -361,8 +361,13 @@ public abstract class Command {
 		consoleReader.setPrompt(Color.colorize(prompt, Const.PROMPT_COLOR));
 	}
 	
+	/**
+	 * Launches the external editor with the given file as argument 
+	 * @param fileFullPath
+	 * @return
+	 */
 	protected String launchEditor(String fileFullPath) {
-		print("Edit file '" + fileFullPath + "'");
+		// print("Edit file '" + fileFullPath + "'");
 		String editorCommand = environment.getEditorCommand();
 		String fullCommand = editorCommand ;
 		
@@ -371,7 +376,7 @@ public abstract class Command {
 			fileToEdit = "" ; // for replacement in "xxx $FILE"
 		}
 
-		// Replace $FILE or ${FILE] if present
+		// Replace $FILE or ${FILE} if present
 		if ( editorCommand.contains("$FILE") ) {
 			fullCommand = StrUtil.replaceVar(editorCommand, "$FILE", fileToEdit);
 		}

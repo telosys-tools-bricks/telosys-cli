@@ -47,7 +47,7 @@ public class EditEntityCommand extends Command {
 					return editEntityDSL(args[1]);
 				}
 				else {
-					editDBModelFile();
+					return editDBModelFile();
 				}
 			}
 		}
