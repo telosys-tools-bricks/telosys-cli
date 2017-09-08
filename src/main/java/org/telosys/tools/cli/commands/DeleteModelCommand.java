@@ -42,21 +42,14 @@ public class DeleteModelCommand extends CommandWithModel {
 
 	@Override
 	public String execute(String[] args) {
-		if ( args.length > 1 ) {			
-			// delete the given model name
-			printDebug("delete args[1] ... ");
-			return deleteModel(args[1]);
-		}
-		else {
-			// no model name => current model ?
-			printDebug("delete current model ... ");
-			if ( checkModelDefined() ) {
-				printDebug("OK current model is defined ");
-				String result = deleteModel(getCurrentModel());
-				return result ;
+		if ( checkHomeDirectoryDefined() ) {
+			if ( args.length > 1 ) {			
+				return deleteModel(args[1]);
 			}
 			else {
-				printDebug("PB current model is not defined ");
+				if ( checkModelDefined() ) {
+					return deleteModel(getCurrentModel());
+				}
 			}
 		}
 		return null ;
@@ -64,33 +57,23 @@ public class DeleteModelCommand extends CommandWithModel {
 
 	private String deleteModel(String modelName) {
 		printDebug("deleteModel('" + modelName + "')");
-//		File modelFile = null ;
-//		try {
-//			modelFile = getModelFile(modelName);
-//		} catch (TelosysToolsException e) {
-//			printError(e);
-//		} 
-
 		File modelFile = getModelFile(modelName);
 		if ( modelFile != null ) {
 			printDebug("modelFile = " + modelFile.getAbsolutePath() );
-			deleteModel(modelFile );
-			// If the current model has been deleted => update env & prompt
-			if ( modelName.equals(getCurrentModel())) {
-				setCurrentModel(null);
+			if ( confirm("Do you realy want to delete model '" + modelName + "'") ) {
+				deleteModel(modelFile );
+				// If the current model has been deleted => update env & prompt
+				if ( modelName.equals(getCurrentModel())) {
+					setCurrentModel(null);
+				}
 			}
 		}
-//		else {
-//			print("Model " + modelName + " not found");
-//		}
 		return null ;
 	}
 	
 	private String deleteModel(File modelFile ) {
 		
 		printDebug("deleteModel('" + modelFile + "')");
-		// TODO : confirm y/n ? 
-		
 		if ( ApiUtil.isDslModelFile(modelFile) ) {
 			// Delete DSL MODEL
 			print("deleting DSL model '" + modelFile.getName() + "' ..." );

@@ -39,54 +39,6 @@ public abstract class CommandWithModel extends Command {
 			print(e.getMessage()); // Ambiguous model name
 			return null ;
 		}
-				
-//		//------------------------------------------
-//		File modelFile = null ;
-//		int n = 0 ;
-//		List<File> models;
-//		try {
-//			models = telosysProject.getModels();
-//		} catch (TelosysToolsException ex) {
-//			printError(ex);
-//			return null ;
-//		} // All the models files in the current project
-//		if ( modelName.contains(".") ) {
-//			// Suffix is in the name 
-//			for ( File file : models ) {
-//				if ( file.getName().equals(modelName) ) {
-//					modelFile = file ;
-//					n++;				
-//				}
-//			}
-//		}
-//		else {
-//			// No suffix in the name => try to add all the suffixes 
-//			for ( File file : models ) {
-//				if ( file.getName().equals(modelName + ApiUtil.MODEL_SUFFIX) ) {
-//					modelFile = file ;
-//					n++;				
-//				}
-//				if ( file.getName().equals(modelName + ApiUtil.DBMODEL_SUFFIX) ) {
-//					modelFile = file ;
-//					n++;				
-//				}
-//				if ( file.getName().equals(modelName + ApiUtil.DBREP_SUFFIX) ) {
-//					modelFile = file ;
-//					n++;				
-//				}
-//			}
-//		}
-//		if ( n == 0 ) {
-//			print("Model '" + modelName + "' not found.") ;
-//			return null ; // Not found
-//		}
-//		else if ( n == 1 ) {
-//			return modelFile ; // Found 1 matching file
-//		}
-//		else {
-//			print("Ambiguous model name (" + n + " files found)");
-//			return null ;
-//		}
 	}
 	
 	/**
