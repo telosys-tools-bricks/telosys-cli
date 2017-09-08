@@ -43,12 +43,14 @@ public class EditBundleCommand extends Command {
 
 	@Override
 	public String execute(String[] args) {
-		if ( args.length > 1 ) {
-			editBundle(args);
-		}
-		else {
-			if ( checkBundleDefined() ) {
-				editBundle( getCurrentBundle() );
+		if ( checkHomeDirectoryDefined() ) {
+			if ( args.length > 1 ) {
+				editBundle(args);
+			}
+			else {
+				if ( checkBundleDefined() ) {
+					editBundle( getCurrentBundle() );
+				}
 			}
 		}
 		return null ;
