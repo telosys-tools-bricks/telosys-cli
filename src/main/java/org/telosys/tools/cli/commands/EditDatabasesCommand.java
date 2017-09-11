@@ -6,35 +6,36 @@ import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Const;
 import org.telosys.tools.cli.Environment;
 
-public class EditProjectDbCfgCommand extends Command {
+public class EditDatabasesCommand extends Command {
 
+	public final static String COMMAND_NAME = "edb";
+			
 	/**
 	 * Constructor
 	 * @param out
 	 */
-	public EditProjectDbCfgCommand(ConsoleReader consoleReader, Environment environment) {
+	public EditDatabasesCommand(ConsoleReader consoleReader, Environment environment) {
 		super(consoleReader, environment);
 	}
 
-
 	@Override
 	public String getName() {
-		return "epdb";
+		return COMMAND_NAME ;
 	}
 
 	@Override
 	public String getShortDescription() {
-		return "Edit Project Databases" ;
+		return "Edit Databases" ;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Open an editor to edit the '.dbcfg' file ";
+		return "Open an editor to edit the '" + Const.DATABASES_DBCFG + "' file ";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "epdb";
+		return COMMAND_NAME ;
 	}
 	
 	@Override

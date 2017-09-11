@@ -3,6 +3,8 @@ package org.telosys.tools.cli;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.telosys.tools.cli.commands.EditDatabasesCommand;
+
 public class CommandsGroups {
 
 	
@@ -51,7 +53,7 @@ public class CommandsGroups {
 		commands.add("h");		
 		commands.add("init");
 		commands.add("epc"); // Edit Project Config 
-		commands.add("epdb"); // Edit Project Databases 
+		commands.add(EditDatabasesCommand.COMMAND_NAME);
 		// commands.add("lpc"); // List Project config 
 		
 		return new CommandsGroup(name, commands);
