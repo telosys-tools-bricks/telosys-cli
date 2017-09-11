@@ -16,7 +16,7 @@ import org.telosys.tools.cli.commands.DeleteModelCommand;
 import org.telosys.tools.cli.commands.EditBundleCommand;
 import org.telosys.tools.cli.commands.EditCommand;
 import org.telosys.tools.cli.commands.EditEntityCommand;
-import org.telosys.tools.cli.commands.EditProjectCfgCommand;
+import org.telosys.tools.cli.commands.EditConfigCommand;
 import org.telosys.tools.cli.commands.EditDatabasesCommand;
 import org.telosys.tools.cli.commands.EnvCommand;
 import org.telosys.tools.cli.commands.ErrorCommand;
@@ -69,7 +69,7 @@ public class CommandProvider {
 		// Project commands
 		register(new HomeCommand(consoleReader, environment)); // h 
 		register(new InitCommand(consoleReader, environment)); // init
-		register(new EditProjectCfgCommand(consoleReader, environment)); // epc
+		register(new EditConfigCommand(consoleReader, environment)); // ecfg
 		register(new EditDatabasesCommand(consoleReader, environment)); // edb
 		
 		// Model commands

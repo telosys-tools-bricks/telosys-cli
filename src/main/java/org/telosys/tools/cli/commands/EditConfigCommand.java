@@ -6,35 +6,36 @@ import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Const;
 import org.telosys.tools.cli.Environment;
 
-public class EditProjectCfgCommand extends Command {
+public class EditConfigCommand extends Command {
 
+	public final static String COMMAND_NAME = "ecfg";
+	
 	/**
 	 * Constructor
 	 * @param out
 	 */
-	public EditProjectCfgCommand(ConsoleReader consoleReader, Environment environment) {
+	public EditConfigCommand(ConsoleReader consoleReader, Environment environment) {
 		super(consoleReader, environment);
 	}
 
-
 	@Override
 	public String getName() {
-		return "epc";
+		return COMMAND_NAME ;
 	}
 
 	@Override
 	public String getShortDescription() {
-		return "Edit Project Configuration" ;
+		return "Edit Configuration" ;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Open an editor to edit the '.cfg' file ";
+		return "Open an editor to edit '" + Const.TELOSYS_TOOLS_CFG + "'";
 	}
 
 	@Override
 	public String getUsage() {
-		return "epc";
+		return COMMAND_NAME ;
 	}
 	
 	@Override
