@@ -4,3 +4,6 @@ target
 .project
 dependency-reduced-pom.xml
 /assembly.xml
+/dist
+/tt.sh
+/tl.bat

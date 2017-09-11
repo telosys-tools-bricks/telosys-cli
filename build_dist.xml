@@ -1,0 +1,46 @@
+<project default="save">
+	
+	<tstamp>
+	    <format property="DSTAMP" pattern="yyyy-MM-dd" />
+	</tstamp>
+
+	<property name="dest_dir"  value="./dist" />
+	<property name="zip_file"  value="${dest_dir}/telosys-cli-3.0.0-004.zip" />
+	<property name="version"   value="3.0.0-004" />
+
+	<!-- ============================================================================== -->
+	<target name="save" >
+		<echo message="Project name : ${project.name}  " />
+		
+		<echo message="DSTAMP : ${DSTAMP}  TSTAMP : ${TSTAMP}  " />
+		
+		<echo message="Create dir : ${dest_dir} " />
+		<mkdir dir="${dest_dir}"/>
+		
+		<!--		
+		<copy file="./target/telosys-cli-${version}.jar" tofile="${dest_dir}/telosys-cli-${version}.jar"/>
+		<copy file="./tt.bat" tofile="${dest_dir}/tt.bat"/>
+		<copy file="./tl.bat" tofile="${dest_dir}/tl.bat"/>
+		-->
+		<copy file="./tl.bat.txt" tofile="./tl.bat"/>
+		<replace file="tl.bat" token="${VER}" value="${version}"/>
+		
+		<copy file="./tt.bat.txt" tofile="./tt.bat"/>
+		<replace file="tt.bat" token="${VER}" value="${version}"/>
+		
+		<copy file="./tt.sh.txt" tofile="./tt.sh"/>
+		<replace file="tt.sh"  token="${VER}" value="${version}"/>
+		
+		<copy file="./target/telosys-cli-${version}.jar" tofile="./telosys-cli-${version}.jar"/>
+		<echo message="Zip file : ${zip_file}  " />
+		<zip destfile="${zip_file}"  >	
+			<fileset dir="." includes="telosys-cli-${version}.jar"/>
+			<fileset dir="." includes="tt.bat"/>
+			<fileset dir="." includes="tl.bat"/>
+			<fileset dir="." includes="tt.sh"/>
+		</zip>
+		<delete file="./telosys-cli-${version}.jar"/>
+		
+	</target>
+
+</project>

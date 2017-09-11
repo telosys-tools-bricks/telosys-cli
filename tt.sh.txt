@@ -1,0 +1,4 @@
+#
+BASEDIR=$(dirname "$0")
+echo BASEDIR = $BASEDIR
+java -jar $BASEDIR/telosys-cli-${VER}.jar
