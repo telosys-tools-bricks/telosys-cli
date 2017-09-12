@@ -1,22 +1,17 @@
-<project default="save">
+<project default="dist">
 	
-	<tstamp>
-	    <format property="DSTAMP" pattern="yyyy-MM-dd" />
-	</tstamp>
-
-	<property name="dest_dir"  value="./dist" />
-	<property name="zip_file"  value="${dest_dir}/telosys-cli-3.0.0-004.zip" />
 	<property name="version"   value="3.0.0-004" />
+	
+	<property name="dest_dir"  value="./dist" />
+	<property name="zip_file"  value="${dest_dir}/telosys-cli-${version}.zip" />
 
 	<!-- ============================================================================== -->
-	<target name="save" >
-		<echo message="Project name : ${project.name}  " />
-		
-		<echo message="DSTAMP : ${DSTAMP}  TSTAMP : ${TSTAMP}  " />
+	<target name="dist" >
 		
 		<echo message="Create dir : ${dest_dir} " />
 		<mkdir dir="${dest_dir}"/>
 		
+		<echo message="Copy files" />
 		<!--		
 		<copy file="./target/telosys-cli-${version}.jar" tofile="${dest_dir}/telosys-cli-${version}.jar"/>
 		<copy file="./tt.bat" tofile="${dest_dir}/tt.bat"/>
@@ -32,9 +27,12 @@
 		<replace file="tt.sh"  token="${VER}" value="${version}"/>
 		
 		<copy file="./target/telosys-cli-${version}.jar" tofile="./telosys-cli-${version}.jar"/>
+		
 		<echo message="Zip file : ${zip_file}  " />
 		<zip destfile="${zip_file}"  >	
 			<fileset dir="." includes="telosys-cli-${version}.jar"/>
+			<fileset dir="." includes="telosys-cli.cfg"/>
+			<fileset dir="." includes="README.TXT"/>
 			<fileset dir="." includes="tt.bat"/>
 			<fileset dir="." includes="tl.bat"/>
 			<fileset dir="." includes="tt.sh"/>
