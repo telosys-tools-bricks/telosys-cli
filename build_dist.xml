@@ -11,23 +11,26 @@
 		<echo message="Create dir : ${dest_dir} " />
 		<mkdir dir="${dest_dir}"/>
 		
-		<echo message="Copy and update files" />
-		<!--		
-		<copy file="./target/telosys-cli-${version}.jar" tofile="${dest_dir}/telosys-cli-${version}.jar"/>
-		<copy file="./tt.bat" tofile="${dest_dir}/tt.bat"/>
-		<copy file="./tl.bat" tofile="${dest_dir}/tl.bat"/>
-		-->
+		<echo message="Copy and prepare files" />
+		
+		<!-- Prepare BAT files -->
 		<copy file="./tl.bat.txt" tofile="./tl.bat"/>
 		<replace file="tl.bat" token="${VER}" value="${version}"/>
 		
 		<copy file="./tt.bat.txt" tofile="./tt.bat"/>
 		<replace file="tt.bat" token="${VER}" value="${version}"/>
 		
-		<copy file="./tt.sh.txt" tofile="./tt.sh"/>
-		<replace file="tt.sh"  token="${VER}" value="${version}"/>
+		<!-- Prepare SHELL files -->
+		<copy file="./tt.sh.txt" tofile="./tt"/>
+		<replace file="tt"  token="${VER}" value="${version}"/>
 		
+		<copy file="./tl.sh.txt" tofile="./tl"/>
+		<replace file="tl"  token="${VER}" value="${version}"/>
+		
+		<!-- Get JAR file -->
 		<copy file="./target/telosys-cli-${version}.jar" tofile="./telosys-cli-${version}.jar"/>
 		
+		<!-- Package all in a ZIP -->
 		<echo message="Zip file : ${zip_file}  " />
 		<zip destfile="${zip_file}"  >	
 			<fileset dir="." includes="telosys-cli-${version}.jar"/>
@@ -35,14 +38,16 @@
 			<fileset dir="." includes="README.TXT"/>
 			<fileset dir="." includes="tt.bat"/>
 			<fileset dir="." includes="tl.bat"/>
-			<fileset dir="." includes="tt.sh"/>
+			<fileset dir="." includes="tt"/>
+			<fileset dir="." includes="tl"/>
 		</zip>
 
 		<echo message="Clean temp files" />
 		<delete file="./telosys-cli-${version}.jar"/>
 		<delete file="./tt.bat"/>
 		<delete file="./tl.bat"/>
-		<delete file="./tt.sh"/>
+		<delete file="./tt"/>
+		<delete file="./tl"/>
 		
 	</target>
 
