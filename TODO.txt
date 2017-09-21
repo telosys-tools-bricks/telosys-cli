@@ -1,13 +1,3 @@
-Bug Fix : Exeption when HOME not set with 
-. dm
-. eb
-. 
-
-Confirm for all "delete" command : 
- - "dm" 
- - "de" 
- - "db" 
-
 (X) gen -r 
 (X) gen * * -r 
 
@@ -17,38 +7,55 @@ Confirm for all "delete" command :
 
 (X) lr (new command) : "List Resources"
     
-    ee : "available only for '.model' 
+(X) ee : "available only for '.model' 
     
+Bug Fix : Exeption when HOME not set with 
+(X) . dm xxx
+(X) . eb xxx
+
+
+Confirm for all "delete" command : 
+ (X) - "dm" 
+ - "de" ??? ( delete entity only if DSL model => check it ? )
+
+
+CLI VERSION : 
+ pom.xml vs Version.java + .bat / .sh 
+ 
 GENERAL COMMANDS :
-  cfg : print configuration ( telosys-tools.cfg )
-  var : print variables
+  'cfg' : print configuration ( telosys-tools.cfg )
+  'var' or 'lv' : print variables
   
-  epc  --> ecfg
-  epdb --> edb 
+(X)  "ecfg" (replaces "epc")
+(X)  "edb"  (replaces "epdb") 
   
+LAUNCHERS COMMANDS : 
+ 'nl' : new launcher
+ 'll' : list launchers
+ 'el' : edit launchers
+ 'launch'/'run' : launch a lan
   
-DB MODEL COMMANDS :
+DB MODEL COMMANDS : (NB : "db" is for "Delete Bundle" )
 
-db : print current db (with all info)
-db 1,2,3 : set current db
+ldb : list all databases ( show the selected db, eg : "1 [2] 3 4" if '2' is the selected db )
 
-ldb : list all databases
-
-edb : edit databases ( replace epdb ? ) 
-
-cdb : check db  ( or 'db' + option )
- cdb [1] -t / t / tables  
+cdb : check the current (or given) db  
  cdb [1] -i / i / info   (par defaut ? )
+ cdb [1] -t / t / tables  
  cdb [1] -c / c / columns
- cdb [1] -p / p / ping
+(  cdb [1] -p / p / ping ??? )
  cdb etc....
 
-db [1] -um / um / update model
-db [1] -gm / gm / genrate model
+ndbm : new db model ( ou "ndbmodel" )
+ ndbm   (for default/selected db)
+ ndbm 2 ( new db model from database #2 )
 
-gdbm : generate db model
-( ou ndbm : new db model )
+udbm : update db model ( ou "udbmodel" )
+ udbm
+ udbm 1 ( update db model from database #1 )
 
-udbm : update db model
 
+NEW COMMANDS ( IN THE FUTURE ):
+
+cb : check bundle
 
