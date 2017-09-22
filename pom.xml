@@ -109,7 +109,34 @@
         </executions>
       </plugin>
 			 -->
-      			
+
+            <plugin>  <!-- License header management -->
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.9.0</version>
+                <configuration>
+                	<!-- <skip>${skip-license}</skip> -->
+                	<!-- specific license file for Telosys-CLI -->
+                    <header>src/license/license-header.txt</header>
+                    <includes>
+                        <include>src/main/java/**</include>
+                    </includes>
+                    <strictCheck>true</strictCheck>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!--
+                            check  : verify if some files miss license header
+                            format : add the license header when missing. If a header is existing, it is updated to the new one
+                            remove : remove existing license header
+                            -->
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+	
 		</plugins>
 	</build>
 </project>
