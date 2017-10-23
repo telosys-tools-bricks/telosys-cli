@@ -52,10 +52,12 @@ public class ThrowExceptionCommand extends Command {
 
 	@Override
 	public String execute(String[] args) {
-		String s = null ;
-		print("Throwing a Null Pointer Exception for test");
-		s.length() ;
-		return "Not supposed to reach this point!";
+//		String s = null ;
+//		print("Throwing a Null Pointer Exception for test");
+//		s.length() ;
+//		
+//		return "Not supposed to reach this point!";
+		throw new NullPointerException("NullPointerException thrown just for test");
 	}
 
 }
