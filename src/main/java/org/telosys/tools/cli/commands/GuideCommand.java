@@ -16,15 +16,10 @@
 package org.telosys.tools.cli.commands;
 
 
-import java.util.LinkedList;
-import java.util.List;
-
-import jline.console.ConsoleReader;
-
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
 
-import tests.SelectionList;
+import jline.console.ConsoleReader;
 
 public class GuideCommand extends Command {
 	
@@ -77,7 +72,7 @@ public class GuideCommand extends Command {
 		return null ;
 	}
 	
-	private String guide(final String parameter) {
+	protected String guide(final String parameter) {
 		StringBuffer sb = new StringBuffer();
 		
 		appendLine(sb, "1) Initialize the project environment");
