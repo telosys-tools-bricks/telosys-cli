@@ -36,7 +36,7 @@ public class SelectionList {
 	private Frame frame;
 	private List  list;
 	private Label headerLabel;
-	private Label statusLabel;
+	//private Label statusLabel;
 	private Panel controlPanel;
 
 	public SelectionList(java.util.List<String> items) {
@@ -123,6 +123,7 @@ public class SelectionList {
 					System.out.println(" . " + s );
 				}
 				hide();
+				System.out.println("result = " + data);
 			}
 		});
 		return button;
