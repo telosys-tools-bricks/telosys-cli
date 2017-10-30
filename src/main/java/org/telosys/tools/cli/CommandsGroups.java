@@ -32,6 +32,7 @@ public class CommandsGroups {
 		
 		all.add(getGlobalCommands(commandProvider)) ;
 		all.add(getProjectCommands(commandProvider)) ;
+		all.add(getDatabaseCommands(commandProvider)) ;
 		all.add(getModelCommands(commandProvider)) ;
 		all.add(getEntityCommands(commandProvider)) ;
 		all.add(getGitHubCommands(commandProvider)) ;
@@ -85,6 +86,15 @@ public class CommandsGroups {
 		commands.add("em");
 		commands.add("dm");
 		commands.add("cm");
+		
+		return new CommandsGroup(name, commands);
+	}
+
+	private final CommandsGroup getDatabaseCommands(CommandProvider commandProvider) {
+		List<String> commands = new LinkedList<>() ;
+		
+		String name = "Database commands" ;
+		commands.add("cdb");
 		
 		return new CommandsGroup(name, commands);
 	}

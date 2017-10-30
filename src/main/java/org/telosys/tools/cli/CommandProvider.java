@@ -24,6 +24,7 @@ import jline.console.ConsoleReader;
 
 import org.telosys.tools.cli.commands.BundleCommand;
 import org.telosys.tools.cli.commands.CdCommand;
+import org.telosys.tools.cli.commands.CheckDatabaseCommand;
 import org.telosys.tools.cli.commands.CheckModelCommand;
 import org.telosys.tools.cli.commands.DeleteBundleCommand;
 import org.telosys.tools.cli.commands.DeleteEntityCommand;
@@ -86,6 +87,9 @@ public class CommandProvider {
 		register(new InitCommand(consoleReader, environment)); // init
 		register(new EditConfigCommand(consoleReader, environment)); // ecfg
 		register(new EditDatabasesCommand(consoleReader, environment)); // edb
+
+		// Database commands
+		register(new CheckDatabaseCommand(consoleReader, environment)); // cdb
 		
 		// Model commands
 		register(new ModelCommand(consoleReader, environment));       // m 
