@@ -51,6 +51,7 @@ import org.telosys.tools.cli.commands.ListResourcesCommand;
 import org.telosys.tools.cli.commands.ListTemplatesCommand;
 import org.telosys.tools.cli.commands.LsCommand;
 import org.telosys.tools.cli.commands.ModelCommand;
+import org.telosys.tools.cli.commands.NewDbModelCommand;
 import org.telosys.tools.cli.commands.NewEntityCommand;
 import org.telosys.tools.cli.commands.NewModelCommand;
 import org.telosys.tools.cli.commands.PwdCommand;
@@ -90,6 +91,7 @@ public class CommandProvider {
 
 		// Database commands
 		register(new CheckDatabaseCommand(consoleReader, environment)); // cdb
+		register(new NewDbModelCommand(consoleReader, environment)); // ndbm
 		
 		// Model commands
 		register(new ModelCommand(consoleReader, environment));       // m 

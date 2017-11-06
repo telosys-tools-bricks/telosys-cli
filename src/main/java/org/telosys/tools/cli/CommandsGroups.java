@@ -95,6 +95,7 @@ public class CommandsGroups {
 		
 		String name = "Database commands" ;
 		commands.add("cdb");
+		commands.add("ndbm");
 		
 		return new CommandsGroup(name, commands);
 	}

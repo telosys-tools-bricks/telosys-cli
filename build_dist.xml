@@ -19,6 +19,7 @@
 		
 		<copy file="./tt.bat.txt" tofile="./tt.bat"/>
 		<replace file="tt.bat" token="${VER}" value="${version}"/>
+		<copy file="./tt.bat" todir="./target"/>
 		
 		<!-- Prepare SHELL files -->
 		<copy file="./tt.sh.txt" tofile="./tt"/>
