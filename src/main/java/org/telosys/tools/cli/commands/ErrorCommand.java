@@ -81,24 +81,28 @@ public class ErrorCommand extends Command {
 		}
 		
 	}
-	private String getExceptionInfo(Exception e) {
+	private String getExceptionInfo(Throwable e) {
 		StringBuffer sb = new StringBuffer();			
 		appendLine(sb, " class   : " + e.getClass().getSimpleName() );
 		appendLine(sb, " message : " + e.getMessage() );
 		appendLine(sb, " stack trace : " );
 		appendLine(sb, getStackTraceInfo(e) );
-		if ( e.getCause() != null ) {
+		Throwable cause = e.getCause();
+		if ( cause != null ) {
+			appendEndOfLine(sb);
 			appendLine(sb, "Cause : " );
-			appendLine(sb, getExceptionInfo(e) );
+			//appendLine(sb, getExceptionInfo(cause) );
+			sb.append( getExceptionInfo(cause) );
 		}
 		return sb.toString();
 	}
 	
-	private String getStackTraceInfo(Exception e) {
+	private String getStackTraceInfo(Throwable e) {
 		StringBuffer sb = new StringBuffer();			
 		StackTraceElement[] stack = e.getStackTrace() ;
 		for ( StackTraceElement ste : stack ) {
-			appendLine(sb, "  " + ste.getFileName() + "[" + ste.getLineNumber()+"] "+ ste.getMethodName() );
+			//appendLine(sb, "  " + ste.getFileName() + "[" + ste.getLineNumber()+"] "+ ste.getMethodName() );
+			appendLine(sb, "  " + ste.getClassName() + "[" + ste.getLineNumber()+"] "+ ste.getMethodName() );
 		}
 		return sb.toString();
 	}	

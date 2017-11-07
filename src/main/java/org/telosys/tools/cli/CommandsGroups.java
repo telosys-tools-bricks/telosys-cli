@@ -94,6 +94,7 @@ public class CommandsGroups {
 		List<String> commands = new LinkedList<>() ;
 		
 		String name = "Database commands" ;
+		commands.add("ldb");
 		commands.add("cdb");
 		commands.add("ndbm");
 		

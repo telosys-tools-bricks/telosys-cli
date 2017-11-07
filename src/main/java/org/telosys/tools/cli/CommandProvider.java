@@ -44,6 +44,7 @@ import org.telosys.tools.cli.commands.HomeCommand;
 import org.telosys.tools.cli.commands.InitCommand;
 import org.telosys.tools.cli.commands.InstallBundlesCommand;
 import org.telosys.tools.cli.commands.ListBundlesCommand;
+import org.telosys.tools.cli.commands.ListDatabasesCommand;
 import org.telosys.tools.cli.commands.ListEntitiesCommand;
 import org.telosys.tools.cli.commands.ListGitHubCommand;
 import org.telosys.tools.cli.commands.ListModelsCommand;
@@ -90,6 +91,7 @@ public class CommandProvider {
 		register(new EditDatabasesCommand(consoleReader, environment)); // edb
 
 		// Database commands
+		register(new ListDatabasesCommand(consoleReader, environment)); // ldb
 		register(new CheckDatabaseCommand(consoleReader, environment)); // cdb
 		register(new NewDbModelCommand(consoleReader, environment)); // ndbm
 		
