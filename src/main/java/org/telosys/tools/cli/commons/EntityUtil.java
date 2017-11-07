@@ -22,7 +22,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.telosys.tools.cli.Color;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.commons.StrUtil;
 import org.telosys.tools.generic.model.Entity;
 
 public class EntityUtil {
@@ -127,7 +129,16 @@ public class EntityUtil {
 	}
 
 	private static String buildLine(Entity e) {
-		return " . " + e.getClassName() + " ( " + e.getFullName() + " )" ;
+		
+		String warning = "" ;
+		if ( e.getWarnings() != null && e.getWarnings().size() > 0 ) {
+			warning = Color.colorize(" (!)", Color.RED_BRIGHT ) ;
+		}
+		String table = "" ;
+		if ( ! StrUtil.nullOrVoid( e.getDatabaseTable() ) ) {
+			table = " (table '" + e.getDatabaseTable() + "')" ;
+		}
+		return " . " + e.getClassName() + warning + table  ;
 	}
 
 }

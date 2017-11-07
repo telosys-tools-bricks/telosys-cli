@@ -1,23 +1,6 @@
-(X) gen -r 
-(X) gen * * -r 
-
-(X) lt : "lt",  "lt *",  "lt aa",  "lt aa,bb,cc"
-
-(X) le : "le",  "le *",  "le Ca",  "le Ca,Dr,Ty"  ( and not "le model" )  => check model defined
-
-(X) lr (new command) : "List Resources"
-    
-(X) ee : "available only for '.model' 
-    
-Bug Fix : Exeption when HOME not set with 
-(X) . dm xxx
-(X) . eb xxx
-
 
 Confirm for all "delete" command : 
- (X) - "dm" 
  - "de" ??? ( delete entity only if DSL model => check it ? )
-
 
 CLI VERSION : 
  pom.xml vs Version.java + .bat / .sh 
@@ -25,15 +8,6 @@ CLI VERSION :
 GENERAL COMMANDS :
   'cfg' : print configuration ( telosys-tools.cfg )
   'var' or 'lv' : print variables
-  
-(X)  "ecfg" (replaces "epc")
-(X)  "edb"  (replaces "epdb") 
-  
-LAUNCHERS COMMANDS : 
- 'nl' : new launcher
- 'll' : list launchers
- 'el' : edit launchers
- 'launch'/'run' : launch a lan
   
 DB MODEL COMMANDS : (NB : "db" is for "Delete Bundle" )
 
@@ -46,9 +20,9 @@ cdb : check the current (or given) db
 (  cdb [1] -p / p / ping ??? )
  cdb etc....
 
-ndbm : new db model ( ou "ndbmodel" )
- ndbm   (for default/selected db)
- ndbm 2 ( new db model from database #2 )
+(X) ndbm : new db model ( ou "ndbmodel" )
+  (X) ndbm   (for default/selected db)
+  (X) ndbm 2 ( new db model from database #2 )
 
 udbm : update db model ( ou "udbmodel" )
  udbm
@@ -59,3 +33,9 @@ NEW COMMANDS ( IN THE FUTURE ):
 
 cb : check bundle
 
+LAUNCHERS COMMANDS : 
+ 'nl' : new launcher
+ 'll' : list launchers
+ 'el' : edit launchers
+ 'launch'/'run' : launch a lan
+  
