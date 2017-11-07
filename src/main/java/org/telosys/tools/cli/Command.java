@@ -294,6 +294,17 @@ public abstract class Command {
 		return environment.getCurrentModel();
 	}
 	
+	/**
+	 * Returns true if the given model name is a DSL model (ends with ".model")
+	 * @param modelName
+	 * @return
+	 */
+	protected boolean isDslModel(String modelName) {
+		if ( modelName != null ) {
+			return modelName.endsWith(".model");
+		}
+		return false ;
+	}
 	//-------------------------------------------------------------------------
 	// Bundle
 	//-------------------------------------------------------------------------

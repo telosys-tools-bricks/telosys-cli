@@ -1,7 +1,4 @@
 
-Confirm for all "delete" command : 
- - "de" ??? ( delete entity only if DSL model => check it ? )
-
 CLI VERSION : 
  pom.xml vs Version.java + .bat / .sh 
  
@@ -17,7 +14,6 @@ cdb : check the current (or given) db
  cdb [1] -i / i / info   (par defaut ? )
  cdb [1] -t / t / tables  
  cdb [1] -c / c / columns
-(  cdb [1] -p / p / ping ??? )
  cdb etc....
 
 (X) ndbm : new db model ( ou "ndbmodel" )
