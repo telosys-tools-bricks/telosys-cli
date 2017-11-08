@@ -22,6 +22,12 @@ import jline.console.ConsoleReader;
 import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
 
+/**
+ * 'm' command
+ * 
+ * @author Laurent GUERIN
+ *
+ */
 public class ModelCommand extends CommandWithModel {
 
 	/**
@@ -66,15 +72,23 @@ public class ModelCommand extends CommandWithModel {
 		return null ;
 	}
 	
-	private String tryToSetCurrentModel(String modelName) {
-		File modelFile = getModelFile(modelName);
+	private String tryToSetCurrentModel(String modelNamePattern) {
+		File modelFile = findModelFile(modelNamePattern) ;
+		// if found => launch the editor
 		if ( modelFile != null ) {
 			setCurrentModel(modelFile.getName());
 			return "Current model is now '" + getCurrentModel() + "'";
 		}
-//		else {
-//			return "Model '" + modelName + "' not found";
-//		}	
+		
+		
+//		File modelFile = getModelFile(modelName);
+//		if ( modelFile != null ) {
+//			setCurrentModel(modelFile.getName());
+//			return "Current model is now '" + getCurrentModel() + "'";
+//		}
+////		else {
+////			return "Model '" + modelName + "' not found";
+////		}	
 		return null ;
 	}
 }

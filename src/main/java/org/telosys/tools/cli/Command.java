@@ -309,6 +309,7 @@ public abstract class Command {
 	
 	/**
 	 * Returns the current model in the environment
+	 * @return the current model (or null if none)
 	 */
 	protected String getCurrentModel() {
 		return environment.getCurrentModel();

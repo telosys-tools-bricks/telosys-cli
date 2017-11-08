@@ -20,8 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import jline.console.ConsoleReader;
-
 import org.telosys.tools.cli.commands.BundleCommand;
 import org.telosys.tools.cli.commands.CdCommand;
 import org.telosys.tools.cli.commands.CheckDatabaseCommand;
@@ -31,9 +29,10 @@ import org.telosys.tools.cli.commands.DeleteEntityCommand;
 import org.telosys.tools.cli.commands.DeleteModelCommand;
 import org.telosys.tools.cli.commands.EditBundleCommand;
 import org.telosys.tools.cli.commands.EditCommand;
-import org.telosys.tools.cli.commands.EditEntityCommand;
 import org.telosys.tools.cli.commands.EditConfigCommand;
 import org.telosys.tools.cli.commands.EditDatabasesCommand;
+import org.telosys.tools.cli.commands.EditEntityCommand;
+import org.telosys.tools.cli.commands.EditModelCommand;
 import org.telosys.tools.cli.commands.EnvCommand;
 import org.telosys.tools.cli.commands.ErrorCommand;
 import org.telosys.tools.cli.commands.GenerateCommand;
@@ -59,6 +58,15 @@ import org.telosys.tools.cli.commands.PwdCommand;
 import org.telosys.tools.cli.commands.QuitCommand;
 import org.telosys.tools.cli.commands.ThrowExceptionCommand;
 
+import jline.console.ConsoleReader;
+
+/**
+ * Class for command instance providing <br>
+ * Based on a Map : 'command name' --> 'command instance'
+ * 
+ * @author Laurent GUERIN 
+ *
+ */
 public class CommandProvider {
 
 	private final Map<String, Command> commands = new Hashtable<>();
@@ -101,12 +109,12 @@ public class CommandProvider {
 		register(new ListModelsCommand(consoleReader, environment));  // lm 
 		register(new DeleteModelCommand(consoleReader, environment)); // dm 
 		register(new CheckModelCommand(consoleReader, environment));  // cm
-		// TODO : em (edit model)
+		register(new EditModelCommand(consoleReader, environment));   // em
 		
 		// Entity commands
 		register(new ListEntitiesCommand(consoleReader, environment)); // le : list entities [model-name]
-		register(new NewEntityCommand(consoleReader, environment)); // ne : new entity
-		register(new EditEntityCommand(consoleReader, environment)); // ee : edit entity
+		register(new NewEntityCommand(consoleReader, environment));    // ne : new entity
+		register(new EditEntityCommand(consoleReader, environment));   // ee : edit entity
 		register(new DeleteEntityCommand(consoleReader, environment)); // de : delete entity
 		
 		// GitHub store management

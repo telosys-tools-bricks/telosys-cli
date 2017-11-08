@@ -17,68 +17,75 @@ package org.telosys.tools.cli.commands;
 
 import java.io.File;
 
-import jline.console.ConsoleReader;
-
 import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.generic.model.Model;
+
+import jline.console.ConsoleReader;
 
 /**
- * 'cm' command
+ * 'em' command
  * 
- * @author Lauren GUERIN 
+ * @author Laurent GUERIN
  *
  */
-public class CheckModelCommand extends CommandWithModel {
+public class EditModelCommand extends CommandWithModel {
 
 	/**
 	 * Constructor
 	 * @param out
 	 */
-	public CheckModelCommand(ConsoleReader consoleReader, Environment environment) {
+	public EditModelCommand(ConsoleReader consoleReader, Environment environment) {
 		super(consoleReader, environment);
 	}
-	
+
 	@Override
 	public String getName() {
-		return "cm";
+		return "em";
 	}
 
 	@Override
 	public String getShortDescription() {
-		return "Check Model" ;
+		return "Edit Model" ;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Check the current/given model";
+		return "Edit the current/given model";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "cm [model-name]";
+		return "em [model-name]";
 	}
-	
+
 	@Override
 	public String execute(String[] args) {
-		
 		if ( checkHomeDirectoryDefined() ) {
 			File modelFile = findModelFile(args) ;
 			// if found => launch the editor
 			if ( modelFile != null ) {
-				return checkModel(modelFile);
+				return launchEditor(modelFile.getAbsolutePath());
 			}
-		}
-		return null;
-	}
-		
-	private String checkModel(File modelFile) {
-		// Just try to load the model to check it 
-		Model model = loadModel(modelFile);
-		if ( model != null ) {
-			int n = model.getEntities() != null ? model.getEntities().size() : 0 ; 
-			print( "Model OK (file '" + modelFile.getName() + "' loaded : " + n + " entities)" );
 		}
 		return null ;
 	}
+
+//	/**
+//	 * Edit the model file for the given model name
+//	 * @param modelName ( eg 'car.model', 'bookstore.dbmodel', 'bookstore.dbrep' )
+//	 * @return
+//	 */
+//	private String editModel(String modelName) {
+//		TelosysProject telosysProject = getTelosysProject();
+//		if ( telosysProject != null ) {
+//			try {
+//				File file = telosysProject.getModelFile(modelName);
+//				return launchEditor(file.getAbsolutePath() );
+//			} catch (TelosysToolsException e) {
+//				printError(e);
+//			}
+//		}
+//		return null ;
+//	}
+
 }

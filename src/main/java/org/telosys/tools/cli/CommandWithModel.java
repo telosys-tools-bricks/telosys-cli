@@ -16,6 +16,8 @@
 package org.telosys.tools.cli;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import jline.console.ConsoleReader;
@@ -25,6 +27,12 @@ import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.generic.model.Model;
 
+/**
+ * Specialization of 'Command' providing methods to work with models
+ * 
+ * @author Laurent GUERIN 
+ *
+ */
 public abstract class CommandWithModel extends Command {
 
 	/**
@@ -36,6 +44,62 @@ public abstract class CommandWithModel extends Command {
 		super(consoleReader, environment);
 	}
 
+	/**
+	 * Try to found a unique model file according with the first argument 
+	 * or with the current model if no arg
+	 * @param args
+	 * @return
+	 */
+	protected File findModelFile(String[] args) {
+		File modelFile = null ;
+		if ( args.length > 1 ) {
+			modelFile = findModelFile(args[1]);
+		}
+		else {
+			if ( checkModelDefined() ) {
+				modelFile = findModelFile(getCurrentModel());
+			}
+		}
+		return modelFile ;
+	}
+	
+	/**
+	 * Try to found a unique model file matching the given model name pattern
+	 * @param modelNamePattern
+	 * @return the file or null if not found or ambiguous
+	 */
+	protected File findModelFile(String modelNamePattern) {
+		TelosysProject telosysProject = getTelosysProject();
+		try {
+			List<File> models = telosysProject.getModels();
+			List<File> modelsFound = findModelFiles(models, modelNamePattern);
+			if ( modelsFound.size() == 0 ) {
+				print("No model for '" + modelNamePattern + "'") ;
+			}
+			else if ( modelsFound.size() > 1 ) {
+				print("Ambiguous : " + modelsFound.size() + " models found") ;
+			}
+			else {
+				return modelsFound.get(0);
+			}
+		} catch (TelosysToolsException e) {
+			printError("Cannot get models.");
+		}
+		return null ;
+	}
+	
+	private List<File> findModelFiles(List<File> models, String modelNamePattern) {
+		List<File> modelsFound = new LinkedList<>();
+		for ( File f : models ) {
+			if  ( f.exists() && f.isFile() ) {
+				if ( f.getName().contains(modelNamePattern) ) {
+					modelsFound.add(f);
+				}
+			}
+		}
+		return modelsFound ;
+	}
+	
 	/**
 	 * Try to find the model file for the given model name (print errors if any)
 	 * @param modelName the model name with or without its suffix ( eg 'foo', 'foo.model', 'foo.dbmodel', etc )
