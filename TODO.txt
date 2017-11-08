@@ -37,5 +37,5 @@ LAUNCHERS COMMANDS :
  'nl' : new launcher
  'll' : list launchers
  'el' : edit launchers
- 'launch'/'run' : launch a lan
+ 'launch'/'run' : launch a launcher  or  'gen < launcher-name'
   

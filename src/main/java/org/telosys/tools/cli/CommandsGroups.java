@@ -18,9 +18,6 @@ package org.telosys.tools.cli;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.telosys.tools.cli.commands.EditConfigCommand;
-import org.telosys.tools.cli.commands.EditDatabasesCommand;
-
 public class CommandsGroups {
 
 	
@@ -69,8 +66,7 @@ public class CommandsGroups {
 		String name = "Project commands" ;
 		commands.add("h");		
 		commands.add("init");
-		commands.add(EditConfigCommand.COMMAND_NAME); 
-		commands.add(EditDatabasesCommand.COMMAND_NAME);
+		commands.add("ecfg"); 
 		// commands.add("lpc"); // List Project config 
 		
 		return new CommandsGroup(name, commands);
@@ -82,10 +78,11 @@ public class CommandsGroups {
 		String name = "Model commands" ;
 		commands.add("m");
 		commands.add("nm");
+		commands.add("ndbm");
 		commands.add("lm");
 		commands.add("em");
-		commands.add("dm");
 		commands.add("cm");
+		commands.add("dm");
 		
 		return new CommandsGroup(name, commands);
 	}
@@ -95,8 +92,8 @@ public class CommandsGroups {
 		
 		String name = "Database commands" ;
 		commands.add("ldb");
+		commands.add("edb");
 		commands.add("cdb");
-		commands.add("ndbm");
 		
 		return new CommandsGroup(name, commands);
 	}
