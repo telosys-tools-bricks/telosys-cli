@@ -24,6 +24,12 @@ import org.telosys.tools.commons.TelosysToolsException;
 
 import jline.console.ConsoleReader;
 
+/**
+ * 'ee' command
+ * 
+ * @author Laurent GUERIN
+ *
+ */
 public class EditEntityCommand extends Command {
 
 	/**
@@ -58,12 +64,6 @@ public class EditEntityCommand extends Command {
 	public String execute(String[] args) {
 		if ( checkDslModelDefined() ) {
 			if ( args.length > 1 ) {
-//				if ( getCurrentModel().endsWith(".model") ) {
-//					return editEntityDSL(args[1]);
-//				}
-//				else {
-//					return editDBModelFile();
-//				}
 				return editEntityDSL(args[1]);
 			}
 			else {
@@ -95,24 +95,5 @@ public class EditEntityCommand extends Command {
 		}
 		return null ;
 	}
-
-	/**
-	 * Edit the DBMODEL FILE ( eg bookstore.dbmodel / .dbrep )
-	 * @return
-	 */
-	private String editDBModelFile() {
-		TelosysProject telosysProject = getTelosysProject();
-		if ( telosysProject != null ) {
-			try {
-				File file = telosysProject.getModelFile(getCurrentModel());
-				return launchEditor(file.getAbsolutePath() );
-			} catch (TelosysToolsException e) {
-				printError(e);
-			}
-		}
-		
-		return null ;
-	}
-
 
 }

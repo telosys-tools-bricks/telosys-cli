@@ -18,7 +18,7 @@ cdb : check the current (or given) db
  cdb [1] -pk --> primary keys
  cdb [1] -fk --> foreign keys
  cdb [1] -cat --> catalogs
- cdb [1] -s --> catalogs
+ cdb [1] -sch/s --> schemas
 
 (X) ndbm : new db model
   (X) ndbm   (for default/selected db)
