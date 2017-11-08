@@ -8,15 +8,19 @@ GENERAL COMMANDS :
   
 DB MODEL COMMANDS : (NB : "db" is for "Delete Bundle" )
 
-ldb : list all databases ( show the selected db, eg : "1 [2] 3 4" if '2' is the selected db )
+(X) ldb : list all databases ( show the selected db, eg : "1 [2] 3 4" if '2' is the selected db )
 
 cdb : check the current (or given) db  
- cdb [1] -i / i / info   (par defaut ? )
- cdb [1] -t / t / tables  
- cdb [1] -c / c / columns
- cdb etc....
+ cdb [1] --> print catalogs and schemas (par defaut)
+ cdb [1] -i --> info   
+ cdb [1] -t --> tables  
+ cdb [1] -c --> columns
+ cdb [1] -pk --> primary keys
+ cdb [1] -fk --> foreign keys
+ cdb [1] -cat --> catalogs
+ cdb [1] -s --> catalogs
 
-(X) ndbm : new db model ( ou "ndbmodel" )
+(X) ndbm : new db model
   (X) ndbm   (for default/selected db)
   (X) ndbm 2 ( new db model from database #2 )
 

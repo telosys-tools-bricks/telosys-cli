@@ -54,7 +54,7 @@ public class NewEntityCommand extends Command {
 	
 	@Override
 	public String execute(String[] args) {
-		if ( checkModelDefined() ) {
+		if ( checkDslModelDefined() ) {
 			if ( args.length > 1 ) {
 				return newEntity(args[1]);
 			}
@@ -69,14 +69,13 @@ public class NewEntityCommand extends Command {
 
 		TelosysProject telosysProject = getTelosysProject();
 		String modelName = getCurrentModel();
-		if ( telosysProject != null ) {
-			try {
-				telosysProject.createNewDslEntity(modelName, entityName);
-				print("Entity '"+ entityName + "' created.");
-			} catch (TelosysToolsException e) {
-				printError(e);
-			}
+		try {
+			telosysProject.createNewDslEntity(modelName, entityName);
+			print("Entity '"+ entityName + "' created.");
+		} catch (TelosysToolsException e) {
+			printError(e);
 		}
+		
 		return null ;
 	}
 

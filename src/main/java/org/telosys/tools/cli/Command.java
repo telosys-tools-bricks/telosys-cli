@@ -268,14 +268,34 @@ public abstract class Command {
 	//-------------------------------------------------------------------------
 	// Model
 	//-------------------------------------------------------------------------
+	/**
+	 * Checks if a model is defined
+	 * @return
+	 */
 	protected boolean checkModelDefined() {
 		if ( environment.getCurrentModel() != null ) {
 			return true ;
 		}
 		else {
-			print( "Model-name must be set before using this command!" ) ;
+			print( "This command requires a model." ) ;
 			return false ;
 		}
+	}	
+
+	/**
+	 * Checks if a model is defined and is a DSL model type
+	 * @return
+	 */
+	protected boolean checkDslModelDefined() {
+		if ( checkModelDefined() ) {
+			if ( isDslModel( getCurrentModel() ) ) {
+				return true ;
+			}
+			else {
+				print("This command requires a DSL model.");
+			}
+		}
+		return false ;
 	}	
 
 	/**

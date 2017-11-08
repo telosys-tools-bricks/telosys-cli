@@ -19,6 +19,12 @@ import java.io.PrintWriter;
 
 import jline.console.ConsoleReader;
 
+/**
+ * CLI command line processor 
+ * 
+ * @author Laurent GUERIN
+ *
+ */
 public class CommandLineProcessor {
 	
 	private final PrintWriter     out ;

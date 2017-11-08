@@ -17,12 +17,12 @@ package org.telosys.tools.cli.commands;
 
 import java.io.File;
 
-import jline.console.ConsoleReader;
-
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.TelosysToolsException;
+
+import jline.console.ConsoleReader;
 
 public class EditEntityCommand extends Command {
 
@@ -56,18 +56,19 @@ public class EditEntityCommand extends Command {
 
 	@Override
 	public String execute(String[] args) {
-		if ( args.length > 1 ) {
-			if ( checkModelDefined() ) {
-				if ( getCurrentModel().endsWith(".model") ) {
-					return editEntityDSL(args[1]);
-				}
-				else {
-					return editDBModelFile();
-				}
+		if ( checkDslModelDefined() ) {
+			if ( args.length > 1 ) {
+//				if ( getCurrentModel().endsWith(".model") ) {
+//					return editEntityDSL(args[1]);
+//				}
+//				else {
+//					return editDBModelFile();
+//				}
+				return editEntityDSL(args[1]);
 			}
-		}
-		else {
-			return invalidUsage("entity-name expected");
+			else {
+				return invalidUsage("entity-name expected");
+			}
 		}
 		return null ;
 	}
@@ -82,7 +83,12 @@ public class EditEntityCommand extends Command {
 		if ( telosysProject != null ) {
 			try {
 				File file = telosysProject.buildDslEntityFile(getCurrentModel(), entityName);
-				return launchEditor(file.getAbsolutePath() );
+				if ( file.exists() ) {
+					return launchEditor(file.getAbsolutePath() );
+				}
+				else {
+					print("No entity '" + entityName + "' in the model.");
+				}
 			} catch (TelosysToolsException e) {
 				printError(e);
 			}
@@ -104,6 +110,7 @@ public class EditEntityCommand extends Command {
 				printError(e);
 			}
 		}
+		
 		return null ;
 	}
 

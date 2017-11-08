@@ -54,7 +54,7 @@ public class DeleteEntityCommand extends Command {
 	
 	@Override
 	public String execute(String[] args) {
-		if ( checkModelDefined() ) {
+		if ( checkDslModelDefined() ) {
 			if ( args.length > 1 ) {
 				return deleteEntity(args[1]);
 			}
@@ -69,20 +69,15 @@ public class DeleteEntityCommand extends Command {
 
 		TelosysProject telosysProject = getTelosysProject();
 		String modelName = getCurrentModel();
-		if ( isDslModel(modelName) ) {
-			try {
-				if ( telosysProject.deleteDslEntity(modelName, entityName) ) {
-					print("Entity '"+ entityName + "' deleted.");
-				}
-				else {
-					print("Entity '"+ entityName + "' not found.");
-				}
-			} catch (TelosysToolsException e) {
-				printError(e);
+		try {
+			if ( telosysProject.deleteDslEntity(modelName, entityName) ) {
+				print("Entity '"+ entityName + "' deleted.");
 			}
-		}
-		else {
-			print("The model is not a DSL model. Cannot delete entity for this kind of model.");
+			else {
+				print("Entity '"+ entityName + "' not found.");
+			}
+		} catch (TelosysToolsException e) {
+			printError(e);
 		}
 		return null ;
 	}
