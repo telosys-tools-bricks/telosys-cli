@@ -1,0 +1,16 @@
+
+To change the Telosys-CLI Version the following files must be updated :
+
+ - Version.java
+ 
+ - pom.xml
+ 
+ - build_dist.xml
+ 
+Build :
+
+ - mvn clean
+ - mvn install 
+ - ant build_dist.xml
+ 
+F5 / "dist" folder
