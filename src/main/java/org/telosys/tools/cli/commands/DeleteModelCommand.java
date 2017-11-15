@@ -17,13 +17,12 @@ package org.telosys.tools.cli.commands;
 
 import java.io.File;
 
-import jline.console.ConsoleReader;
-
 import org.telosys.tools.api.ApiUtil;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.TelosysToolsException;
+
+import jline.console.ConsoleReader;
 
 public class DeleteModelCommand extends CommandWithModel {
 
@@ -86,7 +85,7 @@ public class DeleteModelCommand extends CommandWithModel {
 		return null ;
 	}
 	
-	private String deleteModel(File modelFile ) {
+	private void deleteModel(File modelFile ) {
 		
 		printDebug("deleteModel('" + modelFile + "')");
 		if ( ApiUtil.isDslModelFile(modelFile) ) {
@@ -95,18 +94,22 @@ public class DeleteModelCommand extends CommandWithModel {
 			TelosysProject telosysProject = getTelosysProject();			
 			try {
 				telosysProject.deleteDslModel(modelFile);
-			} catch (TelosysToolsException e) {
+				print("Model '" + modelFile.getName() + "' deleted." );
+			} catch (Exception e) {
+				print("Cannot delete model '" + modelFile.getName() + "' " );
 				printError(e);
-				return null ;
 			}
 		}
 		else {
 			// Delete DB MODEL (a single file )
 			print("deleting DB model '" + modelFile.getName() + "' ..." );
-			modelFile.delete();
+			if ( ! modelFile.delete() ) {
+				print("Cannot delete model '" + modelFile.getName() + "' " );
+			}
+			else {
+				print("Model '" + modelFile.getName() + "' deleted." );
+			}
 		}
-		print("model '" + modelFile.getName() + "' deleted." );
-		return null ;
 	}
 
 }

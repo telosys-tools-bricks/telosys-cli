@@ -15,10 +15,11 @@
  */
 package org.telosys.tools.cli.commands;
 
+import org.telosys.tools.api.MetaDataOptions;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.StrUtil;
+import org.telosys.tools.cli.commands.util.CheckDatabaseArguments;
 import org.telosys.tools.commons.TelosysToolsException;
 
 import jline.console.ConsoleReader;
@@ -57,41 +58,42 @@ public class CheckDatabaseCommand extends CommandWithModel {
 	public String execute(String[] args) {
 		
 		if ( checkHomeDirectoryDefined() ) {
-			if ( args.length > 1 ) {
-				// cdb database-id
-				String argId = args[1];
-				Integer id = StrUtil.getIntegerObject(argId);
-				if ( id != null ) {
-					checkDatabase(id);
-				}
-				else {
-					print("Invalid database id '" + argId + "'");					
+			CheckDatabaseArguments arguments = new CheckDatabaseArguments(args);
+			if ( arguments.hasErrors() ) {
+				for ( String s : arguments.getErrors() ) {
+					print(s);
 				}
 			}
 			else {
-				// cdb
-				checkDatabase(null);
-			}			
+				checkDatabase(arguments.getDatabaseId(), arguments.getOptions() );
+			}
 		}
 		return null;
 	}
 		
-	private String checkDatabase(Integer id) {
+	private String checkDatabase(Integer id, MetaDataOptions options) {
 		try {
-			checkDatabaseConnection(id) ;
+			checkDatabaseConnection(id, options) ;
 		} catch (TelosysToolsException e) {
 			printError(e);
 		}
 		return null ;
 	}
 	
-	private void checkDatabaseConnection(Integer id) throws TelosysToolsException {
+	private void checkDatabaseConnection(Integer id, MetaDataOptions options) throws TelosysToolsException {
 		TelosysProject telosysProject = getTelosysProject();
-		if ( telosysProject.checkDatabaseConnection(id) ) {
-			print("OK, connection test is successful.");
+		if ( options.hasOptions() ) {
+			// Meta-data required
+			print( telosysProject.getMetaData(id, options) );
 		}
 		else {
-			print("ERROR: cannot connect to databse.");
+			// Just try to connect to database (no meta-data)
+			if ( telosysProject.checkDatabaseConnection(id, options) ) {
+				print("OK, connection test is successful.");
+			}
+			else {
+				print("ERROR: cannot connect to databse.");
+			}
 		}
 	}
 }
