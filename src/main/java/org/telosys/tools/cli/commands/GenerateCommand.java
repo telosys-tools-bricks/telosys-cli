@@ -68,7 +68,7 @@ public class GenerateCommand extends CommandWithModel {
 	
 	@Override
 	public String getUsage() {
-		return "gen *|entity-name *|template-name";
+		return "gen *|entity-name *|template-name [-r]";
 	}
 
 	@Override
@@ -82,9 +82,6 @@ public class GenerateCommand extends CommandWithModel {
 				generate(args);
 				return null;
 			}
-//			else {
-//				return invalidUsage("Usage : " + getUsage() );
-//			}
 		}
 		return null ;
 	}

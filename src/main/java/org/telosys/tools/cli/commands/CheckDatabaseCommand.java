@@ -51,7 +51,7 @@ public class CheckDatabaseCommand extends CommandWithModel {
 	
 	@Override
 	public String getUsage() {
-		return "cdb [database-id]";
+		return "cdb [database-id] [-i -t -c -pk -fk -s -cat]";
 	}
 	
 	@Override
