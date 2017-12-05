@@ -21,6 +21,7 @@ import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commands.util.CheckDatabaseArguments;
 import org.telosys.tools.commons.TelosysToolsException;
+import org.telosys.tools.commons.dbcfg.DbConnectionStatus;
 
 import jline.console.ConsoleReader;
 
@@ -60,11 +61,13 @@ public class CheckDatabaseCommand extends CommandWithModel {
 		if ( checkHomeDirectoryDefined() ) {
 			CheckDatabaseArguments arguments = new CheckDatabaseArguments(args);
 			if ( arguments.hasErrors() ) {
+				// Invalid argument(s)
 				for ( String s : arguments.getErrors() ) {
 					print(s);
 				}
 			}
 			else {
+				// Argument(s) OK => check database with arg options
 				checkDatabase(arguments.getDatabaseId(), arguments.getOptions() );
 			}
 		}
@@ -73,6 +76,7 @@ public class CheckDatabaseCommand extends CommandWithModel {
 		
 	private String checkDatabase(Integer id, MetaDataOptions options) {
 		try {
+			print("Checking database" + ( id != null ? " #"+id : "" ) + "..."); 
 			checkDatabaseConnection(id, options) ;
 		} catch (TelosysToolsException e) {
 			printError(e);
@@ -84,16 +88,18 @@ public class CheckDatabaseCommand extends CommandWithModel {
 		TelosysProject telosysProject = getTelosysProject();
 		if ( options.hasOptions() ) {
 			// Meta-data required
-			print( telosysProject.getMetaData(id, options) );
+			String metadata = telosysProject.getMetaData(id, options);
+			print(metadata); 
 		}
 		else {
 			// Just try to connect to database (no meta-data)
-			if ( telosysProject.checkDatabaseConnection(id, options) ) {
-				print("OK, connection test is successful.");
-			}
-			else {
-				print("ERROR: cannot connect to databse.");
-			}
+			DbConnectionStatus conStatus = telosysProject.checkDatabaseConnection(id) ;
+			print("OK, connection test is successful.");
+			print(" . product name    : " + conStatus.getProductName() );
+			print(" . product version : " + conStatus.getProductVersion() );
+			print(" . catalog         : " + conStatus.getCatalog() );
+			print(" . schema          : " + conStatus.getSchema() );
+			print(" . autocommit      : " + conStatus.isAutocommit() );
 		}
 	}
 }

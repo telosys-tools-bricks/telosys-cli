@@ -57,6 +57,7 @@ import org.telosys.tools.cli.commands.NewModelCommand;
 import org.telosys.tools.cli.commands.PwdCommand;
 import org.telosys.tools.cli.commands.QuitCommand;
 import org.telosys.tools.cli.commands.ThrowExceptionCommand;
+import org.telosys.tools.cli.commands.UpdateDbModelCommand;
 
 import jline.console.ConsoleReader;
 
@@ -73,10 +74,8 @@ public class CommandProvider {
 	
 	private final void register(Command command) {
 		commands.put(command.getName(), command);
-//		if ( command.getShortName() != null ) {
-//			commands.put(command.getShortName(), command);
-//		}
 	}
+	
 	private final void init(ConsoleReader consoleReader, Environment environment) {
 		
 		register(new ThrowExceptionCommand(consoleReader, environment)); // tex : FOR TESTS ONLY !
@@ -102,6 +101,7 @@ public class CommandProvider {
 		register(new ListDatabasesCommand(consoleReader, environment)); // ldb
 		register(new CheckDatabaseCommand(consoleReader, environment)); // cdb
 		register(new NewDbModelCommand(consoleReader, environment)); // ndbm
+		register(new UpdateDbModelCommand(consoleReader, environment)); // udbm
 		
 		// Model commands
 		register(new ModelCommand(consoleReader, environment));       // m 
@@ -172,20 +172,12 @@ public class CommandProvider {
 	}
 
 	public final Command getCommand(String commandName) {
-//		Command command = commands.get(commandName);
-//		if ( command != null ) {
-//			return command;
-//		}
-//		else {
-//			throw new RuntimeException("Invalid command name '" + commandName + "'");
-//		}
 		return commands.get(commandName);
 	}
 	
 	public final List<Command> getAllCommands() {
 		List<Command> list = new LinkedList<>();
 		for ( Map.Entry<String, Command> entry : commands.entrySet() ) {
-		    //String name = entry.getKey() ;
 			Command a = entry.getValue() ;
 			if ( ! list.contains(a)) {
 			    list.add(a);

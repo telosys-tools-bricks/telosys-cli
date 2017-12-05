@@ -10,7 +10,7 @@ DB MODEL COMMANDS : (NB : "db" is for "Delete Bundle" )
 
 (X) ldb : list all databases ( show the selected db, eg : "1 [2] 3 4" if '2' is the selected db )
 
-cdb : check the current (or given) db  
+(X) cdb : check the current (or given) db  
  cdb [1] --> print catalogs and schemas (par defaut)
  cdb [1] -i --> info   
  cdb [1] -t --> tables  
@@ -30,6 +30,9 @@ udbm : update db model ( ou "udbmodel" )
 
 
 NEW COMMANDS ( IN THE FUTURE ):
+
+sql : to run sql scripts
+      eg : "sql myscript.sql" ( or "sql 2 myscript.sql" for database #2 ) 
 
 cb : check bundle
 

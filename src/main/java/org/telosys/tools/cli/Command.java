@@ -126,7 +126,7 @@ public abstract class Command {
 	}
 	
 	protected String readResponse() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		while ( true ) {
 			char c = (char) readChar();
 			if ( c >= ' ' ) {
