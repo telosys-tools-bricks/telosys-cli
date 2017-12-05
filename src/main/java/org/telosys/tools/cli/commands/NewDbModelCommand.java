@@ -27,7 +27,8 @@ public class NewDbModelCommand extends CommandWithModel {
 
 	/**
 	 * Constructor
-	 * @param out
+	 * @param consoleReader
+	 * @param environment
 	 */
 	public NewDbModelCommand(ConsoleReader consoleReader, Environment environment) {
 		super(consoleReader, environment);
@@ -58,7 +59,7 @@ public class NewDbModelCommand extends CommandWithModel {
 		
 		if ( checkHomeDirectoryDefined() ) {
 			if ( args.length > 1 ) {
-				// cdb database-id
+				// database-id
 				String argId = args[1];
 				Integer id = StrUtil.getIntegerObject(argId);
 				if ( id != null ) {
@@ -69,7 +70,7 @@ public class NewDbModelCommand extends CommandWithModel {
 				}
 			}
 			else {
-				// 
+				// no database-id
 				newDatabaseModel(null);
 			}			
 		}
@@ -86,10 +87,4 @@ public class NewDbModelCommand extends CommandWithModel {
 		}
 		return null ;
 	}
-	
-//	private void newDatabaseModel(Integer id) throws TelosysToolsException {
-//		TelosysProject telosysProject = getTelosysProject();
-//		telosysProject.createNewDbModel(id) ;
-//		print("OK, connection test is successful.");
-//	}
 }

@@ -24,9 +24,12 @@ DB MODEL COMMANDS : (NB : "db" is for "Delete Bundle" )
   (X) ndbm   (for default/selected db)
   (X) ndbm 2 ( new db model from database #2 )
 
-udbm : update db model ( ou "udbmodel" )
- udbm
- udbm 1 ( update db model from database #1 )
+(X) udbm : update db model ( ou "udbmodel" )
+  (X) udbm
+  (X) udbm 1 ( update db model from database #1 )
+
+
+Confirm for "ndbm" and "udbm" 
 
 
 NEW COMMANDS ( IN THE FUTURE ):
