@@ -79,6 +79,7 @@ public class CommandsGroups {
 		commands.add("m");
 		commands.add("nm");
 		commands.add("ndbm");
+		commands.add("udbm");
 		commands.add("lm");
 		commands.add("em");
 		commands.add("cm");

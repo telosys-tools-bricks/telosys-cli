@@ -19,6 +19,15 @@ import org.telosys.tools.generator.GeneratorVersion;
 
 public class Version {
 
-	public final static String TELOSYS_TOOLS_CLI_VERSION = GeneratorVersion.GENERATOR_VERSION + " CLI-006" ;
+	/**
+	 * Private constructor
+	 */
+	private Version() {
+	}
+	
+	/**
+	 * Current version
+	 */
+	public static final String TELOSYS_TOOLS_CLI_VERSION = GeneratorVersion.GENERATOR_VERSION + " CLI-007" ;
 	
 }
