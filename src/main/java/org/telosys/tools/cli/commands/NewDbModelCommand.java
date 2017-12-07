@@ -15,6 +15,8 @@
  */
 package org.telosys.tools.cli.commands;
 
+import java.io.File;
+
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
@@ -80,6 +82,22 @@ public class NewDbModelCommand extends CommandWithModel {
 	private String newDatabaseModel(Integer id) {
 		try {
 			TelosysProject telosysProject = getTelosysProject();
+			File dbModelFile = telosysProject.getDbModelFile(id);
+			if ( dbModelFile != null && dbModelFile.exists() ) {
+				print("WARNING : Model file '" + dbModelFile.getName() + "' already exists");
+				if ( ! confirm("Do you really want to overwrite it ?") ) {
+					return null ;
+				}
+//				print("Deleting '" + dbModelFile.getName() + "'...");
+//				if ( dbModelFile.delete() ) {
+//					print("File '" + dbModelFile.getName() + "' deleted.");
+//				}
+//				else {
+//					print("Cannot delete '" + dbModelFile.getName() + "'.");
+//					return null ;
+//				}
+			}
+			print("Generating new model...");
 			telosysProject.createNewDbModel(id) ;
 			print("New model created.");
 		} catch (TelosysToolsException e) {
