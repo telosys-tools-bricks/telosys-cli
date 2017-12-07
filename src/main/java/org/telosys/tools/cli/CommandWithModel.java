@@ -73,7 +73,7 @@ public abstract class CommandWithModel extends Command {
 		try {
 			List<File> models = telosysProject.getModels();
 			List<File> modelsFound = findModelFiles(models, modelNamePattern);
-			if ( modelsFound.size() == 0 ) {
+			if ( modelsFound.isEmpty() ) {
 				print("No model for '" + modelNamePattern + "'") ;
 			}
 			else if ( modelsFound.size() > 1 ) {

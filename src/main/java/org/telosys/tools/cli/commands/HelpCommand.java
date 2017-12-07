@@ -26,7 +26,7 @@ import org.telosys.tools.cli.Environment;
 
 public class HelpCommand extends Command {
 
-	private final static int PADDING = 4 ;
+	private static final int PADDING = 4 ;
 	
 	private final CommandProvider commandProvider ;
 	
@@ -34,9 +34,9 @@ public class HelpCommand extends Command {
 	 * Constructor
 	 * @param out
 	 */
-	public HelpCommand(ConsoleReader consoleReader, Environment environment, CommandProvider commandProvider) {
+	public HelpCommand(ConsoleReader consoleReader, Environment environment) {
 		super(consoleReader, environment);
-		this.commandProvider = commandProvider ;
+		this.commandProvider = environment.getCommandProvider();
 	}
 	
 	@Override
@@ -77,8 +77,6 @@ public class HelpCommand extends Command {
 	}
 	
 	private void printHelp(String commandName) {
-		Environment environment = getEnvironment();
-		CommandProvider commandProvider = environment.getCommandProvider();
 		Command command = commandProvider.getCommand(commandName);
 		if ( command != null ) {
 			printHelp(command);
@@ -123,7 +121,7 @@ public class HelpCommand extends Command {
 		if ( s.length() >= length ) {
 			return s ;
 		}
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(s);
 		for ( int i = s.length() ; i < length ; i++ ) {
 			sb.append(' ');
@@ -132,14 +130,9 @@ public class HelpCommand extends Command {
 	}
 	
 	private String formatCommand(Command c) {
-		StringBuffer sb = new StringBuffer();
-		
+		StringBuilder sb = new StringBuilder();
 		sb.append(". " + padding(c.getName(), PADDING)  ) ; 
-//		if ( c.getShortName() != null ) {
-//			sb.append(" / " + c.getShortName() ) ;
-//		}
 		sb.append( " " + c.getShortDescription() ) ;
-		// sb.append(" (" + c.getClass().getSimpleName() +")") ;
 		sb.append(" : " + c.getDescription() ) ;
 		return sb.toString();
 	}

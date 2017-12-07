@@ -82,7 +82,7 @@ public class ListDatabasesCommand extends Command {
 	private String listDatabases(Integer id) {
 		TelosysProject telosysProject = getTelosysProject();
 		try {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			if ( id != null ) {
 				DatabaseConfiguration dbConfig = telosysProject.getDatabaseConfiguration(id);
 				if ( dbConfig != null ) {
@@ -113,7 +113,7 @@ public class ListDatabasesCommand extends Command {
 		return null ;
 	}
 
-	private void printDbConfig(StringBuffer sb, DatabaseConfiguration dbConfig) {
+	private void printDbConfig(StringBuilder sb, DatabaseConfiguration dbConfig) {
 		appendLine(sb, " ");
 		appendLine(sb, "Database '" + dbConfig.getDatabaseId() + "' : " + dbConfig.getDatabaseName() );
 		appendLine(sb, " . Driver class  : " + dbConfig.getDriverClass() );

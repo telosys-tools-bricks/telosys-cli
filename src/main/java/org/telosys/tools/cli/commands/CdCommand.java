@@ -61,14 +61,6 @@ public class CdCommand extends Command {
 		else {
 			return cd(null);
 		}
-//		if (args[0].equals("..")) {
-//			String currentDir = environment.getCurrentDirectory();
-//			return currentDir.substring(0, currentDir.lastIndexOf('\\'));
-//		}
-//		if (args[0].equals("help")) {
-//			return "Print a basic user guide";
-//		}
-//		return cd(environment, (String) args[0]);
 	}
 
 	private String cd(String destination) {
@@ -98,9 +90,7 @@ public class CdCommand extends Command {
 				}
 			}
 		} else {
-			// currentDirectory = originalDirectory ;
 			environment.resetCurrentDirectoryToHomeIfDefined();
-			// return "Current directory : " + currentDirectory ;
 			return environment.getCurrentDirectory();
 		}
 
@@ -112,9 +102,7 @@ public class CdCommand extends Command {
 		}
 		if (file.exists()) {
 			if (file.isDirectory()) {
-				// currentDirectory = file.getAbsolutePath() ;
 				environment.setCurrentDirectory(file.getAbsolutePath());
-				// return "Current directory : " + currentDirectory ;
 				return environment.getCurrentDirectory();
 			} else {
 				return "'" + file.getAbsolutePath() + "' is not a directory!";

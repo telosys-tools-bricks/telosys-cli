@@ -68,7 +68,6 @@ public class BundleCommand extends Command {
 			if ( bundleName != null ) {
 				TargetsDefinitions targetsDefinitions = getCurrentTargetsDefinitions();
 				int templatesCount = targetsDefinitions.getTemplatesTargets().size();
-				//int resourcesCount = targetsDefinitions.getResourcesTargets().size();
 				String resources = "no resource" ;
 				if ( targetsDefinitions.getResourcesTargets().size() > 0 ) {
 					resources = "contains resource(s)" ;

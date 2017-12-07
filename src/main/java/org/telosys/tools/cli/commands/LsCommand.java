@@ -65,14 +65,12 @@ public class LsCommand extends Command {
 	}
 
 	private String ls(final String parameter) {
-		//File currentDir = new File(environment.getCurrentDirectory());
 		File currentDir = new File(getCurrentDirectory());
 		if (parameter == null) {
 			// --- No parameter => list current directory
 			return buildFilesList(currentDir, currentDir.listFiles());
 		} else {
 			// --- Parameter : is it a directory ?
-//			File argFile = new File(FileUtil.buildFilePath(environment.getCurrentDirectory(), parameter));
 			File argFile = new File(FileUtil.buildFilePath(getCurrentDirectory(), parameter));
 			if (argFile.exists() && argFile.isDirectory()) {
 				// --- List parameter directory
@@ -85,7 +83,6 @@ public class LsCommand extends Command {
 						return (name.matches(buildRegExp(parameter)));
 					}
 				};
-				// File[] files = currentDir.listFiles(filenameFilter);
 				return buildFilesList(currentDir, currentDir.listFiles(filenameFilter));
 			}
 		}
@@ -93,7 +90,7 @@ public class LsCommand extends Command {
 
 	private String buildFilesList(File dir, File[] files) {
 		int n = 0;
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(dir.getPath() + " : ");
 		appendEndOfLine(sb);
 		if (files != null) {
@@ -109,14 +106,13 @@ public class LsCommand extends Command {
 				n++;
 			}
 		}
-		// buf.append(" "+n+" file(s)");
 		sb.append("        " + n + " file(s)");
 		appendEndOfLine(sb);
 		return sb.toString();
 	}
 
 	private String buildRegExp(String filterPattern) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		// "*" --> ".*"
 		// "." --> "\."
 		// "$" --> "\$"

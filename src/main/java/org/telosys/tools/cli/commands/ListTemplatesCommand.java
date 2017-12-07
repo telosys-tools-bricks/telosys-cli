@@ -73,7 +73,6 @@ public class ListTemplatesCommand extends Command {
 	
 	private String listTemplates(String[] args) {
 		TargetsDefinitions targetDefinitions = getCurrentTargetsDefinitions();
-		//List<String> criteria = TargetUtil.buildCriteriaFromArg(args.length > 1 ? args[1] : null) ;
 		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(args.length > 1 ? args[1] : null) ;
 		List<TargetDefinition> selectedTargets = TargetUtil.filter(targetDefinitions.getTemplatesTargets(), criteria);
 		print ( TargetUtil.buildListAsString(selectedTargets) );

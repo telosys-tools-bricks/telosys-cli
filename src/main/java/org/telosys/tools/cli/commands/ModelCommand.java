@@ -79,16 +79,6 @@ public class ModelCommand extends CommandWithModel {
 			setCurrentModel(modelFile.getName());
 			return "Current model is now '" + getCurrentModel() + "'";
 		}
-		
-		
-//		File modelFile = getModelFile(modelName);
-//		if ( modelFile != null ) {
-//			setCurrentModel(modelFile.getName());
-//			return "Current model is now '" + getCurrentModel() + "'";
-//		}
-////		else {
-////			return "Model '" + modelName + "' not found";
-////		}	
 		return null ;
 	}
 }

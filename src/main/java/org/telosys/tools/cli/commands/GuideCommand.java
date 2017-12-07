@@ -54,15 +54,6 @@ public class GuideCommand extends Command {
 
 	@Override
 	public String execute(String[] args) {
-//		return guide(environment, (String) args[0]);
-
-//		List<String> items = new LinkedList<>();
-//		for ( int i = 0 ; i < 20 ; i++ ) {
-//			items.add("Item #" + i);
-//		}
-//		SelectionList list = new SelectionList(items);
-//		list.show();
-
 		if ( confirm("Do you confirm") ) {
 			print("YES");
 		}
@@ -73,7 +64,7 @@ public class GuideCommand extends Command {
 	}
 	
 	protected String guide(final String parameter) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		
 		appendLine(sb, "1) Initialize the project environment");
 		appendLine(sb, " . cd [project-directory]");
@@ -98,9 +89,4 @@ public class GuideCommand extends Command {
 		return sb.toString();
 	}
 
-//	private void append(StringBuffer sb, String s) {
-//		sb.append(s);
-//		sb.append(OsUtils.LINE_SEPARATOR);
-//	}
-	
 }

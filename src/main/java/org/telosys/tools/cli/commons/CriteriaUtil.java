@@ -35,7 +35,7 @@ public class CriteriaUtil {
 	 * @param arg argument containing the criteria ( eg 'pattern1,pattern2,pattern3' )
 	 * @return
 	 */
-	public final static List<String> buildCriteriaFromArg( String arg ) {
+	public static final List<String> buildCriteriaFromArg( String arg ) {
 		if ( arg == null ) {
 			return null ; // No criteria
 		}
@@ -43,7 +43,7 @@ public class CriteriaUtil {
 			return null ; 
 		}
 		else {
-			List<String> list = new LinkedList<String>();
+			List<String> list = new LinkedList<>();
 			if ( arg.contains(",") ) {
 				// Many template patterns (eg 'template1,template2,template3')				
 				String[] array = StrUtil.split(arg, ',' );

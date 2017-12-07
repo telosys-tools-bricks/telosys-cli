@@ -22,7 +22,7 @@ public class Banner {
 		return banner2();
 	}
 	protected String banner1() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("\n=======================================" );
 		buf.append("\n* *" );
 		buf.append("\n* TELOSYS TOOLS *" );
@@ -32,7 +32,7 @@ public class Banner {
 		return buf.toString();
 	}
 	protected String banner2() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("" );
 		buf.append("\n  _       _                        "  ) ;
 		buf.append("\n | |_ ___| | ___  ___ _   _ ___    " ) ;
@@ -40,13 +40,11 @@ public class Banner {
 		buf.append("\n | ||  __/ | (_) \\__ \\ |_| \\__ \\ " ) ;
 		buf.append("\n  \\__\\___|_|\\___/|___/\\__, |___/ " ) ;
 		buf.append("\n                      |___/                             " ) ;
-		//buf.append(" " );
 		buf.append(" \n version  " + this.getVersion());
-		//buf.append("Version:" + this.getVersion());
 		return buf.toString();
 	}
 	protected String banner3() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append(" " );
 		
 		buf.append("\n _____     ______                                _____            ______       "  ) ;
@@ -55,24 +53,21 @@ public class Banner {
 		buf.append("\n / /_ /  __/  / / /_/ /(__  )_  /_/ /_(__  )     / /_ / /_/ / /_/ /  / _(__  ) "  ) ;
 		buf.append("\n \\__/ \\___//_/  \\____//____/ _\\__, / /____/      \\__/ \\____/\\____//_/  /____/  "  ) ;
 		buf.append("\n                             /____/                                            "  ) ;
-		//buf.append(" " );
 		buf.append("\n " + this.getVersion());
-		//buf.append("Version:" + this.getVersion());
 		return buf.toString();
 	}
 
 	protected String bannerSlant() {
-		StringBuffer buf = new StringBuffer();
-		buf.append(" " );
+		StringBuilder sb = new StringBuilder();
+		sb.append(" " );
 		
-		buf.append("\n    ______     __                     ");
-		buf.append("\n   /_  __/__  / /___  _______  _______");
-		buf.append("\n    / / / _ \\/ / __ \\/ ___/ / / / ___/");
-		buf.append("\n   / / /  __/ / /_/ (__  ) /_/ (__  ) ");
-		buf.append("\n  /_/  \\___/_/\\____/____/\\__, /____/  ");
-		buf.append("\n                        /____/  " + this.getVersion() );
-		//buf.append("\n " + this.getVersion());
-		return buf.toString();
+		sb.append("\n    ______     __                     ");
+		sb.append("\n   /_  __/__  / /___  _______  _______");
+		sb.append("\n    / / / _ \\/ / __ \\/ ___/ / / / ___/");
+		sb.append("\n   / / /  __/ / /_/ (__  ) /_/ (__  ) ");
+		sb.append("\n  /_/  \\___/_/\\____/____/\\__, /____/  ");
+		sb.append("\n                        /____/  " + this.getVersion() );
+		return sb.toString();
 	}
 /* 
 
@@ -132,14 +127,4 @@ Standard
 		return Version.TELOSYS_TOOLS_CLI_VERSION ;
 	}
 
-	
-	public String getWelcomeMessage() {
-		//return "Welcome to Telosys-Tools CLI";
-		return "";
-	}
-
-
-	public String getProviderName() {
-		return "Telosys-Tools banner provider";
-	}
 }

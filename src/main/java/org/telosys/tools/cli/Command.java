@@ -47,7 +47,6 @@ public abstract class Command {
 	 */
 	public Command(ConsoleReader consoleReader, Environment environment ) {
 		super();
-		//this.out = out;
 		this.consoleReader = consoleReader ;
 		this.out = new PrintWriter(consoleReader.getOutput()) ;
 		this.environment = environment ;
@@ -90,23 +89,18 @@ public abstract class Command {
 		return environment ;
 	}
 
-	protected void appendLine(StringBuffer sb, String s) {
+	protected void appendLine(StringBuilder sb, String s) {
 		sb.append(s);
 		sb.append(Environment.LINE_SEPARATOR);
 	}
 	
-	protected void appendEndOfLine(StringBuffer sb) {
+	protected void appendEndOfLine(StringBuilder sb) {
 		sb.append(Environment.LINE_SEPARATOR);
 	}
-
-//	protected String getLastErrorMessage() {
-//		return lastErrorMessage;
-//	}
 
 	protected String invalidUsage(String message) {
 		return "Invalid usage : " + message ;
 	}
-
 
 	protected int readChar() {
 		try {
@@ -236,14 +230,6 @@ public abstract class Command {
 		return environment.getHomeDirectory();
 	}
 	
-//	/**
-//	 * Returns the current home directory
-//	 * @return
-//	 */
-//	protected String getHomeDirectory() {
-//		return environment.getHomeDirectory();
-//	}
-
 	//-------------------------------------------------------------------------
 	/**
 	 * Check the number of arguments
@@ -414,9 +400,7 @@ public abstract class Command {
 	 * @return
 	 */
 	protected String launchEditor(String fileFullPath) {
-		// print("Edit file '" + fileFullPath + "'");
 		String editorCommand = environment.getEditorCommand();
-		String fullCommand = editorCommand ;
 		
 		String fileToEdit = fileFullPath ;
 		if ( StrUtil.nullOrVoid(fileToEdit) ) {
@@ -424,6 +408,7 @@ public abstract class Command {
 		}
 
 		// Replace $FILE or ${FILE} if present
+		String fullCommand ;
 		if ( editorCommand.contains("$FILE") ) {
 			fullCommand = StrUtil.replaceVar(editorCommand, "$FILE", fileToEdit);
 		}
@@ -454,8 +439,7 @@ public abstract class Command {
 	protected TelosysProject getTelosysProject() {
 		if ( checkHomeDirectoryDefined() ) {
 			String projectFullPath = environment.getHomeDirectory();
-			TelosysProject telosysProject = new TelosysProject(projectFullPath);
-			return telosysProject ;
+			return new TelosysProject(projectFullPath);
 		}
 		return null ;
 	}

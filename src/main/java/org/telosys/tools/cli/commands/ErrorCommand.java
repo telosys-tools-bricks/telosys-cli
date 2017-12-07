@@ -55,7 +55,7 @@ public class ErrorCommand extends Command {
 	public String execute(String[] args) {
 		
 		if ( LastError.hasError() ) {
-			StringBuffer sb = new StringBuffer();			
+			StringBuilder sb = new StringBuilder();			
 			appendLine(sb, "Last error :");
 			
 			appendLine(sb, "Message :");
@@ -82,7 +82,7 @@ public class ErrorCommand extends Command {
 		
 	}
 	private String getExceptionInfo(Throwable e) {
-		StringBuffer sb = new StringBuffer();			
+		StringBuilder sb = new StringBuilder();			
 		appendLine(sb, " class   : " + e.getClass().getSimpleName() );
 		appendLine(sb, " message : " + e.getMessage() );
 		appendLine(sb, " stack trace : " );
@@ -91,17 +91,15 @@ public class ErrorCommand extends Command {
 		if ( cause != null ) {
 			appendEndOfLine(sb);
 			appendLine(sb, "Cause : " );
-			//appendLine(sb, getExceptionInfo(cause) );
 			sb.append( getExceptionInfo(cause) );
 		}
 		return sb.toString();
 	}
 	
 	private String getStackTraceInfo(Throwable e) {
-		StringBuffer sb = new StringBuffer();			
+		StringBuilder sb = new StringBuilder();			
 		StackTraceElement[] stack = e.getStackTrace() ;
 		for ( StackTraceElement ste : stack ) {
-			//appendLine(sb, "  " + ste.getFileName() + "[" + ste.getLineNumber()+"] "+ ste.getMethodName() );
 			appendLine(sb, "  " + ste.getClassName() + "[" + ste.getLineNumber()+"] "+ ste.getMethodName() );
 		}
 		return sb.toString();

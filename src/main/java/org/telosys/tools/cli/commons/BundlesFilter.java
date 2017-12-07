@@ -24,12 +24,18 @@ import org.telosys.tools.commons.TelosysToolsException;
 public class BundlesFilter {
 	
 	/**
+	 * Private constructor
+	 */
+	private BundlesFilter() {	
+	}
+	
+	/**
 	 * Builds a list of criteria from the given command line arguments <br>
 	 * taking all the arguments from 1 to N (except 0)
 	 * @param commandArgs 
 	 * @return
 	 */
-	public final static List<String> buildCriteriaFromArgs( String[] commandArgs) {
+	public static final List<String> buildCriteriaFromArgs( String[] commandArgs) {
 		List<String> tokens = new LinkedList<>();
 		for ( int i = 1 ; i < commandArgs.length ; i++ ) {
 				tokens.add(commandArgs[i]);
@@ -49,7 +55,7 @@ public class BundlesFilter {
 			// No criteria => no filter => return the same list
 			return bundles ;
 		}
-		else if ( criteria.size() == 0 )  {
+		else if ( criteria.isEmpty() )  {
 			// No criteria => no filter => return the same list
 			return bundles ;
 		}

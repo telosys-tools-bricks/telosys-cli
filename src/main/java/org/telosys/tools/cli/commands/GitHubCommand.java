@@ -66,11 +66,6 @@ public class GitHubCommand extends Command {
 		}
 	}
 	
-//	private String getCurrentGitHub() {
-//		Environment environment = getEnvironment();
-//		return environment.getCurrentGitHubStore();
-//	}
-	
 	private String setNewValue(String newValue) {
 		setCurrentGitHubStore(newValue);
 		return "GitHub store is now '" + newValue + "'";

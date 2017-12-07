@@ -18,8 +18,6 @@ package org.telosys.tools.cli.commands;
 import java.util.LinkedList;
 import java.util.List;
 
-import jline.console.ConsoleReader;
-
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
@@ -29,11 +27,12 @@ import org.telosys.tools.cli.commons.TargetUtil;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.bundles.TargetDefinition;
 import org.telosys.tools.commons.bundles.TargetsDefinitions;
-import org.telosys.tools.generator.GeneratorException;
 import org.telosys.tools.generator.task.ErrorReport;
 import org.telosys.tools.generator.task.GenerationTaskResult;
 import org.telosys.tools.generic.model.Entity;
 import org.telosys.tools.generic.model.Model;
+
+import jline.console.ConsoleReader;
 
 /**
  * Generates targets using the given entities and the given templates 
@@ -115,8 +114,6 @@ public class GenerateCommand extends CommandWithModel {
 			}
 		} catch (TelosysToolsException e) {
 			printError(e);
-		} catch (GeneratorException e) {
-			printError(e);
 		}
 	}
 	
@@ -136,15 +133,13 @@ public class GenerateCommand extends CommandWithModel {
 	 * @param flagResources resources generation flag : true = generate resources
 	 * @return 
 	 * @throws TelosysToolsException
-	 * @throws GeneratorException
 	 */
 	private GenerationTaskResult generate(String argEntityNames, String argTemplateNames, 
-			boolean flagResources) throws TelosysToolsException, GeneratorException {
+			boolean flagResources) throws TelosysToolsException {
 		
 		TelosysProject telosysProject = getTelosysProject();
 		// Loads the model for the current model name
 		Model model = loadCurrentModel();
-		//List<String> entityNames = buildEntityNames(argEntityNames, model);
 		List<Entity> entities = buildEntitiesList(argEntityNames, model);
 		
 		String bundleName = getCurrentBundle() ;
@@ -175,18 +170,18 @@ public class GenerateCommand extends CommandWithModel {
 		}
 	}
 
-	private GenerationTaskResult generateResources() throws TelosysToolsException, GeneratorException {
+	private GenerationTaskResult generateResources() throws TelosysToolsException {
 		
 		TelosysProject telosysProject = getTelosysProject();
 		
 		Model model = loadCurrentModel(); // Loads the model for the current model name
-		List<String> entityNames = new LinkedList<String>(); // Void list
+		List<String> entityNames = new LinkedList<>(); // Void list
 		
 		String bundleName = getCurrentBundle() ;
 		TargetsDefinitions targetsDefinitions = getCurrentTargetsDefinitions();
-		List<TargetDefinition> targetDefinitions = new LinkedList<TargetDefinition>(); // Void list
+		List<TargetDefinition> targetDefinitions = new LinkedList<>(); // Void list
 		List<TargetDefinition> resources = targetsDefinitions.getResourcesTargets();
-		if ( resources.size() == 0 ) {
+		if ( resources.isEmpty() ) {
 			print("No resource in bundle '" + bundleName + "'");
 		}
 		else {
@@ -207,52 +202,18 @@ public class GenerateCommand extends CommandWithModel {
 	 * @param model
 	 * @return
 	 */
-//	private List<String> buildEntityNames(String arg, Model model) throws TelosysToolsException {
-	private List<Entity> buildEntitiesList(String arg, Model model) throws TelosysToolsException {
-//		List<String> list = new LinkedList<String>();
-//		if ( "*".equals(arg) ) {
-//			// All entities 
-//			for ( Entity entity : model.getEntities() ) {
-//				list.add(entity.getClassName());
-//			}
-//		}
-//		else if ( arg.contains(",") ) {
-//			// Many entity names : eg 'Car,Driver,Dog'
-//			String[] array = StrUtil.split(arg, ',' );
-//			for ( String s : array ) {
-//				String entityName = s.trim();
-//				if ( entityName.length() > 0 ) {
-//					checkEntityExists(entityName, model);
-//					list.add(entityName);
-//				}
-//			}
-//		}
-//		else {
-//			// Only 1 entity name
-//			checkEntityExists(arg, model);
-//			list.add(arg);
-//		}
-//		return list ;
-		
+	private List<Entity> buildEntitiesList(String arg, Model model) {
 		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(arg) ;
 		return EntityUtil.filter(model.getEntities(), criteria);
 	}
-	
-//	private void checkEntityExists(String entityName, Model model) {
-//		if ( model.getEntityByClassName(entityName) == null ) {
-//			throw new CancelCommandException("Unknown entity '" + entityName + "'");
-//		}
-//	}
 	
 	/**
 	 * Returns a list of TargetDefinitions for the given argument <br>
 	 * 
 	 * @param arg can be '*' or a single 'pattern' or a list of 'patterns' ( eg '*' or 'record' or 'record,resource' )
 	 * @return
-	 * @throws TelosysToolsException
 	 */
-	private List<TargetDefinition> buildTargetsList(String arg) throws TelosysToolsException {
-
+	private List<TargetDefinition> buildTargetsList(String arg) {
 		TargetsDefinitions targetDefinitions = getCurrentTargetsDefinitions();
 		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(arg) ;
 		return TargetUtil.filter(targetDefinitions.getTemplatesTargets(), criteria);

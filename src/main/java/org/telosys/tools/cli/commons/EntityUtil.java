@@ -48,7 +48,7 @@ public class EntityUtil {
 	}
 	
 	public final static List<String> toEntityNames( List<Entity> entities ) {
-		List<String> list = new LinkedList<String>();
+		List<String> list = new LinkedList<>();
 		for ( Entity e : entities ) {
 			list.add(e.getClassName());
 		}
@@ -63,7 +63,7 @@ public class EntityUtil {
 	 */
 	public final static List<Entity> select( List<Entity> allEntities, List<String> criteria ) {
 		if ( criteria != null ) {
-			Map<String,Entity> map = new Hashtable<String,Entity>();
+			Map<String,Entity> map = new Hashtable<>();
 			for ( String criterion : criteria ) {
 				for ( Entity entity : allEntities ) {
 					String entityClassName = entity.getClassName() ;
@@ -73,7 +73,7 @@ public class EntityUtil {
 				}				
 			}
 			// Convert map values to list
-			List<Entity> list = new LinkedList<Entity>();
+			List<Entity> list = new LinkedList<>();
 			for ( Entity entity : map.values() ) {
 				list.add(entity);
 			}
@@ -103,14 +103,14 @@ public class EntityUtil {
 	//--------------------------------------------------------------------------------------------
 	public static List<String> buildList( List<Entity> entities ) {
 		if ( entities != null && entities.size() > 0 ) {
-			List<String> list = new LinkedList<String>();
+			List<String> list = new LinkedList<>();
 			for ( Entity entity : entities ) {
 				list.add( buildLine(entity) );
 			}
 			return list;
 		}
 		else {
-			return new LinkedList<String>();
+			return new LinkedList<>();
 		}
 	}
 

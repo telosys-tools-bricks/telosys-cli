@@ -23,28 +23,27 @@ public class CommandsGroups {
 	
 	private final List<CommandsGroup> all ;
 		
-	public CommandsGroups(CommandProvider commandProvider) {
+	public CommandsGroups() {
 		super();
 		all = new LinkedList<>();
 		
-		all.add(getGlobalCommands(commandProvider)) ;
-		all.add(getProjectCommands(commandProvider)) ;
-		all.add(getDatabaseCommands(commandProvider)) ;
-		all.add(getModelCommands(commandProvider)) ;
-		all.add(getEntityCommands(commandProvider)) ;
-		all.add(getGitHubCommands(commandProvider)) ;
-		all.add(getBundleCommands(commandProvider)) ;
-		all.add(getTemplateCommands(commandProvider)) ;
-		all.add(getGenerationCommands(commandProvider)) ;
-		all.add(getLauncherCommands(commandProvider)) ;
-		
+		all.add(getGlobalCommands()) ;
+		all.add(getProjectCommands()) ;
+		all.add(getDatabaseCommands()) ;
+		all.add(getModelCommands()) ;
+		all.add(getEntityCommands()) ;
+		all.add(getGitHubCommands()) ;
+		all.add(getBundleCommands()) ;
+		all.add(getTemplateCommands()) ;
+		all.add(getGenerationCommands()) ;
+		all.add(getLauncherCommands()) ;
 	}
 
 	public final List<CommandsGroup> getAll() {
 		return all ;
 	}
 	
-	private final CommandsGroup getGlobalCommands(CommandProvider commandProvider) {
+	private final CommandsGroup getGlobalCommands() {
 		List<String> commands = new LinkedList<>() ;
 		
 		String name = "General commands" ;
@@ -60,7 +59,7 @@ public class CommandsGroups {
 		return new CommandsGroup(name, commands);
 	}
 
-	private final CommandsGroup getProjectCommands(CommandProvider commandProvider) {
+	private final CommandsGroup getProjectCommands() {
 		List<String> commands = new LinkedList<>() ;
 		
 		String name = "Project commands" ;
@@ -72,7 +71,7 @@ public class CommandsGroups {
 		return new CommandsGroup(name, commands);
 	}
 
-	private final CommandsGroup getModelCommands(CommandProvider commandProvider) {
+	private final CommandsGroup getModelCommands() {
 		List<String> commands = new LinkedList<>() ;
 		
 		String name = "Model commands" ;
@@ -88,7 +87,7 @@ public class CommandsGroups {
 		return new CommandsGroup(name, commands);
 	}
 
-	private final CommandsGroup getDatabaseCommands(CommandProvider commandProvider) {
+	private final CommandsGroup getDatabaseCommands() {
 		List<String> commands = new LinkedList<>() ;
 		
 		String name = "Database commands" ;
@@ -99,7 +98,7 @@ public class CommandsGroups {
 		return new CommandsGroup(name, commands);
 	}
 
-	private final CommandsGroup getEntityCommands(CommandProvider commandProvider) {
+	private final CommandsGroup getEntityCommands() {
 		List<String> commands = new LinkedList<>() ;
 		
 		String name = "Entity commands" ;
@@ -111,7 +110,7 @@ public class CommandsGroups {
 		return new CommandsGroup(name, commands);
 	}
 
-	private final CommandsGroup getGitHubCommands(CommandProvider commandProvider) {
+	private final CommandsGroup getGitHubCommands() {
 		List<String> commands = new LinkedList<>() ;
 		
 		String name = "GitHub commands" ;
@@ -121,7 +120,7 @@ public class CommandsGroups {
 		return new CommandsGroup(name, commands);
 	}
 	
-	private final CommandsGroup getBundleCommands(CommandProvider commandProvider) {
+	private final CommandsGroup getBundleCommands() {
 		List<String> commands = new LinkedList<>() ;
 		
 		String name = "Bundle commands" ;
@@ -134,7 +133,7 @@ public class CommandsGroups {
 		return new CommandsGroup(name, commands);
 	}
 	
-	private final CommandsGroup getTemplateCommands(CommandProvider commandProvider) {
+	private final CommandsGroup getTemplateCommands() {
 		List<String> commands = new LinkedList<>() ;
 		
 		String name = "Template commands" ;
@@ -146,7 +145,7 @@ public class CommandsGroups {
 		return new CommandsGroup(name, commands);
 	}
 	
-	private final CommandsGroup getGenerationCommands(CommandProvider commandProvider) {
+	private final CommandsGroup getGenerationCommands() {
 		List<String> commands = new LinkedList<>() ;
 		
 		String name = "Generation commands" ;
@@ -155,7 +154,7 @@ public class CommandsGroups {
 		return new CommandsGroup(name, commands);
 	}
 	
-	private final CommandsGroup getLauncherCommands(CommandProvider commandProvider) {
+	private final CommandsGroup getLauncherCommands() {
 		List<String> commands = new LinkedList<>() ;
 		
 		String name = "Launcher commands" ;

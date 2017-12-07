@@ -73,7 +73,6 @@ public class ListGitHubCommand extends Command {
 	}
 	
 	private List<String> getBundles(String githubStoreName, String[] args) {
-		//List<String> criteria = GitHubBundlesUtil.buildCriteria(args);
 		List<String> criteria = BundlesFilter.buildCriteriaFromArgs(args);
 		TelosysProject telosysProject = getTelosysProject();
 		try {
@@ -91,7 +90,7 @@ public class ListGitHubCommand extends Command {
 	 * @return
 	 */
 	private String printBundles(String githubStore, List<String> bundles) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if ( bundles != null && bundles.size() > 0 ) {
 			appendLine(sb, "Bundles found in GitHub store '" + githubStore + "' : ");
 			for ( String s : bundles ) {
@@ -103,6 +102,4 @@ public class ListGitHubCommand extends Command {
 		}
 		return sb.toString();
 	}
-
-	
 }

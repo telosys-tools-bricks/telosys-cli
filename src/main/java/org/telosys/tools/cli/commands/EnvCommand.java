@@ -59,11 +59,9 @@ public class EnvCommand extends Command {
 	private String env() {
 		Environment environment = getEnvironment();
 		
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		
 		appendLine(sb, "ENVIRONMENT : ");
-//		buf.append( ". Original directory : " + environment.getOriginalDirectory() );
-//		buf.append(OsUtils.LINE_SEPARATOR);
 
 		appendLine(sb, ". Operating System     : " + environment.getOperatingSystem() );		
 		appendLine(sb, ". Editor command       : " + environment.getEditorCommand() );

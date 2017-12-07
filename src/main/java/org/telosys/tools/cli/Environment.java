@@ -54,7 +54,7 @@ public class Environment {
 	public Environment(CommandProvider commandProvider) {
 		super();
 		this.commandProvider = commandProvider ;
-		this.commandsGroups  = new CommandsGroups(commandProvider);
+		this.commandsGroups  = new CommandsGroups();
 		this.jarLocation = findJarFullPath();
 		this.originalDirectory = System.getProperty("user.dir"); 
 		this.currentDirectory = originalDirectory ;

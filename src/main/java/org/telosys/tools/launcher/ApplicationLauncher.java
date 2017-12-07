@@ -90,23 +90,8 @@ public class ApplicationLauncher {
 			}
 		}
 
-//		testFileExists( "D:\\workspaces-TELOSYS-TOOLS\\wks-43-telosys-tools-bricks\\telosys-tools-api/tests-env/project1" ) ;
-//		testFileExists( "D:\\workspaces-TELOSYS-TOOLS\\wks-43-telosys-tools-bricks\\telosys-tools-api/tests-env/project1/TelosysTools" ) ;
-//		testFileExists( "D:\\workspaces-TELOSYS-TOOLS\\wks-43-telosys-tools-bricks\\telosys-tools-api/tests-env/project1/TelosysTools/templates" ) ;
-//		testFileExists( "D:\\workspaces-TELOSYS-TOOLS\\wks-43-telosys-tools-bricks\\telosys-tools-api/tests-env/project1/TelosysTools/templates/basic-templates-samples-T300/templates.cfg" ) ;
-		
 		print("" );
 		if ( ! yesOption ) {
-//			print("Do you want to launch the generation [y/n] ? " );
-//			Scanner scanner = new Scanner(System.in);
-//			String choice = scanner.next();
-//			scanner.close();
-//			if ( choice.startsWith("y") || choice.startsWith("Y") ) {
-//				launchGeneration(launcher);
-//			}
-//			else {
-//				print("OK, bye." );
-//			}	
 			if ( confirm("Do you want to launch the generation [y/n] ? ") ) {
 				launchGeneration(launcher);
 			}
@@ -132,12 +117,6 @@ public class ApplicationLauncher {
 		}		
 	}
 
-//	private static void testFileExists(String s ) {
-//		File f = new File(s);
-//		print("TEST : file : " + f.getAbsolutePath());
-//		print("TEST : file exists ? : " + f.exists() );
-//	}
-	
 	private static void checkArgs(String[] args ) {
 		print(args.length + " argument(s) :");
 		for( String arg : args ) {

@@ -67,7 +67,7 @@ public class ListModelsCommand extends Command {
 		TelosysProject telosysProject = getTelosysProject();
 		try {
 			List<File> files = telosysProject.getModels();
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			for ( File f : files ) {
 				appendLine(sb, " . " + f.getName() );
 			}

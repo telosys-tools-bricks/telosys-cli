@@ -85,7 +85,7 @@ public class CommandProvider {
 		register(new EditCommand(consoleReader, environment)); // e
 		register(new EnvCommand(consoleReader, environment)); // env
 		register(new GuideCommand(consoleReader, environment)); // guide
-		register(new HelpCommand(consoleReader, environment, this)); // ? - help
+		register(new HelpCommand(consoleReader, environment)); // ? - help
 		register(new LsCommand(consoleReader, environment)); // ls
 		register(new PwdCommand(consoleReader, environment)); // pwd
 		register(new QuitCommand(consoleReader, environment)); // q

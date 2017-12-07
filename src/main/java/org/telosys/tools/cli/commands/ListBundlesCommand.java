@@ -63,51 +63,18 @@ public class ListBundlesCommand extends Command {
 	}
 
 	private void listBundles(String[] commandArgs) {
-//		List<String> criteria = BundlesFilter.buildCriteriaFromArgs(args);
-//		TelosysProject telosysProject = getTelosysProject();
-//		try {
-//			// get all installed bundles
-//			List<String> bundles = telosysProject.getInstalledBundles();
-//			// filter with criteria if any
-//			List<String> filteredBundles = BundlesFilter.filter(bundles, criteria);
-//			return printBundles(filteredBundles);
-//			
-//		} catch (TelosysToolsException e) {
-//			printError(e);
-//		}
-//		return null ;
 		
 		try {
 			List<String> bundleNames = BundlesFilter.getExistingBundles(getTelosysProject(), commandArgs);	
-			if ( bundleNames.size() > 0 ) {
-				print( bundleNames.size() + " bundle(s) :") ;
-				printList(bundleNames) ;
+			if ( bundleNames.isEmpty() ) {
+				print("No bundle found.") ;
 			}
 			else {
-				print("No bundle found.") ;
+				print( bundleNames.size() + " bundle(s) :") ;
+				printList(bundleNames) ;
 			}
 		} catch (TelosysToolsException e) {
 			printError(e);
 		}
 	}
-	
-//	/**
-//	 * Prints the given bundles
-//	 * @param bundles
-//	 * @return
-//	 */
-//	private String printBundles(List<String> bundles) {
-//		StringBuffer sb = new StringBuffer();
-//		if ( bundles != null && bundles.size() > 0 ) {
-//			//appendLine(sb, "Bundles installed in the current project : ");
-//			for ( String s : bundles ) {
-//				appendLine(sb, " . " + s);
-//			}
-//		}
-//		else {
-//			appendLine(sb, "No bundle found.");
-//		}
-//		return sb.toString();
-//	}
-
 }

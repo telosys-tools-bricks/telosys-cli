@@ -27,7 +27,9 @@ DB MODEL COMMANDS : (NB : "db" is for "Delete Bundle" )
 (X) udbm : update db model ( ou "udbmodel" )
   (X) udbm
   (X) udbm 1 ( update db model from database #1 )
+ Logger traces in udbm ????
 
+Check file existence in CLI ( ndbm and udbm )
 
 Confirm for "ndbm" and "udbm" 
 
