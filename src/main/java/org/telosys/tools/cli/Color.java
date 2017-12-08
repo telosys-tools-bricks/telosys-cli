@@ -17,6 +17,12 @@ package org.telosys.tools.cli;
 
 public class Color {
 
+	/**
+	 * Private constructor for static class
+	 */
+	private Color() {
+	}
+	
 	// see : http://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html
 	public static final String BALCK = "30" ;
 	

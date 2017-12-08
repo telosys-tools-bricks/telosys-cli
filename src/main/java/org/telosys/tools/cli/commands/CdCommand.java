@@ -21,6 +21,7 @@ import jline.console.ConsoleReader;
 
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.commons.FileUtil;
 
 public class CdCommand extends Command {
 
@@ -85,7 +86,7 @@ public class CdCommand extends Command {
 					return tryToChangeCurrentDirectory(environment, new File(destination));
 				} else {
 					File current = new File(environment.getCurrentDirectory());
-					String destPath = current.getAbsolutePath() + "/" + destination;
+					String destPath = FileUtil.buildFilePath(current.getAbsolutePath(), destination);
 					return tryToChangeCurrentDirectory(environment, new File(destPath));
 				}
 			}
