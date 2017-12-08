@@ -17,6 +17,12 @@ package org.telosys.tools.cli;
 
 public class Trace {
 
-	public final static boolean DEBUG = false ;
+	/**
+	 * Private constructor
+	 */
+	private Trace() {
+	}
+
+	public static final boolean DEBUG = false ;
 	
 }
