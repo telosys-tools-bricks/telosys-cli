@@ -23,7 +23,7 @@ import org.telosys.tools.cli.Environment;
 
 public class EditConfigCommand extends Command {
 
-	public final static String COMMAND_NAME = "ecfg";
+	public static final String COMMAND_NAME = "ecfg";
 	
 	/**
 	 * Constructor

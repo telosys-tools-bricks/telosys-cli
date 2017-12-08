@@ -91,7 +91,7 @@
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<!-- <mainClass>org.telosys.tools.cli.Main</mainClass>  -->
-									<mainClass>org.telosys.tools.cli.ApplicationCLI</mainClass>
+									<mainClass>org.telosys.tools.cli.TelosysMain</mainClass>
 								</transformer>
 							</transformers>
 						</configuration>

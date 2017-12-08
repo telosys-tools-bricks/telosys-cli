@@ -94,7 +94,7 @@ public class Environment {
 	 * @return
 	 */
 	private File findJarFile() {
-		URL url = ApplicationCLI.class.getProtectionDomain().getCodeSource().getLocation();
+		URL url = TelosysCLI.class.getProtectionDomain().getCodeSource().getLocation();
 		try {
 			URI uri = url.toURI();
 			return new File( uri.getPath() ) ;
@@ -140,7 +140,6 @@ public class Environment {
 	 * @return
 	 */
 	private String determineDefaultEditorCommand() {
-		String osName = System.getProperty("os.name");
 		if ( osName.contains("windows") || osName.contains("Windows") ) {
 			// Windows
 			return "notepad.exe $FILE" ;

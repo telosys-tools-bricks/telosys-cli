@@ -65,8 +65,12 @@ public class HomeCommand extends Command {
 			setCurrentHome();
 			return "Home set ('" + getCurrentHome() + "')" ;	
 		}
+		else if ( checkDirectory(dir) ) {
+			setCurrentHome(dir);
+			return "Home set ('" + getCurrentHome() + "')" ;	
+		}
 		else {
-			return "Invalid directory";
+			return "Invalid directory '" + dir + "'";
 		}
 	}
 }

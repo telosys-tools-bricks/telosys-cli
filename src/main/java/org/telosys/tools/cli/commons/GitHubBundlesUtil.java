@@ -23,6 +23,12 @@ import org.telosys.tools.commons.TelosysToolsException;
 public class GitHubBundlesUtil {
 	
 	/**
+	 * Private constructor 
+	 */
+	private GitHubBundlesUtil() {
+	}
+	
+	/**
 	 * Returns a list of bundles matching the given criteria
 	 * @param telosysProject
 	 * @param githubStoreName
@@ -30,7 +36,7 @@ public class GitHubBundlesUtil {
 	 * @return
 	 * @throws TelosysToolsException
 	 */
-	public final static List<String> getBundles(TelosysProject telosysProject, String githubStoreName, List<String> criteria) throws TelosysToolsException {
+	public static List<String> getBundles(TelosysProject telosysProject, String githubStoreName, List<String> criteria) throws TelosysToolsException {
 		
 		// Get all the bundles available in the GitHub store
 		List<String> bundles = telosysProject.getGitHubBundlesList(githubStoreName);

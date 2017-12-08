@@ -44,10 +44,10 @@ public class CommandLineProcessor {
 	 * Processes the given line (try to interpret and execute the command) 
 	 * @param line
 	 */
-	public void processLine( String line ) {
+	public boolean processLine( String line ) {
 		debug("(line='"+line+"')");
 		if ( line.trim().length() == 0 ) {
-			return ;
+			return false ;
 		}
 		String result ;
 		String[] args = CommandLineUtil.toArgs(line);
@@ -60,6 +60,7 @@ public class CommandLineProcessor {
 				try {
 					result = command.execute(args);
 					print(result);
+					return true; // OK
 				} catch (CancelCommandException cancelCommandEx ) {
 					// The command has been canceled, for example due to invalid arguments 
 					// => just print the messsage and continue
@@ -72,6 +73,7 @@ public class CommandLineProcessor {
 		} catch (Exception e) {
 			printException(e);
 		}
+		return false ;
 	}
 	
 	private void debug(String message) {

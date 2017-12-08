@@ -154,7 +154,7 @@ public class GenerateCommand extends CommandWithModel {
 
 		print("Copy resources : " + ( flagResources ? "yes" : "no" ));
 
-		if ( entityNames.size() == 0 || targetDefinitions.size() == 0 ) {
+		if ( entityNames.isEmpty() || targetDefinitions.isEmpty() ) {
 			print("No entity or no templates => nothing to generate ");
 			return null ;
 		}

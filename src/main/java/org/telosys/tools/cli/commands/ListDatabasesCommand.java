@@ -97,13 +97,13 @@ public class ListDatabasesCommand extends Command {
 				appendLine(sb, databasesConfigurations.getNumberOfDatabases() + " database(s) defined" );
 				appendLine(sb, "Default database is '" + databasesConfigurations.getDatabaseDefaultId() + "'" );
 				List<DatabaseConfiguration> databases = databasesConfigurations.getDatabaseConfigurationsList();
-				if ( databases.size() > 0 ) {
+				if ( databases.isEmpty() ) {
+					appendLine(sb, "No database defined." );
+				}
+				else {
 					for ( DatabaseConfiguration dbConfig : databases ) {
 						printDbConfig(sb, dbConfig);
 					}
-				}
-				else {
-					appendLine(sb, "No database defined." );
 				}
 			}
 			return sb.toString();

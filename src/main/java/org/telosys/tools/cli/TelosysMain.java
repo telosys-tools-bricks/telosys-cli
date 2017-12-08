@@ -16,9 +16,6 @@
 package org.telosys.tools.cli;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-
-import jline.console.ConsoleReader;
 
 /**
  * Application entry point for CLI
@@ -26,8 +23,8 @@ import jline.console.ConsoleReader;
  * @author Laurent GUERIN
  *
  */
-public class ApplicationCLI {
-	
+public class TelosysMain {
+
 	/**
 	 * Main
 	 * @param args
@@ -35,26 +32,8 @@ public class ApplicationCLI {
 	 */
 	public static void main(String[] args) throws IOException {
 
-		try {
-
-			ConsoleReader consoleReader = new ConsoleReader();
-			CommandProvider commandProvider = new CommandProvider(consoleReader);
-			consoleReader.setPrompt(Color.colorize(Const.INITIAL_PROMPT, Const.PROMPT_COLOR) );
-			
-			PrintWriter out = new PrintWriter(consoleReader.getOutput());
-			String banner = new Banner().bannerSlant();
-			out.println( Color.colorize(banner, Color.CYAN_BRIGHT));
-			out.println("Enter ? for help");
-
-			CommandLineProcessor commandLineProcessor = new CommandLineProcessor( consoleReader, commandProvider ) ;
-			
-			while (true) {
-				String line = consoleReader.readLine() ;
-				commandLineProcessor.processLine(line);
-			}
-		} catch (Exception e) {
-			System.out.println("ERROR : Exception " + e.getMessage() );
-			System.out.flush();
-		}
+		TelosysCLI cli = new TelosysCLI();
+		
+		cli.start(args);
 	}
 }

@@ -23,7 +23,7 @@ import org.telosys.tools.cli.Environment;
 
 public class EditDatabasesCommand extends Command {
 
-	public final static String COMMAND_NAME = "edb";
+	public static final String COMMAND_NAME = "edb";
 			
 	/**
 	 * Constructor

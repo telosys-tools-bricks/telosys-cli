@@ -73,7 +73,10 @@ public class ListResourcesCommand extends Command {
 	private String listResources() {
 		TargetsDefinitions targetDefinitions = getCurrentTargetsDefinitions();
 		List<TargetDefinition> resources = targetDefinitions.getResourcesTargets();
-		if ( resources.size() > 0 ) {
+		if ( resources.isEmpty() ) {
+			print( "No resource" ) ; 
+		}
+		else {
 			for ( TargetDefinition td : resources ) {
 				String dest = "" ;
 				String folder = td.getFolder() ;
@@ -91,9 +94,6 @@ public class ListResourcesCommand extends Command {
 				}
 				print( " . " + td.getTemplate() + " -> " + dest  ) ; 
 			}
-		}
-		else {
-			print( "No resource" ) ; 
 		}
 		return null ;
 	}

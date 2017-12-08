@@ -41,13 +41,13 @@ public class EntityUtil {
 	 * @param criteria
 	 * @return
 	 */
-	public final static List<Entity> filter( List<Entity> allEntities, List<String> criteria ) {
+	public static List<Entity> filter( List<Entity> allEntities, List<String> criteria ) {
 		List<Entity> list = select(allEntities, criteria);
 		sort(list);
 		return list;
 	}
 	
-	public final static List<String> toEntityNames( List<Entity> entities ) {
+	public static List<String> toEntityNames( List<Entity> entities ) {
 		List<String> list = new LinkedList<>();
 		for ( Entity e : entities ) {
 			list.add(e.getClassName());
@@ -61,7 +61,7 @@ public class EntityUtil {
 	 * @param criteria
 	 * @return
 	 */
-	public final static List<Entity> select( List<Entity> allEntities, List<String> criteria ) {
+	public static List<Entity> select( List<Entity> allEntities, List<String> criteria ) {
 		if ( criteria != null ) {
 			Map<String,Entity> map = new Hashtable<>();
 			for ( String criterion : criteria ) {
@@ -88,7 +88,7 @@ public class EntityUtil {
 	 * Sorts the given list of TargetDefinition by template name
 	 * @param list
 	 */
-	public final static void sort( List<Entity> list) {
+	public static void sort( List<Entity> list) {
 		// Sort 
 		Collections.sort(list, new Comparator<Entity>() {
 			@Override
@@ -116,7 +116,7 @@ public class EntityUtil {
 
 	public static String buildListAsString( List<Entity> entities ) {
 		if ( entities != null && entities.size() > 0 ) {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			for ( Entity entity : entities ) {
 				sb.append( buildLine(entity) );
 				sb.append(Environment.LINE_SEPARATOR);

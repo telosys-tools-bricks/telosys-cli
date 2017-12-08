@@ -63,7 +63,7 @@ public class GuideCommand extends Command {
 		return null ;
 	}
 	
-	protected String guide(final String parameter) {
+	protected String guide() {
 		StringBuilder sb = new StringBuilder();
 		
 		appendLine(sb, "1) Initialize the project environment");

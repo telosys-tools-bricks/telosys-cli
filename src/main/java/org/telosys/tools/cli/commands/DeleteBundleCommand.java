@@ -71,7 +71,10 @@ public class DeleteBundleCommand extends Command {
 	private void deleteBundles(String[] commandArgs) {
 		try {
 			List<String> bundleNames = BundlesFilter.getExistingBundles(getTelosysProject(), commandArgs);	
-			if ( bundleNames.size() > 0 ) {
+			if ( bundleNames.isEmpty() ) {
+				print("No bundle found.") ;
+			}
+			else {
 				print("You are about to delete the following bundles :") ;
 				printList(bundleNames) ;
 				if ( confirm("Are you sure you want to delete these bundles ?") ) {
@@ -79,9 +82,6 @@ public class DeleteBundleCommand extends Command {
 						deleteBundle(bundleName);
 					}
 				}
-			}
-			else {
-				print("No bundle found.") ;
 			}
 		} catch (TelosysToolsException e) {
 			printError(e);

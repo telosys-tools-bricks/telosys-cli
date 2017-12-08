@@ -199,6 +199,33 @@ public abstract class Command {
 	//-------------------------------------------------------------------------
 	// Home directory 
 	//-------------------------------------------------------------------------
+	protected boolean checkDirectory(String dir) {
+		if (dir == null) {
+			print("Directory is null !");
+			return false;
+		}
+		return checkDirectory(new File(dir) );
+	}
+	
+	protected boolean checkDirectory(File file) {
+		if (file == null) {
+			print("Directory is null !");
+			return false;
+		}
+		if ( ! file.exists() ) {
+			print("'" + file.getAbsolutePath() + "' doesn't exist !");
+			return false;
+		}
+		if ( ! file.isDirectory()) {
+			print( "'" + file.getAbsolutePath() + "' is not a directory !" );
+			return false;
+		} 
+		return true ; // OK
+	}
+	
+	//-------------------------------------------------------------------------
+	// Home directory 
+	//-------------------------------------------------------------------------
 	protected boolean checkHomeDirectoryDefined() {
 		if ( environment.getHomeDirectory() != null ) {
 			return true ;

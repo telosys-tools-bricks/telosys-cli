@@ -17,30 +17,32 @@ package org.telosys.tools.cli;
 
 public class LastError {
 
+	/**
+	 * Private constructor
+	 */
+	private LastError() {
+	}
+	
 	private static String message ;
 
 	private static Exception exception ;
 	
-	public final static void setError(String msg, Exception ex ) {
+	public static void setError(String msg, Exception ex ) {
 		message = msg ;
 		exception = ex ;
 	}
-	public final static void setError(Exception ex ) {
+	public static void setError(Exception ex ) {
 		message = null ;
 		exception = ex ;
 	}
-	public final static void setError(String msg ) {
-		message = msg ;
-		exception = null ;
-	}
 	
-	public final static boolean hasError() {
+	public static boolean hasError() {
 		return message != null || exception != null ;
 	}
-	public final static String getMessage() {
+	public static String getMessage() {
 		return message ;
 	}
-	public final static Exception getException() {
+	public static Exception getException() {
 		return exception;
 	}
 }

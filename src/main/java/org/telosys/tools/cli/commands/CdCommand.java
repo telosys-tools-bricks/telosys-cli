@@ -65,52 +65,71 @@ public class CdCommand extends Command {
 	}
 
 	private String cd(String destination) {
+		printDebug("cd : '" + destination + "'");
 		Environment environment = getEnvironment();
 		if (destination != null) {
 			if ("..".equals(destination)) {
-				File current = new File(environment.getCurrentDirectory());
-				File parent = current.getParentFile();
-				if (parent != null) {
-					return tryToChangeCurrentDirectory(environment, current.getParentFile());
-				} else {
-					return "No parent directory.";
-				}
+				printDebug("cd : '..' => change to parent dir ");
+				return cdParent();
 			}
-			if (".".equals(destination)) {
+			else if (".".equals(destination)) {
+				printDebug("cd : '.' => stay in the current dir ");
 				// No change (stay in the current directory )
 				return environment.getCurrentDirectory();
-			} else {
-				if (destination.contains("..")) {
-					return "Invalid syntax!";
-				} else if (destination.startsWith("/")) {
-					return tryToChangeCurrentDirectory(environment, new File(destination));
-				} else {
-					File current = new File(environment.getCurrentDirectory());
-					String destPath = FileUtil.buildFilePath(current.getAbsolutePath(), destination);
-					return tryToChangeCurrentDirectory(environment, new File(destPath));
-				}
+			}
+			else if (destination.contains("..")) {
+				printDebug("cd : contains '..' => invalid directory ");
+				return "Invalid directory ('..' in the path) !";
+			}
+			else {
+				return cdPath(destination);
 			}
 		} else {
 			environment.resetCurrentDirectoryToHomeIfDefined();
 			return environment.getCurrentDirectory();
 		}
-
 	}
-
-	private String tryToChangeCurrentDirectory(Environment environment, File file) {
-		if (file == null) {
-			return "Destination is null!";
-		}
-		if (file.exists()) {
-			if (file.isDirectory()) {
-				environment.setCurrentDirectory(file.getAbsolutePath());
-				return environment.getCurrentDirectory();
-			} else {
-				return "'" + file.getAbsolutePath() + "' is not a directory!";
-			}
+	
+	private File getCurrentDir() {
+		Environment environment = getEnvironment();
+		return new File(environment.getCurrentDirectory());
+	}
+	
+	private String cdParent() {
+		File current = getCurrentDir();
+		File parent = current.getParentFile();
+		if (parent != null) {
+			return tryToChangeCurrentDirectory(current.getParentFile());
 		} else {
-			return "Invalid directory!";
+			return "No parent directory.";
 		}
 	}
-
+	
+	private String cdPath(String destination) {
+		File file = new File(destination);
+		if ( file.isAbsolute() ) {
+			printDebug("cd : absolute path");
+			return tryToChangeCurrentDirectory(file);
+		}
+		else {
+			printDebug("cd : subfolder");
+			File current = getCurrentDir();
+			String destPath = FileUtil.buildFilePath(current.getAbsolutePath(), destination);
+			return tryToChangeCurrentDirectory(new File(destPath));
+		}
+	}
+	
+	/**
+	 * Try to change the current directory to the given file 
+	 * @param file
+	 * @return
+	 */
+	private String tryToChangeCurrentDirectory(File file) {
+		if ( checkDirectory(file) ) {
+			Environment environment = getEnvironment();
+			environment.setCurrentDirectory(file.getAbsolutePath());
+			return environment.getCurrentDirectory();
+		}
+		return null;
+	}
 }
