@@ -88,14 +88,6 @@ public class NewDbModelCommand extends CommandWithModel {
 				if ( ! confirm("Do you really want to overwrite it ?") ) {
 					return null ;
 				}
-//				print("Deleting '" + dbModelFile.getName() + "'...");
-//				if ( dbModelFile.delete() ) {
-//					print("File '" + dbModelFile.getName() + "' deleted.");
-//				}
-//				else {
-//					print("Cannot delete '" + dbModelFile.getName() + "'.");
-//					return null ;
-//				}
 			}
 			print("Generating new model...");
 			telosysProject.createNewDbModel(id) ;
