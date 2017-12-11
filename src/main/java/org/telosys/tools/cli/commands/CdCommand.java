@@ -106,10 +106,9 @@ public class CdCommand extends Command {
 	}
 	
 	private String cdPath(String destination) {
-		File file = new File(destination);
-		if ( file.isAbsolute() ) {
+		if ( destination.startsWith("/") ) {
 			printDebug("cd : absolute path");
-			return tryToChangeCurrentDirectory(file);
+			return tryToChangeCurrentDirectory(new File(destination));
 		}
 		else {
 			printDebug("cd : subfolder");
@@ -117,6 +116,17 @@ public class CdCommand extends Command {
 			String destPath = FileUtil.buildFilePath(current.getAbsolutePath(), destination);
 			return tryToChangeCurrentDirectory(new File(destPath));
 		}
+//		File file = new File(destination);
+//		if ( file.isAbsolute() ) {
+//			printDebug("cd : absolute path");
+//			return tryToChangeCurrentDirectory(file);
+//		}
+//		else {
+//			printDebug("cd : subfolder");
+//			File current = getCurrentDir();
+//			String destPath = FileUtil.buildFilePath(current.getAbsolutePath(), destination);
+//			return tryToChangeCurrentDirectory(new File(destPath));
+//		}
 	}
 	
 	/**
