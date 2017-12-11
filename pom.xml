@@ -22,10 +22,18 @@
 			<version>2.12</version>
 		</dependency>
 		<!-- TELOSYS DEPENDENCIES -->
+		<!-- TELOSYS-API : pull all other Telosys dependencies -->
+		<!-- 
 		<dependency>
 			<groupId>${telosys.groupId}</groupId>
-			<artifactId>telosys-tools-api</artifactId> <!-- TELOSYS-API : pull all other Telosys dependencies -->
+			<artifactId>telosys-tools-api</artifactId> 
 			<version>${telosys.version}</version>
+		</dependency>
+		 -->
+		<dependency>
+			<groupId>${telosys.groupId}</groupId>
+			<artifactId>telosys-tools-all</artifactId> <!-- TELOSYS-ALL : the "UBER JAR" with everything -->
+			<version>3.0.0</version>
 		</dependency>
 		
         <!-- FOR TESTS -->
