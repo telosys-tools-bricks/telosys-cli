@@ -19,13 +19,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.telosys.tools.api.MetaDataOptions;
+import org.telosys.tools.api.MetaDataOptionsImpl;
 import org.telosys.tools.commons.StrUtil;
 
 public class CheckDatabaseArguments  {
 
 	private Integer databaseId = null ;
 	
-	private CheckDatabaseOptionsImpl options = new CheckDatabaseOptionsImpl();
+	private MetaDataOptionsImpl options = new MetaDataOptionsImpl();
 	
 	private List<String> errors = new LinkedList<>();
 	
