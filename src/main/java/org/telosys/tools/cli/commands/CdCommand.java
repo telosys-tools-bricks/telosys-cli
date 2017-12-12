@@ -111,22 +111,20 @@ public class CdCommand extends Command {
 			return tryToChangeCurrentDirectory(new File(destination));
 		}
 		else {
-			printDebug("cd : subfolder");
-			File current = getCurrentDir();
-			String destPath = FileUtil.buildFilePath(current.getAbsolutePath(), destination);
-			return tryToChangeCurrentDirectory(new File(destPath));
+			// Can be an absolute path and not starts with "/", eg "C:\tmp" with Windows )
+			File file = new File(destination);
+			if ( file.isAbsolute() ) { 
+				printDebug("cd : absolute path");
+				// Build the full path from the current directory
+				return tryToChangeCurrentDirectory(file);
+			}
+			else {
+				printDebug("cd : subfolder");
+				// Build the full path from the current directory
+				String destPath = FileUtil.buildFilePath(getCurrentDir().getAbsolutePath(), destination);
+				return tryToChangeCurrentDirectory(new File(destPath));
+			}
 		}
-//		File file = new File(destination);
-//		if ( file.isAbsolute() ) {
-//			printDebug("cd : absolute path");
-//			return tryToChangeCurrentDirectory(file);
-//		}
-//		else {
-//			printDebug("cd : subfolder");
-//			File current = getCurrentDir();
-//			String destPath = FileUtil.buildFilePath(current.getAbsolutePath(), destination);
-//			return tryToChangeCurrentDirectory(new File(destPath));
-//		}
 	}
 	
 	/**
