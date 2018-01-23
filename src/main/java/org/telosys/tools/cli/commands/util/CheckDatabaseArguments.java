@@ -26,53 +26,60 @@ public class CheckDatabaseArguments  {
 
 	private Integer databaseId = null ;
 	
-	private MetaDataOptionsImpl options = new MetaDataOptionsImpl();
+	private boolean verboseOption = false ;
 	
+	private MetaDataOptionsImpl metadataOptions = new MetaDataOptionsImpl();
+
 	private List<String> errors = new LinkedList<>();
 	
 	public CheckDatabaseArguments(String[] args) {
 		for ( String arg : args ) {
 			if ( arg.length() >= 2 && arg.charAt(0) == '-' ) {
 				switch ( arg.substring(1) ) {
+				case "v" :
+					// -v : verbose
+					verboseOption = true ;
+					break;
+
 				case "i" :
 					// -i : info
-					options.setInfo(true);
+					metadataOptions.setInfo(true);
 					break;
 					
 				case "s" :
 				case "sch" :
 					// -s -sch : schemas
-					options.setSchemas(true);
+					metadataOptions.setSchemas(true);
 					break;
 
 				case "ca" :
 				case "cat" :
 					// -ca -cat : catalogs
-					options.setCatalogs(true);
+					metadataOptions.setCatalogs(true);
 					break;
 
 				case "t" :
 					// -t : tables
-					options.setTables(true);
+					metadataOptions.setTables(true);
 					break;
 					
 				case "c" :
 				case "co" :
 				case "col" :
 					// -c -co -col : columns
-					options.setColumns(true);
+					metadataOptions.setColumns(true);
 					break;
 					
 				case "f" :
 				case "fk" :
 					// -f -fk : columns
-					options.setForeignKeys(true);
+					metadataOptions.setForeignKeys(true);
 					break;
 					
 				case "p" :
 				case "pk" :
 					// -p -pk : columns
-					options.setPrimaryKeys(true);
+					metadataOptions.setPrimaryKeys(true);
 					break;
 					
 		        default:
@@ -90,12 +97,20 @@ public class CheckDatabaseArguments  {
 		}
 	}
 	
-	public MetaDataOptions getOptions() {
-		return options;
-	}
-
 	public Integer getDatabaseId() {
 		return databaseId;
+	}
+
+	public boolean hasVerboseOption() {
+		return verboseOption ;
+	}
+
+	public boolean hasMetaDataOptions() {
+		return metadataOptions.hasOptions() ;
+	}
+
+	public MetaDataOptions getMetaDataOptions() {
+		return metadataOptions;
 	}
 
 	public boolean hasErrors() {

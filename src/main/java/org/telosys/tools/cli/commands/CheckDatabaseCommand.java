@@ -52,7 +52,7 @@ public class CheckDatabaseCommand extends CommandWithModel {
 	
 	@Override
 	public String getUsage() {
-		return "cdb [database-id] [-i -t -c -pk -fk -s -cat]";
+		return "cdb [database-id] [-v] [-i -t -c -pk -fk -s -cat]";
 	}
 	
 	@Override
@@ -68,38 +68,69 @@ public class CheckDatabaseCommand extends CommandWithModel {
 			}
 			else {
 				// Argument(s) OK => check database with arg options
-				checkDatabase(arguments.getDatabaseId(), arguments.getOptions() );
+				checkDatabase(arguments.getDatabaseId(), arguments );
 			}
 		}
 		return null;
 	}
 		
-	private String checkDatabase(Integer id, MetaDataOptions options) {
+	private String checkDatabase(Integer id, CheckDatabaseArguments arguments) {
 		try {
 			print("Checking database" + ( id != null ? " #"+id : "" ) + "..."); 
-			checkDatabaseConnection(id, options) ;
+			if ( arguments.hasMetaDataOptions() ) {
+				getMetaData(id, arguments.getMetaDataOptions() ) ;
+			}
+			else if ( arguments.hasVerboseOption() ) {
+				checkDatabaseConnectionVerbose(id);
+			}
+			else {
+				checkDatabaseConnection(id);
+			}
 		} catch (TelosysToolsException e) {
 			printError(e);
 		}
 		return null ;
 	}
 	
-	private void checkDatabaseConnection(Integer id, MetaDataOptions options) throws TelosysToolsException {
+	/**
+	 * Try to connect and get metadata
+	 * @param id
+	 * @param options
+	 * @throws TelosysToolsException
+	 */
+	private void getMetaData(Integer id, MetaDataOptions options) throws TelosysToolsException {
 		TelosysProject telosysProject = getTelosysProject();
-		if ( options.hasOptions() ) {
-			// Meta-data required
-			String metadata = telosysProject.getMetaData(id, options);
-			print(metadata); 
-		}
-		else {
-			// Just try to connect to database (no meta-data)
-			DbConnectionStatus conStatus = telosysProject.checkDatabaseConnection(id) ;
-			print("OK, connection test is successful.");
-			print(" . product name    : " + conStatus.getProductName() );
-			print(" . product version : " + conStatus.getProductVersion() );
-			print(" . catalog         : " + conStatus.getCatalog() );
-			print(" . schema          : " + conStatus.getSchema() );
-			print(" . autocommit      : " + conStatus.isAutocommit() );
-		}
+		// Meta-data required
+		String metadata = telosysProject.getMetaData(id, options);
+		print(metadata); 
+	}
+	
+	/**
+	 * Just try to connect (get a connection and close it) not verbose, no metadata
+	 * @param id
+	 * @throws TelosysToolsException
+	 */
+	private void checkDatabaseConnection(Integer id) throws TelosysToolsException {
+		TelosysProject telosysProject = getTelosysProject();
+		// Just try to connect to database (no meta-data)
+		telosysProject.checkDatabaseConnection(id) ;
+		print("OK, connection test is successful.");
+	}
+
+	/**
+	 * Try to connect and get status (get information from connexion) 
+	 * @param id
+	 * @throws TelosysToolsException
+	 */
+	private void checkDatabaseConnectionVerbose(Integer id) throws TelosysToolsException {
+		TelosysProject telosysProject = getTelosysProject();
+		// Just try to connect to database (no meta-data)
+		DbConnectionStatus conStatus = telosysProject.checkDatabaseConnectionWithStatus(id) ;
+		print("OK, connection test is successful.");
+		print(" . product name    : " + conStatus.getProductName() );
+		print(" . product version : " + conStatus.getProductVersion() );
+		print(" . catalog         : " + conStatus.getCatalog() );
+		print(" . schema          : " + conStatus.getSchema() );
+		print(" . autocommit      : " + conStatus.isAutocommit() );
 	}
 }
