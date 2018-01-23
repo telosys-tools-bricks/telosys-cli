@@ -15,7 +15,6 @@
  */
 package org.telosys.tools.cli;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -31,6 +30,7 @@ public class TelosysCLI {
 
 	private final PrintWriter out ;
 	private final ConsoleReader consoleReader ;
+	private final CommandProvider commandProvider ;
 	private final CommandLineProcessor commandLineProcessor;
 	
 	/**
@@ -41,7 +41,7 @@ public class TelosysCLI {
 		super();
 		this.consoleReader = new ConsoleReader() ;
 		this.out = new PrintWriter(consoleReader.getOutput());
-		CommandProvider commandProvider = new CommandProvider(consoleReader);
+		this.commandProvider = new CommandProvider(consoleReader);
 		this.commandLineProcessor = new CommandLineProcessor( consoleReader, commandProvider ) ;
 	}
 	
@@ -51,18 +51,13 @@ public class TelosysCLI {
 	 */
 	public void start(String[] args) {
 		
-		StringBuilder sb = new StringBuilder();
-		sb.append("args : ");
-		for (String s : args ) {
-			sb.append(s);
-			sb.append(" ");
-		}
-		print(sb.toString());
-		
 		// Initialize the CLI
 		init();		
+		
 		// Process launch arguments if any
-		processArguments(args);
+		LaunchArgumentsProcessor argsProcessor = new LaunchArgumentsProcessor(commandProvider, out);
+		argsProcessor.processLaunchArguments(args);
+		
 		// Launch the line processor...
 		launch();
 	}
@@ -86,23 +81,6 @@ public class TelosysCLI {
 	}
 
 	/**
-	 * Processes the arguments if any <br>
-	 * eg : -h homedir 
-	 *  
-	 * @param args
-	 */
-	private void processArguments(String[] args) {
-		// Is there a "-h homedir" argument ?
-		File home = getHomeArg(args);
-		if ( home != null ) {
-			print("Setting 'home' to " + home.getAbsolutePath() ) ;
-			if ( commandLineProcessor.processLine("cd " + home.getAbsolutePath() ) ) {
-				commandLineProcessor.processLine("h " + home.getAbsolutePath() );
-			}
-		}
-	}
-
-	/**
 	 * Launches the command line processor
 	 */
 	private void launch() {
@@ -113,37 +91,6 @@ public class TelosysCLI {
 			}
 		} catch (Exception e) {
 			print("ERROR : Unexpected exception " + e.getMessage() );
-		}
-	}
-
-	private File getHomeArg(String[] args) {
-		// args do not containts the initial command ( eg "java -jar xxx" ) 
-		// so the usefull arguments starts at ZERO 
-		for ( int i = 0 ; i < args.length ; i++ ) {
-			String arg = args[i];
-			if ( "-h".equals(arg) ) {
-				String home = getNextArg(args, i);
-				if ( home != null ) {
-					File file = new File(home);
-					if ( file.exists() && file.isDirectory() ) {
-						// OK, home argument is valid
-						return file ;
-					}
-					else {
-						print("Invalid 'home' argument : " + home);
-					}
-				}
-			}
-		}
-		return null ;
-	}
-
-	private String getNextArg(String[] args, int i) {
-		if ( i+1 < args.length ) {
-			return args[i+1] ;
-		}
-		else {
-			return null ;
 		}
 	}
 
