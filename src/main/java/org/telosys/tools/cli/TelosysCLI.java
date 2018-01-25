@@ -18,6 +18,9 @@ package org.telosys.tools.cli;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.telosys.tools.cli.observer.DbModelObserver;
+import org.telosys.tools.db.observer.DatabaseObserverProvider;
+
 import jline.console.ConsoleReader;
 
 /**
@@ -78,6 +81,8 @@ public class TelosysCLI {
 		print(Color.colorize(banner, Color.CYAN_BRIGHT));
 		// print few messages
 		print("Enter ? for help");
+		
+		DatabaseObserverProvider.setObserverClass(DbModelObserver.class);
 	}
 
 	/**
