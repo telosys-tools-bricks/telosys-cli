@@ -18,6 +18,7 @@ package org.telosys.tools.cli;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.telosys.tools.cli.observer.DbMetadataObserver;
 import org.telosys.tools.cli.observer.DbModelObserver;
 import org.telosys.tools.db.observer.DatabaseObserverProvider;
 
@@ -82,7 +83,9 @@ public class TelosysCLI {
 		// print few messages
 		print("Enter ? for help");
 		
-		DatabaseObserverProvider.setObserverClass(DbModelObserver.class);
+		DatabaseObserverProvider.setModelObserverClass(DbModelObserver.class);
+		DatabaseObserverProvider.setMetadataObserverClass(DbMetadataObserver.class);
+		DbMetadataObserver.setActive(false);
 	}
 
 	/**

@@ -83,13 +83,24 @@ public class NewDbModelCommand extends CommandWithModel {
 		try {
 			TelosysProject telosysProject = getTelosysProject();
 			File dbModelFile = telosysProject.getDbModelFile(id);
+			String existingModelFile = null ;
 			if ( dbModelFile != null && dbModelFile.exists() ) {
-				print("WARNING : Model file '" + dbModelFile.getName() + "' already exists");
-				if ( ! confirm("Do you really want to overwrite it ?") ) {
-					return null ;
-				}
+				existingModelFile = dbModelFile.getName() ;
 			}
-			print("Generating new model...");
+
+			print("WARNING : ");
+			print("  You're about to create a new model from a database");
+			print("  This operation can take a lot of time (especially for Oracle databases)");
+			if ( existingModelFile != null ) {
+				print("  The model file '" + dbModelFile.getName() + "' already exists.");
+				print("  The existing file will be overridden !");
+			}
+			if ( ! confirm("Do you really want to launch the model creation ? ") ) {
+				return null ;
+			}
+			
+			print("");
+			print("Generating the new model...");
 			telosysProject.createNewDbModel(id) ;
 			print("New model created.");
 		} catch (TelosysToolsException e) {

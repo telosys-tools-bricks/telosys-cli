@@ -15,19 +15,17 @@
  */
 package org.telosys.tools.cli.observer;
 
-import org.telosys.tools.commons.StrUtil;
+import org.telosys.tools.commons.observer.TaskObserver2;
 
-public class DbModelObserver extends AbstractObserver {
+public abstract class AbstractObserver implements TaskObserver2<Integer, String> {
 
-	public DbModelObserver() {
+	public AbstractObserver() {
 		super();
 	}
-	
-	@Override
-	public void notify(Integer level, String msg) {
-		
-		int n = level < 10 ? level : 10 ;
-		String s = StrUtil.repeat(' ', n);
-		print(s + msg );
+
+	protected void print(String msg) {
+		System.out.println( msg );
+		System.out.flush();
 	}
+	
 }

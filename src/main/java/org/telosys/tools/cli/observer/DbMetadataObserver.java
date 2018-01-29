@@ -17,17 +17,27 @@ package org.telosys.tools.cli.observer;
 
 import org.telosys.tools.commons.StrUtil;
 
-public class DbModelObserver extends AbstractObserver {
+public class DbMetadataObserver extends AbstractObserver {
 
-	public DbModelObserver() {
-		super();
+	private static boolean active = false ;
+	
+	public static void setActive(boolean b) {
+		active = b ;
+	}
+	public static boolean isActive() {
+		return active ;
 	}
 	
+	public DbMetadataObserver() {
+		super();
+	}
+		
 	@Override
 	public void notify(Integer level, String msg) {
+		if ( ! active ) return ;
 		
 		int n = level < 10 ? level : 10 ;
-		String s = StrUtil.repeat(' ', n);
+		String s = StrUtil.repeat('.', n);
 		print(s + msg );
 	}
 }
