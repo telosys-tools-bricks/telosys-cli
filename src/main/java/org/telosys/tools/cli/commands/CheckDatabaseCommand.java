@@ -20,6 +20,7 @@ import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commands.util.CheckDatabaseArguments;
+import org.telosys.tools.cli.observer.DbMetadataObserver;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.dbcfg.DbConnectionStatus;
 
@@ -68,7 +69,9 @@ public class CheckDatabaseCommand extends CommandWithModel {
 			}
 			else {
 				// Argument(s) OK => check database with arg options
+				DbMetadataObserver.setActive(true);
 				checkDatabase(arguments.getDatabaseId(), arguments );
+				DbMetadataObserver.setActive(false);
 			}
 		}
 		return null;
