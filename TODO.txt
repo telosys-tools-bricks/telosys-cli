@@ -3,7 +3,20 @@
 GENERAL COMMANDS :
   'cfg' : print configuration ( telosys-tools.cfg )
   'var' or 'lv' : print variables
-  
+  'vf' / 'cat' : View File
+  'lst' : LS TelosysTools
+  'mkdir ' 
+
+NEW COMMANDS ( IN THE FUTURE ):
+
+'sql' : to run sql scripts
+      eg : "sql myscript.sql" ( or "sql 2 myscript.sql" for database #2 ) 
+
+'cb' : check bundle
+ 
+'ib -l' : Install Bundle Locally (download manually)
+ 
+ 
 DB MODEL COMMANDS : (NB : "db" is for "Delete Bundle" )
 
 
@@ -17,12 +30,6 @@ Check file existence in CLI ( ndbm and udbm )
 Confirm for "ndbm" and "udbm" 
 
 
-NEW COMMANDS ( IN THE FUTURE ):
-
-sql : to run sql scripts
-      eg : "sql myscript.sql" ( or "sql 2 myscript.sql" for database #2 ) 
-
-cb : check bundle
 
 LAUNCHERS COMMANDS : 
  'nl' : new launcher

@@ -21,17 +21,22 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Properties;
 
+import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.commons.FileUtil;
 import org.telosys.tools.commons.PropertiesManager;
+import org.telosys.tools.commons.TelosysToolsException;
+import org.telosys.tools.commons.cfg.TelosysToolsCfg;
 
 
 public class Environment {
 	
-	private static final String TELOSYS_CLI_CFG = "telosys-cli.cfg" ;
-	private static final String EDITOR_COMMAND  = "EditorCommand" ;
+	private static final String TELOSYS_CLI_CFG      = "telosys-cli.cfg" ;
+	private static final String EDITOR_COMMAND       = "EditorCommand" ;
+	private static final String DEFAULT_GITHUB_STORE = "telosys-templates-v3" ;
 	
 	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
+	// unchangeable attributes
 	private final CommandProvider commandProvider ;
 	private final CommandsGroups  commandsGroups ;
 	
@@ -40,12 +45,12 @@ public class Environment {
 	private final String editorCommand ;
 	private final String originalDirectory ;
 
+	// alterable attributes
 	private       String homeDirectory ;
 	private       String currentDirectory ;
-	private       String currentGitHubStore = "telosys-templates-v3";
+	private       String currentGitHubStore = DEFAULT_GITHUB_STORE ;
 	private       String currentModel ;
 	private       String currentBundle ;
-
 	
 	/**
 	 * Constructor
@@ -53,16 +58,21 @@ public class Environment {
 	 */
 	public Environment(CommandProvider commandProvider) {
 		super();
+		
+		// unchangeable attributes 
 		this.commandProvider = commandProvider ;
 		this.commandsGroups  = new CommandsGroups();
 		this.jarLocation = findJarFullPath();
 		this.originalDirectory = System.getProperty("user.dir"); 
-		this.currentDirectory = originalDirectory ;
-		this.homeDirectory    = null ;
-		this.currentModel     = null ;
-		this.currentBundle    = null ;
 		this.osName = System.getProperty("os.name");
 		this.editorCommand = findEditorCommand();
+
+		// alterable attributes
+		this.currentDirectory   = originalDirectory ;
+		this.homeDirectory      = null ;
+		this.currentModel       = null ;
+		this.currentBundle      = null ;
+		this.currentGitHubStore = DEFAULT_GITHUB_STORE ;
 	}
 	
 	/**
@@ -196,18 +206,20 @@ public class Environment {
 	}
 
 	/**
+	 * Set the "HOME" directory with the current directory
+	 */
+	public void setHomeDirectory() {
+		setHomeDirectory(this.currentDirectory);
+	}
+
+	/**
 	 * Set the "HOME" directory with the given directory
 	 * @param homeDirectory
 	 */
 	public void setHomeDirectory(String directory) {
 		this.homeDirectory = directory;
-	}
-
-	/**
-	 * Set the "HOME" directory with the current directory
-	 */
-	public void setHomeDirectory() {
-		this.homeDirectory = this.currentDirectory ;
+		// Reset the current environment according with the new HOME
+		resetCurrentEnvironment() ; 
 	}
 
 	//---------------------------------------------------------------------------------
@@ -245,6 +257,7 @@ public class Environment {
 	 */
 	public void setCurrentGitHubStore(String github) {
 		this.currentGitHubStore = github;
+		saveCurrentEnvironment();
 	}
 
 	//---------------------------------------------------------------------------------
@@ -264,6 +277,7 @@ public class Environment {
 	 */
 	public void setCurrentModel(String modelName) {
 		this.currentModel = modelName;
+		saveCurrentEnvironment();
 	}
 
 	//---------------------------------------------------------------------------------
@@ -283,7 +297,86 @@ public class Environment {
 	 */
 	public void setCurrentBundle(String bundleName) {
 		this.currentBundle = bundleName;
+		saveCurrentEnvironment();
 	}
 
+	//---------------------------------------------------------------------------------
+	// Environment persistence
+	//---------------------------------------------------------------------------------
+	private static final String ENV_FILE_NAME  = "telosys.env" ;
+	private static final String MODEL  = "model" ;
+	private static final String BUNDLE = "bundle" ;
+	private static final String GITHUBSTORE = "githubstore" ;
 	
+	/**
+	 * Returns the current environment properties file <br>
+	 * e.g. HOME/TelosysTools/telosys.env
+	 * @return a File instance or null if HOME is not defined 
+	 */
+	private File getEnvironmentPropertiesFile() {
+		if ( homeDirectory != null ) {
+			String dir = null ;
+			try {
+				TelosysToolsCfg telosysToolsCfg = (new TelosysProject(homeDirectory)).getTelosysToolsCfg();
+				dir = telosysToolsCfg.getTelosysToolsFolderAbsolutePath();
+			} catch (TelosysToolsException e) {
+				// Cannot get Telosys configuration
+				return null ;
+			}
+			// Check 'TelosysTools' directory existence ( if not yet init => no TelosysTools directory )
+			File telosysToolsDir = new File(dir);
+			if ( telosysToolsDir.exists() && telosysToolsDir.isDirectory() ) {
+				// Build the file
+				return new File( FileUtil.buildFilePath(dir, ENV_FILE_NAME) );
+			}
+		}
+		return null ;
+	}
+	
+	/**
+	 * Saves the current environment in a file
+	 */
+	private void saveCurrentEnvironment() {
+		File file = getEnvironmentPropertiesFile() ;
+		if ( file != null ) {
+			Properties properties = new Properties();
+			putIfNotNull(properties, MODEL, this.currentModel);
+			putIfNotNull(properties, BUNDLE, this.currentBundle);
+			putIfNotNull(properties, GITHUBSTORE, this.currentGitHubStore);
+			
+			PropertiesManager pm = new PropertiesManager(file);
+			pm.save(properties);
+		}
+	}
+	
+	private void putIfNotNull(Properties properties, String key, String value ) {
+		if ( value != null ) {
+			properties.put(key, value);
+		}
+	}
+	
+	private void resetCurrentEnvironment() {
+		// Reset all the default values 
+		this.currentModel = null ;
+		this.currentBundle = null ;
+		this.currentGitHubStore = DEFAULT_GITHUB_STORE ;
+		// Try to restore if possible 
+		restoreCurrentEnvironment();
+	}
+	
+	/**
+	 * Restores the environment from a file if any
+	 */
+	private void restoreCurrentEnvironment() {
+		File file = getEnvironmentPropertiesFile() ;
+		if ( file != null && file.exists() && file.isFile() ) {
+			
+			PropertiesManager pm = new PropertiesManager(file);
+			Properties properties = pm.load();
+			
+			this.currentModel = properties.getProperty(MODEL); // null if not found
+			this.currentBundle = properties.getProperty(BUNDLE); // null if not found
+			this.currentGitHubStore = properties.getProperty(GITHUBSTORE); // null if not found
+		}
+	}
 }
