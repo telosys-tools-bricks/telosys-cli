@@ -31,6 +31,8 @@ import org.telosys.tools.commons.cfg.TelosysToolsCfg;
 public class Environment {
 	
 	private static final String TELOSYS_CLI_CFG      = "telosys-cli.cfg" ;
+	private static final String TELOSYS_TERM_SH      = "telosys-term.sh" ;
+	
 	private static final String EDITOR_COMMAND       = "EditorCommand" ;
 	private static final String DEFAULT_GITHUB_STORE = "telosys-templates-v3" ;
 	
@@ -40,8 +42,10 @@ public class Environment {
 	private final CommandProvider commandProvider ;
 	private final CommandsGroups  commandsGroups ;
 	
-	private final String jarLocation ;
+	private final String jarFileFullPath ;
+	private final String jarFolderFullPath ;
 	private final String osName ;
+	private final OSType osType ;
 	private final String editorCommand ;
 	private final String originalDirectory ;
 
@@ -62,10 +66,12 @@ public class Environment {
 		// unchangeable attributes 
 		this.commandProvider = commandProvider ;
 		this.commandsGroups  = new CommandsGroups();
-		this.jarLocation = findJarFullPath();
+		this.jarFileFullPath   = findJarFileFullPath();
+		this.jarFolderFullPath = findJarFolderFullPath();
 		this.originalDirectory = System.getProperty("user.dir"); 
 		this.osName = System.getProperty("os.name");
-		this.editorCommand = findEditorCommand();
+		this.osType = findOSType(this.osName); 
+		this.editorCommand = findEditorCommand(this.osType);
 
 		// alterable attributes
 		this.currentDirectory   = originalDirectory ;
@@ -80,13 +86,13 @@ public class Environment {
 	 * The specific command if defined in the '.cfg' file or the standard default command <br>
 	 * @return
 	 */
-	private String findEditorCommand() {
+	private String findEditorCommand(OSType osType) {
 		String specificEditorCommand = findSpecificEditorCommand();
 		if ( specificEditorCommand != null ) {
 			return specificEditorCommand ;
 		}
 		else {
-			return determineDefaultEditorCommand();
+			return determineDefaultEditorCommand(osType);
 		}
 	}
 	
@@ -94,9 +100,24 @@ public class Environment {
 	 * Returns the '.jar' file location (full path) 
 	 * @return
 	 */
-	private String findJarFullPath() {
+	private String findJarFileFullPath() {
 		File file = findJarFile();
 		return file.toString();
+	}
+
+	/**
+	 * Returns the '.jar' folder full path
+	 * @return
+	 */
+	private String findJarFolderFullPath() {
+		File file = findJarFile();
+		if ( file.exists() ) {
+			File parent = file.getParentFile();
+			return parent.toString();
+		}
+		else {
+			throw new RuntimeException("Cannot find jar folder (no jar file)");
+		}
 	}
 
 	/**
@@ -119,7 +140,7 @@ public class Environment {
 	 */
 	private String findSpecificEditorCommand() {
 		String cmd = null ;
-		File configFile = findConfigFile();
+		File configFile = findTelosysCliConfigFile();
 		if ( configFile != null ) {
 			PropertiesManager pm = new PropertiesManager(configFile);
 			Properties p = pm.load();
@@ -129,49 +150,113 @@ public class Environment {
 	}
 
 	/**
-	 * Tries to find a configuration file 
+	 * Tries to find the 'telosys-cli.cfg' configuration file <br>
+	 * located in the same folder as the '.jar' file
 	 * @return the file or null if not found
 	 */
-	private File findConfigFile() {
-		File file = findJarFile();
-		if ( file.exists() ) {
-			File parent = file.getParentFile();
-			String folderPath = parent.toString();
-			File cfgFile = new File( FileUtil.buildFilePath(folderPath, TELOSYS_CLI_CFG) ) ;
-			if ( cfgFile.exists() && cfgFile.isFile() ) {
-				return cfgFile ;
+	private File findTelosysCliConfigFile() {
+		return findFileInJarFolder(TELOSYS_CLI_CFG) ;
+	}
+
+	/**
+	 * Tries to find the 'telosys-term.sh' shell file <br>
+	 * located in the same folder as the '.jar' file
+	 * @return the file or null if not found
+	 */
+	private File findTelosysTerminalShellFile() {
+		return findFileInJarFolder(TELOSYS_TERM_SH) ;
+	}
+
+	private File findFileInJarFolder(String fileName) {
+		if ( this.jarFolderFullPath != null ) {
+			File file = new File( FileUtil.buildFilePath(this.jarFolderFullPath, fileName) ) ;
+			if ( file.exists() && file.isFile() ) {
+				return file ;
 			}
 		}
 		return null ;
 	}
 
+	private OSType findOSType(String osName) {
+		if ( osName.contains("windows") || osName.contains("Windows") ) {
+			return OSType.WINDOWS ;
+		}
+		else if ( osName.contains("mac") || osName.contains("Mac") ) {
+			return OSType.MACOS ;
+		}
+		else {
+			// Other => Linux
+			return OSType.LINUX ;
+		}
+	}
+	
 	/**
 	 * Determine the suitable command according with the current OS
 	 * @return
 	 */
-	private String determineDefaultEditorCommand() {
-		if ( osName.contains("windows") || osName.contains("Windows") ) {
-			// Windows
+	private String determineDefaultEditorCommand(OSType osType) {
+		
+		switch(osType) {
+		case WINDOWS :
 			return "notepad.exe $FILE" ;
-		}
-		else if ( osName.contains("mac") || osName.contains("Mac") ) {
-			// Mac OS
+		case MACOS :
 			return "open -t $FILE" ;
-		}
-		else {
-			// Other => Linux
+		case LINUX :
 			return "vi $FILE" ;
+		case UNKNOWN :
+		default :
+			return "unknown operating system" ;
 		}
+		
+//		if ( osName.contains("windows") || osName.contains("Windows") ) {
+//			// Windows
+//			return "notepad.exe $FILE" ;
+//		}
+//		else if ( osName.contains("mac") || osName.contains("Mac") ) {
+//			// Mac OS
+//			return "open -t $FILE" ;
+//		}
+//		else {
+//			// Other => Linux
+//			File shFile = findTelosysTerminalShellFile();
+//			if ( shFile != null ) {
+//				return "sh " + shFile.getAbsolutePath() + "vi $FILE" ;
+//			}
+//			return "vi $FILE" ;
+//		}
+
+	}
+	
+	/**
+	 * Customize the given command if necessary in order to open a new terminal/window
+	 * when the command will be launched
+	 * @param fullCommand
+	 * @return
+	 */
+	protected String customizeSystemCommandIfNecessary(String fullCommand) {
+		// If Linux use the shell script to open a new terminal
+		if ( this.osType == OSType.LINUX ) {
+			File shFile = findTelosysTerminalShellFile();
+			if ( shFile != null ) {
+				return "sh " + shFile.getAbsolutePath() + " " + fullCommand ;
+			}
+		}
+		return fullCommand;
 	}
 
 	//---------------------------------------------------------------------------------
 	public String getJarLocation() {
-		return jarLocation;
+		return jarFileFullPath;
 	}
 
 	//---------------------------------------------------------------------------------
-	public String getOperatingSystem() {
+	public String getOperatingSystemName() {
 		return osName;
+	}
+
+	//---------------------------------------------------------------------------------
+	public OSType getOperatingSystemType() {
+		return osType;
 	}
 
 	//---------------------------------------------------------------------------------

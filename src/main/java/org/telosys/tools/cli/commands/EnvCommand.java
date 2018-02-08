@@ -63,14 +63,15 @@ public class EnvCommand extends Command {
 		
 		appendLine(sb, "ENVIRONMENT : ");
 
-		appendLine(sb, ". Operating System     : " + environment.getOperatingSystem() );		
-		appendLine(sb, ". Editor command       : " + environment.getEditorCommand() );
-		appendLine(sb, ". '.jar' file          : " + environment.getJarLocation() );
-		appendLine(sb, ". Current directory    : " + environment.getCurrentDirectory() );
-		appendLine(sb, ". Current GitHub store : " + undefinedIfNull(environment.getCurrentGitHubStore()) );
-		appendLine(sb, ". Home directory       : " + undefinedIfNull(environment.getHomeDirectory()) );
-		appendLine(sb, ". Current model        : " + undefinedIfNull(environment.getCurrentModel()) );
-		appendLine(sb, ". Current bundle       : " + undefinedIfNull(environment.getCurrentBundle()) );
+		appendLine(sb, ". Operating System name : " + environment.getOperatingSystemName() );
+		appendLine(sb, ". Operating System type : " + environment.getOperatingSystemType() );
+		appendLine(sb, ". Editor command        : " + environment.getEditorCommand() );
+		appendLine(sb, ". '.jar' file           : " + environment.getJarLocation() );
+		appendLine(sb, ". Current directory     : " + environment.getCurrentDirectory() );
+		appendLine(sb, ". Current GitHub store  : " + undefinedIfNull(environment.getCurrentGitHubStore()) );
+		appendLine(sb, ". Home directory        : " + undefinedIfNull(environment.getHomeDirectory()) );
+		appendLine(sb, ". Current model         : " + undefinedIfNull(environment.getCurrentModel()) );
+		appendLine(sb, ". Current bundle        : " + undefinedIfNull(environment.getCurrentBundle()) );
 		
 		return sb.toString();
 	}

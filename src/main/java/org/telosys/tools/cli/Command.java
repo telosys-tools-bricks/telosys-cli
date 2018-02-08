@@ -456,6 +456,9 @@ public abstract class Command {
 	 */
 	protected String launchEditor(String fileFullPath) {
 		String editorCommand = environment.getEditorCommand();
+		if ( editorCommand == null ) { 
+			return "No editor command. Check the configuration.";
+		}
 		
 		String fileToEdit = fileFullPath ;
 		if ( StrUtil.nullOrVoid(fileToEdit) ) {
@@ -474,15 +477,17 @@ public abstract class Command {
 			fullCommand = editorCommand + " " + fileToEdit;
 		}
 
+		fullCommand = environment.customizeSystemCommandIfNecessary(fullCommand);
 		launchSystemCommand(fullCommand);
 		return fullCommand ;
 	}
 	
 	protected void launchSystemCommand(String fullCommand) {
+		print("Launching command : " + fullCommand );
 		try {
 			Runtime.getRuntime().exec(fullCommand);
 		} catch (IOException e) {
-			print( "ERROR : IOException : " + e.getMessage() );
+			printError(e);
 		}
 	}
 
