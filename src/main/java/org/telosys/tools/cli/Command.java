@@ -312,11 +312,39 @@ public abstract class Command {
 	}	
 
 	/**
+	 * Set the current model in the current environment
+	 * @param modelName
+	 */
+	protected void setCurrentModel(File modelFile) {
+		if ( modelFile.exists() ) {
+			setCurrentModel(modelFile.getName());
+		}
+		else {
+			printError("Model file '" + modelFile.getName() + "' does not exist");
+		}
+	}
+	
+	protected boolean isCurrentModel(File modelFile) {
+		if ( modelFile != null ) {
+			return modelFile.getName().equals(environment.getCurrentModel() ) ;
+		}
+		return false ;
+	}
+	
+	/**
 	 * Set the current model name in the current environment
 	 * @param modelName
 	 */
 	protected void setCurrentModel(String modelName) {
 		environment.setCurrentModel(modelName);
+		updatePrompt();
+	}
+	
+	/**
+	 * Unset the current model in the current environment
+	 */
+	protected void unsetCurrentModel() {
+		environment.setCurrentModel(null);
 		updatePrompt();
 	}
 	

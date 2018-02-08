@@ -75,9 +75,9 @@ public class NewModelCommand extends Command {
 		String projectFullPath = getCurrentHome();
 		TelosysProject telosysProject = new TelosysProject(projectFullPath);
 		try {
-			File file = telosysProject.createNewDslModel(modelName);
-			setCurrentModel(modelName);
-			return "Model '" + modelName + "' created (" + file.getName() + "), current model is now '" 
+			File modelFile = telosysProject.createNewDslModel(modelName);
+			setCurrentModel(modelFile);
+			return "Model '" + modelName + "' created (" + modelFile.getName() + "), current model is now '" 
 					+ modelName + "'" ;
 		} catch (TelosysToolsException e) {
 			return "Cannot create model '" + modelName + "'"
