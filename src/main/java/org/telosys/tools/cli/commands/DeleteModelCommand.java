@@ -77,7 +77,6 @@ public class DeleteModelCommand extends CommandWithModel {
 			if ( confirm("Do you realy want to delete model '" + modelName + "'") ) {
 				deleteModel(modelFile );
 				// If the current model has been deleted => update env & prompt
-				//if ( modelName.equals(getCurrentModel())) {					
 				if ( isCurrentModel(modelFile) ) {
 					unsetCurrentModel();
 				}

@@ -4,7 +4,7 @@
 
 	<groupId>org.telosys</groupId>
 	<artifactId>telosys-cli</artifactId>
-	<version>3.0.0-009</version>
+	<version>3.0.0-010</version>
 	<packaging>jar</packaging>
 
 	<name>telosys-cli</name>
