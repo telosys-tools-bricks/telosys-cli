@@ -431,6 +431,10 @@ public abstract class Command {
 		return environment.getCurrentGitHubStore();
 	}
 	
+	protected String getDefaultGitHubStore() {
+		return environment.getDefaultGitHubStore();
+	}
+	
 	//-------------------------------------------------------------------------
 	//-------------------------------------------------------------------------
 	

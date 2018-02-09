@@ -334,7 +334,15 @@ public class Environment {
 	// Current GITHUB STORE
 	//---------------------------------------------------------------------------------
 	/**
-	 * Returns the current model name
+	 * Returns the default GitHub store name ( eg "telosys-templates-v3" )
+	 * @return
+	 */
+	public String getDefaultGitHubStore() {
+		return DEFAULT_GITHUB_STORE ;
+	}
+
+	/**
+	 * Returns the current GitHub store name
 	 * @return
 	 */
 	public String getCurrentGitHubStore() {
@@ -342,7 +350,7 @@ public class Environment {
 	}
 
 	/**
-	 * Set the current model name
+	 * Set the current GitHub store name
 	 * @param github
 	 */
 	public void setCurrentGitHubStore(String github) {

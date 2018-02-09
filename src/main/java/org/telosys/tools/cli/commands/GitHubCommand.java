@@ -15,10 +15,10 @@
  */
 package org.telosys.tools.cli.commands;
 
-import jline.console.ConsoleReader;
-
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
+
+import jline.console.ConsoleReader;
 
 public class GitHubCommand extends Command {
 	
@@ -42,12 +42,12 @@ public class GitHubCommand extends Command {
 	
 	@Override
 	public String getDescription() {
-		return "Set/print the GitHub store name ";
+		return "Print/Set/Reset the GitHub store name ";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "gh [github-store-name]";
+		return "gh [github-store-name] ( or [-r] for reset )";
 	}
 		
 	@Override
@@ -58,7 +58,15 @@ public class GitHubCommand extends Command {
 		}
 		else if ( args.length == 2 ) {
 			// gh xxxx 
-			return setNewValue(args[1]);
+			String arg = args[1] ;
+			if ( "-r".equals(arg) ) {
+				// Reset the default GitHub store
+				return setGitHubStore(getDefaultGitHubStore());
+			}
+			else {
+				// Reset a specific GitHub store
+				return setGitHubStore(arg);
+			}
 		}
 		else {
 			// gh xxx yyy 
@@ -66,7 +74,7 @@ public class GitHubCommand extends Command {
 		}
 	}
 	
-	private String setNewValue(String newValue) {
+	private String setGitHubStore(String newValue) {
 		setCurrentGitHubStore(newValue);
 		return "GitHub store is now '" + newValue + "'";
 	}
