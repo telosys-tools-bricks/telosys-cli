@@ -62,6 +62,6 @@ public enum OSType {
 	
 	@Override
 	public String toString() {
-		return value + " - " + text ;
+		return text ;
 	}
 }
