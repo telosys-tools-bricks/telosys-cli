@@ -258,7 +258,12 @@ public class Environment {
 	public OSType getOperatingSystemType() {
 		return osType;
 	}
-
+	//---------------------------------------------------------------------------------
+	public String getJavaVersion() {
+		// property "java.version" doesn't return the buikd ( eg : "1.6.0_45" )
+		return System.getProperty("java.runtime.version"); // eg : 1.6.0_45-b06
+	}
+	
 	//---------------------------------------------------------------------------------
 	public String getEditorCommand() {
 		return editorCommand;

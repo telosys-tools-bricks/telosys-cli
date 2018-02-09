@@ -65,6 +65,7 @@ public class EnvCommand extends Command {
 
 		appendLine(sb, ". Operating System name : " + environment.getOperatingSystemName() );
 		appendLine(sb, ". Operating System type : " + environment.getOperatingSystemType() );
+		appendLine(sb, ". Java version          : " + environment.getJavaVersion() );
 		appendLine(sb, ". Editor command        : " + environment.getEditorCommand() );
 		appendLine(sb, ". '.jar' file           : " + environment.getJarLocation() );
 		appendLine(sb, ". Current directory     : " + environment.getCurrentDirectory() );
