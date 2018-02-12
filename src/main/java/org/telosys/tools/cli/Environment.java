@@ -83,15 +83,19 @@ public class Environment {
 	
 	/**
 	 * Returns the editor command to be used <br>
-	 * The specific command if defined in the '.cfg' file or the standard default command <br>
+	 * The specific command if defined in the '.cfg' file <br>
+	 * or the default command for the current OS<br>
 	 * @return
 	 */
 	private String findEditorCommand(OSType osType) {
+		// Try to find a specific command (defined by the user)
 		String specificEditorCommand = findSpecificEditorCommand();
 		if ( specificEditorCommand != null ) {
+			// A specific editor command is defined in ".cfg" file => use it
 			return specificEditorCommand ;
 		}
 		else {
+			// No specific editor command => get the default edito command
 			return determineDefaultEditorCommand(osType);
 		}
 	}
@@ -202,47 +206,45 @@ public class Environment {
 		case MACOS :
 			return "open -t $FILE" ;
 		case LINUX :
-			return "vi $FILE" ;
+			return getDefaultEditorCommandForLinux() ;
 		case UNKNOWN :
 		default :
-			return "unknown operating system" ;
+			return "ERROR-unknown-operating-system" ;
 		}
-		
-//		if ( osName.contains("windows") || osName.contains("Windows") ) {
-//			// Windows
-//			return "notepad.exe $FILE" ;
-//		}
-//		else if ( osName.contains("mac") || osName.contains("Mac") ) {
-//			// Mac OS
-//			return "open -t $FILE" ;
-//		}
-//		else {
-//			// Other => Linux
-//			File shFile = findTelosysTerminalShellFile();
-//			if ( shFile != null ) {
-//				return "sh " + shFile.getAbsolutePath() + "vi $FILE" ;
-//			}
-//			return "vi $FILE" ;
-//		}
-
 	}
 	
 	/**
-	 * Customize the given command if necessary in order to open a new terminal/window
-	 * when the command will be launched
-	 * @param fullCommand
+	 * Return the command to open 'vi' in a new terminal <br>
+	 * The shell 'telosys-term.sh' is used to open a new terminal using the adaquate command
 	 * @return
 	 */
-	protected String customizeSystemCommandIfNecessary(String fullCommand) {
+	private String getDefaultEditorCommandForLinux() {
 		// If Linux use the shell script to open a new terminal
-		if ( this.osType == OSType.LINUX ) {
-			File shFile = findTelosysTerminalShellFile();
-			if ( shFile != null ) {
-				return "sh " + shFile.getAbsolutePath() + " " + fullCommand ;
-			}
+		File shFile = findTelosysTerminalShellFile();
+		if ( shFile != null ) {
+			return "/bin/sh " + shFile.getAbsolutePath() + " vi $FILE" ;
 		}
-		return fullCommand;
+		else {
+			return "ERROR-shell-file-not-found-(" + TELOSYS_TERM_SH + ")";
+		}
 	}
+	
+//	/**
+//	 * Customize the given command if necessary in order to open a new terminal/window
+//	 * when the command will be launched
+//	 * @param fullCommand
+//	 * @return
+//	 */
+//	protected String customizeSystemCommandIfNecessary(String fullCommand) {
+//		// If Linux use the shell script to open a new terminal
+//		if ( this.osType == OSType.LINUX ) {
+//			File shFile = findTelosysTerminalShellFile();
+//			if ( shFile != null ) {
+//				return "/bin/sh " + shFile.getAbsolutePath() + " " + fullCommand ;
+//			}
+//		}
+//		return fullCommand;
+//	}
 
 	//---------------------------------------------------------------------------------
 	public String getJarLocation() {

@@ -1,0 +1,28 @@
+
+     Linux commands examples 
+
+--------------------------------------------------------
+
+Open a new terminal to launch a character editor :
+
+  Linux Mint 
+    /usr/bin/gnome-terminal -e "vi foo.txt"
+    /usr/bin/gnome-terminal -e "nano foo.txt"
+
+  Lubuntu 
+    /usr/bin/lxterminal -e "vi foo.txt"
+
+  Ubuntu Desktop 
+    gnome-terminal
+    xterm
+
+--------------------------------------------------------
+XTerm is a more universal terminal emulator, without as many frills as gnome-terminal. 
+Xterm is the X terminal emulator. 
+--------------------------------------------------------
+
+Invoke GUI editor directly :
+
+  Linux Mint : 
+    /usr/bin/xed foo.txt   
+    

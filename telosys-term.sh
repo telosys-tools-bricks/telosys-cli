@@ -1,6 +1,9 @@
 #!/bin/sh
-# Shell script to open a terminal 
+# Shell script to open a new terminal and launch the given editor
+# Be sure to use and keep Unix line delimiters for this file
+# ( with Eclipse use : File / Convert Line Delimiters To / Unix )
 # You can customize this file to add another terminal command  
+#  
 
 EDITOR=$1
 #echo $EDITOR
@@ -8,30 +11,20 @@ FILE=$2
 #echo $FILE
 
 # Try to find the terminal command for the current Linux OS
-COMMAND=""
-if [ -x "$(command -v xterm)" ]
-then
-  COMMAND="xterm -e"
-elif [ -x "$(command -v gnome-terminal)" ]
-then
-  COMMAND="gnome-terminal -e"
-elif [ -x "$(command -v konsole)" ]
-then
-  COMMAND="konsole -e"
-elif [ -x "$(command -v uxterm)" ]
-then
-  COMMAND="uxterm -e"
-elif [ -x "$(command -v lxterm)" ]
-then
-  COMMAND="lxterm -e"
-elif [ -x "$(command -v xfce4-terminal)" ]
-then
-  COMMAND="xfce4-terminal -e"
-elif [ -x "$(command -v koi8rxterm)" ]
-then
-  COMMAND="koi8rxterm -e"
+if [ -x "$(command -v xterm)" ] ; then
+  xterm -e "$EDITOR $FILE"
+elif [ -x "$(command -v gnome-terminal)" ] ; then
+  gnome-terminal -e "$EDITOR $FILE"
+elif [ -x "$(command -v lxterminal)" ] ; then
+  lxterminal -e $EDITOR $FILE
+elif [ -x "$(command -v konsole)" ] ; then
+  konsole -e "$EDITOR $FILE"
+elif [ -x "$(command -v uxterm)" ] ; then
+  uxterm -e "$EDITOR $FILE"
+elif [ -x "$(command -v lxterm)" ] ; then
+  lxterm -e "$EDITOR $FILE"
+elif [ -x "$(command -v xfce4-terminal)" ] ; then
+  xfce4-terminal -e "$EDITOR $FILE"
+elif [ -x "$(command -v koi8rxterm)" ] ; then
+  koi8rxterm -e "$EDITOR $FILE"
 fi
-
-# Launch the terminal command to execute the given editor
-echo $COMMAND "$EDITOR $FILE"
-$COMMAND "$EDITOR $FILE"

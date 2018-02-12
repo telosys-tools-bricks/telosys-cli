@@ -456,14 +456,17 @@ public abstract class Command {
 	/**
 	 * Launches the external editor with the given file as argument 
 	 * @param fileFullPath
-	 * @return
+	 * @return the full command line launched
 	 */
 	protected String launchEditor(String fileFullPath) {
+		
+		// Check the editor command is defined
 		String editorCommand = environment.getEditorCommand();
 		if ( editorCommand == null ) { 
 			return "No editor command. Check the configuration.";
 		}
 		
+		// Is there a file to be edited ?
 		String fileToEdit = fileFullPath ;
 		if ( StrUtil.nullOrVoid(fileToEdit) ) {
 			fileToEdit = "" ; // for replacement in "xxx $FILE"
@@ -480,9 +483,12 @@ public abstract class Command {
 		else {
 			fullCommand = editorCommand + " " + fileToEdit;
 		}
+		// At this step the full comman is like "notepad foo.txt" 
+		// or "/bin/sh /xx/xx/telosys-term.sh vi foo.txt"
+		// or "specific-command foo.txt"
 
-		fullCommand = environment.customizeSystemCommandIfNecessary(fullCommand);
-		launchSystemCommand(fullCommand);
+		// Run the OS command 
+		SystemCommand.run(fullCommand, environment.getOperatingSystemType());
 		return fullCommand ;
 	}
 	
