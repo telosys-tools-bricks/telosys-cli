@@ -36,6 +36,7 @@
 		<zip destfile="${zip_file}"  >	
 			<fileset dir="." includes="telosys-cli-${version}.jar"/>
 			<fileset dir="." includes="telosys-cli.cfg"/>
+			<fileset dir="." includes="telosys.ico"/>
 			<fileset dir="." includes="telosys-term.sh"/>
 			<fileset dir="." includes="README.TXT"/>
 			<fileset dir="." includes="tt.bat"/>
