@@ -15,10 +15,15 @@
  */
 package org.telosys.tools.cli.commands;
 
-import jline.console.ConsoleReader;
+import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
 
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
+
+import jline.console.ConsoleReader;
 
 public class EnvCommand extends Command {
 	
@@ -48,12 +53,25 @@ public class EnvCommand extends Command {
 	
 	@Override
 	public String getUsage() {
-		return "env";
+		return "env [-s]";
 	}
 	
 	@Override
 	public String execute(String[] args) {
-		return env();
+		if ( args.length > 1 ) {
+			// env arg1
+			String arg = args[1] ;
+			if ( "-s".equals(arg) ) {
+				return systemProperties();
+			}
+			else {
+				return "Invalid argument '" + arg + "'" ;
+			}
+		}
+		else {
+			// env
+			return env();
+		}
 	}
 	
 	private String env() {
@@ -79,4 +97,21 @@ public class EnvCommand extends Command {
 		return sb.toString();
 	}
 	
+	private String systemProperties() {
+		List<String> lines = new LinkedList<>();
+		Properties p = System.getProperties();
+		Enumeration<?> keys = p.keys();
+		while (keys.hasMoreElements()) {
+		    String key = (String)keys.nextElement();
+		    String value = (String)p.get(key);
+		    lines.add(". " + key + " = " + value);
+		}
+		java.util.Collections.sort(lines);
+		
+		print("SYSTEM PROPERTIES : ");
+		for ( String l : lines ) {
+			print(l);
+		}
+		return null ;
+	}
 }
