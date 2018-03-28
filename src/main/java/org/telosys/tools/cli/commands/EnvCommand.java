@@ -22,6 +22,8 @@ import java.util.Properties;
 
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.commons.github.GitHubClient;
+import org.telosys.tools.commons.http.HttpClient;
 
 import jline.console.ConsoleReader;
 
@@ -63,6 +65,9 @@ public class EnvCommand extends Command {
 			String arg = args[1] ;
 			if ( "-s".equals(arg) ) {
 				return systemProperties();
+			}
+			else if ( "-http".equals(arg) ) {
+				return httpConfig();
 			}
 			else {
 				return "Invalid argument '" + arg + "'" ;
@@ -112,6 +117,15 @@ public class EnvCommand extends Command {
 		for ( String l : lines ) {
 			print(l);
 		}
+		return null ;
+	}
+
+	private static final String HTTPS_PROTOCOLS = "https.protocols" ;
+	private String httpConfig() {
+		print("HTTP CONFIGURATION : ");
+		print(". HttpClient version   : " + HttpClient.VERSION );
+		print(". GitHubClient version : " + GitHubClient.VERSION );
+		print(". System property '" + HTTPS_PROTOCOLS + "' : " + System.getProperty(HTTPS_PROTOCOLS) );
 		return null ;
 	}
 }
