@@ -54,6 +54,7 @@ public class CommandsGroups {
 		commands.add("e");
 		commands.add("err");
 		commands.add("env");
+		commands.add("ver");
 		commands.add("q");
 		
 		return new CommandsGroup(name, commands);

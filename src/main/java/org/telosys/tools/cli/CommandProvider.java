@@ -58,6 +58,7 @@ import org.telosys.tools.cli.commands.PwdCommand;
 import org.telosys.tools.cli.commands.QuitCommand;
 import org.telosys.tools.cli.commands.ThrowExceptionCommand;
 import org.telosys.tools.cli.commands.UpdateDbModelCommand;
+import org.telosys.tools.cli.commands.VerCommand;
 
 import jline.console.ConsoleReader;
 
@@ -90,6 +91,7 @@ public class CommandProvider {
 		register(new PwdCommand(consoleReader, environment)); // pwd
 		register(new QuitCommand(consoleReader, environment)); // q
 		register(new ErrorCommand(consoleReader, environment)); // err
+		register(new VerCommand(consoleReader, environment)); // ver
 		
 		// Project commands
 		register(new HomeCommand(consoleReader, environment)); // h 
