@@ -1,0 +1,16 @@
+
+1) Check Telosys-CLI version in the following files :
+   
+   See NEW-VERSION.txt
+   
+2) Build :
+
+ - Build Java artefacts with Maven :
+   - mvn clean
+   - mvn install 
+ 
+ - Build the zip file for distribution :
+   - ant build_dist.xml
+   - F5 / "dist" folder
+   
+ 
