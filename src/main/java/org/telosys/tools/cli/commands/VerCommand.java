@@ -15,6 +15,7 @@
  */
 package org.telosys.tools.cli.commands;
 
+import org.telosys.tools.api.TelosysApiVersion;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.Version;
@@ -64,6 +65,7 @@ public class VerCommand extends Command {
 		
 		appendLine(sb, "Components versions : "  );
 		appendLine(sb, "Telosys CLI   : " + Version.TELOSYS_TOOLS_CLI_VERSION  );
+		appendLine(sb, "Telosys API   : " + TelosysApiVersion.VERSION  );
 		appendLine(sb, "Generator     : " + GeneratorVersion.GENERATOR_VERSION  );
 		appendLine(sb, "Generic model : " + GenericModelVersion.VERSION  );
 		appendLine(sb, "DSL model     : " + DslModelVersion.VERSION  );
