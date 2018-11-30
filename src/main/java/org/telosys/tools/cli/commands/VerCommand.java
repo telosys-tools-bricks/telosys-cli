@@ -20,8 +20,9 @@ import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.Version;
 import org.telosys.tools.commons.github.GitHubClient;
 import org.telosys.tools.commons.http.HttpClient;
-import org.telosys.tools.dsl.generic.model.GenericModelVersion;
+import org.telosys.tools.dsl.model.DslModelVersion;
 import org.telosys.tools.generator.GeneratorVersion;
+import org.telosys.tools.generic.model.GenericModelVersion;
 import org.telosys.tools.repository.model.DbModelVersion;
 
 import jline.console.ConsoleReader;
@@ -65,9 +66,10 @@ public class VerCommand extends Command {
 		appendLine(sb, "Telosys CLI   : " + Version.TELOSYS_TOOLS_CLI_VERSION  );
 		appendLine(sb, "Generator     : " + GeneratorVersion.GENERATOR_VERSION  );
 		appendLine(sb, "Generic model : " + GenericModelVersion.VERSION  );
+		appendLine(sb, "DSL model     : " + DslModelVersion.VERSION  );
 		appendLine(sb, "DB model      : " + DbModelVersion.VERSION  );
-		appendLine(sb, "GitHubClient  : " + GitHubClient.VERSION ) ;
-		appendLine(sb, "HttpClient    : " + HttpClient.VERSION ) ;
+		appendLine(sb, "GitHub client : " + GitHubClient.VERSION ) ;
+		appendLine(sb, "HTTP client   : " + HttpClient.VERSION ) ;
 		
 		return sb.toString();
 	}
