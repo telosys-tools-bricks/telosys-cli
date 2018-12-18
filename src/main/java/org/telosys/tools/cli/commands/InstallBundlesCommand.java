@@ -17,14 +17,13 @@ package org.telosys.tools.cli.commands;
 
 import java.util.List;
 
-import jline.console.ConsoleReader;
-
 import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.Command;
+import org.telosys.tools.cli.CommandWithGitHub;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.cli.commons.BundlesFilter;
-import org.telosys.tools.cli.commons.GitHubBundlesUtil;
 import org.telosys.tools.commons.TelosysToolsException;
+import org.telosys.tools.commons.bundles.BundlesFromGitHub;
+
+import jline.console.ConsoleReader;
 
 /**
  * Install Bundle(s) 
@@ -35,7 +34,7 @@ import org.telosys.tools.commons.TelosysToolsException;
  * @author Laurent GUERIN
  *
  */
-public class InstallBundlesCommand extends Command {
+public class InstallBundlesCommand extends CommandWithGitHub {
 	
 	/**
 	 * Constructor
@@ -86,12 +85,24 @@ public class InstallBundlesCommand extends Command {
 	private String install(String[] args) {
 		//   TODO if already exists : prompt "overwrite ? [y/n] : "
 		TelosysProject telosysProject = getTelosysProject();
-		List<String> bundles = getBundles(getCurrentGitHubStore(), args);
+		
+		// List<String> bundles = getBundles(getCurrentGitHubStore(), args);
+		
+		BundlesFromGitHub githubBundles ;
+		String githubStoreName = getCurrentGitHubStore() ;
+		try {
+			githubBundles = getGitHubBundles(githubStoreName, args) ;
+		} catch (TelosysToolsException e) {
+			printError(e);
+			return null ;
+		}
+		List<String> bundles = githubBundles.getBundlesNames() ;
+
 		if ( bundles != null && bundles.size() > 0 ) {
 			print( "Installing " + bundles.size() + " bundle(s) from GitHub... ");
 			for ( String bundleName : bundles ) {
 				try {
-					telosysProject.downloadAndInstallBundle(getCurrentGitHubStore(), bundleName);
+					telosysProject.downloadAndInstallBundle(githubStoreName, bundleName);
 					print( " . '" + bundleName + "' : installed. ");
 				} catch (TelosysToolsException e) {
 					print( " . '" + bundleName + "' : ERROR (cannot install) : "+ e.getMessage() );
@@ -99,20 +110,20 @@ public class InstallBundlesCommand extends Command {
 			}
 		}
 		else {
-			print("No bundle available on GitHub.") ;
+			print("No bundle found on GitHub.") ;
 		}
 		return null ;
 	}
 	
-	private List<String> getBundles(String githubStoreName, String[] args) {
-		List<String> criteria = BundlesFilter.buildCriteriaFromArgs(args);
-		TelosysProject telosysProject = getTelosysProject();
-		try {
-			return GitHubBundlesUtil.getBundles(telosysProject, githubStoreName, criteria);
-		} catch (TelosysToolsException e) {
-			printError(e);
-			return null ;
-		}
-	}
+//	private List<String> getBundles(String githubStoreName, String[] args) {
+//		List<String> criteria = BundlesFilter.buildCriteriaFromArgs(args);
+//		TelosysProject telosysProject = getTelosysProject();
+//		try {
+//			return GitHubBundlesUtil.getBundles(telosysProject, githubStoreName, criteria);
+//		} catch (TelosysToolsException e) {
+//			printError(e);
+//			return null ;
+//		}
+//	}
 
 }

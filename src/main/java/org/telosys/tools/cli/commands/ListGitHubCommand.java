@@ -17,20 +17,19 @@ package org.telosys.tools.cli.commands;
 
 import java.util.List;
 
+import org.telosys.tools.cli.CommandWithGitHub;
+import org.telosys.tools.cli.Environment;
+import org.telosys.tools.commons.TelosysToolsException;
+import org.telosys.tools.commons.bundles.BundlesFromGitHub;
+
 import jline.console.ConsoleReader;
 
-import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.Command;
-import org.telosys.tools.cli.Environment;
-import org.telosys.tools.cli.commons.BundlesFilter;
-import org.telosys.tools.cli.commons.GitHubBundlesUtil;
-import org.telosys.tools.commons.TelosysToolsException;
-
-public class ListGitHubCommand extends Command {
+public class ListGitHubCommand extends CommandWithGitHub {
 	
 	/**
 	 * Constructor
-	 * @param out
+	 * @param consoleReader
+	 * @param environment
 	 */
 	public ListGitHubCommand(ConsoleReader consoleReader, Environment environment) {
 		super(consoleReader, environment);
@@ -68,20 +67,30 @@ public class ListGitHubCommand extends Command {
 	
 	private String listContent(String githubStoreName, String[] args) {
 		
-		List<String> bundles = getBundles(githubStoreName, args) ;
-		return printBundles(githubStoreName, bundles);
-	}
-	
-	private List<String> getBundles(String githubStoreName, String[] args) {
-		List<String> criteria = BundlesFilter.buildCriteriaFromArgs(args);
-		TelosysProject telosysProject = getTelosysProject();
+//		List<String> bundles = getBundles(githubStoreName, args) ;
+//		return printBundles(githubStoreName, bundles);
+		
+		
 		try {
-			return GitHubBundlesUtil.getBundles(telosysProject, githubStoreName, criteria);
+			BundlesFromGitHub githubBundles = getGitHubBundles(githubStoreName, args) ;
+			printBundles(githubStoreName, githubBundles.getBundlesNames());
 		} catch (TelosysToolsException e) {
 			printError(e);
-			return null ;
 		}
+		return null ;
+		
 	}
+	
+//	private List<String> getBundles(String githubStoreName, String[] args) {
+//		List<String> criteria = BundlesFilter.buildCriteriaFromArgs(args);
+//		TelosysProject telosysProject = getTelosysProject();
+//		try {
+//			return GitHubBundlesUtil.getBundles(telosysProject, githubStoreName, criteria);
+//		} catch (TelosysToolsException e) {
+//			printError(e);
+//			return null ;
+//		}
+//	}
 	
 	/**
 	 * Prints the given bundles
@@ -89,17 +98,20 @@ public class ListGitHubCommand extends Command {
 	 * @param bundles
 	 * @return
 	 */
-	private String printBundles(String githubStore, List<String> bundles) {
-		StringBuilder sb = new StringBuilder();
+	private void printBundles(String githubStore, List<String> bundles) {
+		//StringBuilder sb = new StringBuilder();
 		if ( bundles != null && bundles.size() > 0 ) {
-			appendLine(sb, "Bundles found in GitHub store '" + githubStore + "' : ");
+			//appendLine(sb, "Bundles found in GitHub store '" + githubStore + "' : ");
+			print("Bundles found in GitHub store '" + githubStore + "' : ");
 			for ( String s : bundles ) {
-				appendLine(sb, " . " + s);
+				//appendLine(sb, " . " + s);
+				print( " . " + s);
 			}
 		}
 		else {
-			appendLine(sb, "No bundle found in GitHub store '" + githubStore + "'.");
+			//appendLine(sb, "No bundle found in GitHub store '" + githubStore + "'.");
+			print( "No bundle found in GitHub store '" + githubStore + "'.");
 		}
-		return sb.toString();
+		//return sb.toString();
 	}
 }
