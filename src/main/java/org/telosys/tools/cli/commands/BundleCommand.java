@@ -17,14 +17,14 @@ package org.telosys.tools.cli.commands;
 
 import java.util.List;
 
-import jline.console.ConsoleReader;
-
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.cli.commons.BundlesFilter;
 import org.telosys.tools.commons.TelosysToolsException;
+import org.telosys.tools.commons.bundles.BundlesNames;
 import org.telosys.tools.commons.bundles.TargetsDefinitions;
+
+import jline.console.ConsoleReader;
 
 public class BundleCommand extends Command {
 	
@@ -82,13 +82,17 @@ public class BundleCommand extends Command {
 	}
 
 	private String setBundle(String[] args) {
-		List<String> criteria = BundlesFilter.buildCriteriaFromArgs(args);
 		TelosysProject telosysProject = getTelosysProject();
 		try {
 			// get all installed bundles
-			List<String> bundles = telosysProject.getInstalledBundles();
+			//List<String> bundles = telosysProject.getInstalledBundles();
+			BundlesNames bundlesNames = telosysProject.getInstalledBundles();
 			// filter with criteria if any
-			List<String> filteredBundles = BundlesFilter.filter(bundles, criteria);
+//			List<String> criteria = BundlesUtil.buildCriteriaFromArgs(args);
+//			List<String> filteredBundles = BundlesUtil.filter(bundles, criteria);
+			
+			List<String> filteredBundles = bundlesNames.filter(args);
+			
 			if ( filteredBundles.size() < 0 ) {
 				return "No bundle found!" ;
 			}

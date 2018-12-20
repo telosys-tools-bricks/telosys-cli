@@ -69,10 +69,8 @@ public class InstallBundlesCommand extends CommandWithGitHub {
 		
 		if ( args.length > 1 ) {
 			// ib aaa bbb  
-			if ( checkHomeDirectoryDefined() ) {
-				if ( checkGitHubStoreDefined() ) {
-					return install(args);
-				}
+			if ( checkHomeDirectoryDefined() && checkGitHubStoreDefined() ) {
+				installBundles(args);
 			}
 			return null ;
 		}
@@ -82,25 +80,37 @@ public class InstallBundlesCommand extends CommandWithGitHub {
 		}
 	}
 		
-	private String install(String[] args) {
+	private void installBundles(String[] args) {
 		//   TODO if already exists : prompt "overwrite ? [y/n] : "
 		TelosysProject telosysProject = getTelosysProject();
 		
 		// List<String> bundles = getBundles(getCurrentGitHubStore(), args);
 		
-		BundlesFromGitHub githubBundles ;
 		String githubStoreName = getCurrentGitHubStore() ;
+//		BundlesFromGitHub githubBundles ;
+//		try {
+//			githubBundles = getGitHubBundles(githubStoreName, args) ;
+//		} catch (TelosysToolsException e) {
+//			printError(e);
+//			return null ;
+//		}
+//		List<String> bundles = githubBundles.getBundlesNames() ;
+		
+		// Get bundles from GitHub 
+		BundlesFromGitHub githubBundles;
 		try {
-			githubBundles = getGitHubBundles(githubStoreName, args) ;
+			githubBundles = super.getGitHubBundles(githubStoreName);
 		} catch (TelosysToolsException e) {
 			printError(e);
-			return null ;
+			return ;
 		}
-		List<String> bundles = githubBundles.getBundlesNames() ;
+		// Filter bundles names if args		
+		List<String> bundlesNames = githubBundles.getBundlesNames().filter(args);
 
-		if ( bundles != null && bundles.size() > 0 ) {
-			print( "Installing " + bundles.size() + " bundle(s) from GitHub... ");
-			for ( String bundleName : bundles ) {
+		// Install  bundles		
+		if ( bundlesNames != null && bundlesNames.size() > 0 ) {
+			print( "Installing " + bundlesNames.size() + " bundle(s) from GitHub... ");
+			for ( String bundleName : bundlesNames ) {
 				try {
 					telosysProject.downloadAndInstallBundle(githubStoreName, bundleName);
 					print( " . '" + bundleName + "' : installed. ");
@@ -112,7 +122,6 @@ public class InstallBundlesCommand extends CommandWithGitHub {
 		else {
 			print("No bundle found on GitHub.") ;
 		}
-		return null ;
 	}
 	
 //	private List<String> getBundles(String githubStoreName, String[] args) {

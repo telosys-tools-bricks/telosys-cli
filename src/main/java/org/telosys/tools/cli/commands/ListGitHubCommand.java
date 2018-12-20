@@ -59,26 +59,37 @@ public class ListGitHubCommand extends CommandWithGitHub {
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
 			if ( checkGitHubStoreDefined() ) {
-				return listContent(getCurrentGitHubStore(), args);
+				return getAndPrintGitHubBundles(getCurrentGitHubStore(), args);
 			}
 		}
 		return null ;
 	}
 	
-	private String listContent(String githubStoreName, String[] args) {
+	private String getAndPrintGitHubBundles(String githubStoreName, String[] args) {
 		
 //		List<String> bundles = getBundles(githubStoreName, args) ;
 //		return printBundles(githubStoreName, bundles);
 		
 		
+//		try {
+//			BundlesFromGitHub githubBundles = getGitHubBundles(githubStoreName, args) ;
+//			printBundles(githubStoreName, githubBundles.getBundlesNames());
+//		} catch (TelosysToolsException e) {
+//			printError(e);
+//		}
+		
 		try {
-			BundlesFromGitHub githubBundles = getGitHubBundles(githubStoreName, args) ;
-			printBundles(githubStoreName, githubBundles.getBundlesNames());
+			// Get all bundles from GitHub 
+			BundlesFromGitHub githubBundles = getGitHubBundles(githubStoreName);
+			// Filter bundles with args if necessary
+			List<String> bundlesNames = githubBundles.getBundlesNames().filter(args);
+			// Print the result
+			printBundles(githubStoreName, bundlesNames);
 		} catch (TelosysToolsException e) {
 			printError(e);
 		}
-		return null ;
 		
+		return null ;
 	}
 	
 //	private List<String> getBundles(String githubStoreName, String[] args) {

@@ -17,15 +17,14 @@ package org.telosys.tools.cli.commands;
 
 import java.util.List;
 
-import jline.console.ConsoleReader;
-
 import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.Command;
+import org.telosys.tools.cli.CommandWithBundles;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.cli.commons.BundlesFilter;
 import org.telosys.tools.commons.TelosysToolsException;
 
-public class DeleteBundleCommand extends Command {
+import jline.console.ConsoleReader;
+
+public class DeleteBundleCommand extends CommandWithBundles {
 
 	/**
 	 * Constructor
@@ -70,7 +69,8 @@ public class DeleteBundleCommand extends Command {
 
 	private void deleteBundles(String[] commandArgs) {
 		try {
-			List<String> bundleNames = BundlesFilter.getExistingBundles(getTelosysProject(), commandArgs);	
+			//List<String> bundleNames = BundlesUtil.getExistingBundles(getTelosysProject(), commandArgs);	
+			List<String> bundleNames = getInstalledBundles(commandArgs);
 			if ( bundleNames.isEmpty() ) {
 				print("No bundle found.") ;
 			}

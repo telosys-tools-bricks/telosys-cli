@@ -18,15 +18,14 @@ package org.telosys.tools.cli.commands;
 import java.io.File;
 import java.util.List;
 
-import jline.console.ConsoleReader;
-
 import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.Command;
+import org.telosys.tools.cli.CommandWithBundles;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.cli.commons.BundlesFilter;
 import org.telosys.tools.commons.TelosysToolsException;
 
-public class EditBundleCommand extends Command {
+import jline.console.ConsoleReader;
+
+public class EditBundleCommand extends CommandWithBundles {
 
 	/**
 	 * Constructor
@@ -73,7 +72,8 @@ public class EditBundleCommand extends Command {
 
 	private String editBundle(String[] commandArgs) {
 		try {
-			List<String> bundleNames = BundlesFilter.getExistingBundles(getTelosysProject(), commandArgs);	
+//			List<String> bundleNames = BundlesUtil.getExistingBundles(getTelosysProject(), commandArgs);	
+			List<String> bundleNames = getInstalledBundles(commandArgs);
 			if ( bundleNames.size() > 1 ) {
 				print( "Too much bundles found (" + bundleNames.size() + " bundles)") ;
 			}
