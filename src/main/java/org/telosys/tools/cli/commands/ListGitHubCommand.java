@@ -59,24 +59,13 @@ public class ListGitHubCommand extends CommandWithGitHub {
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
 			if ( checkGitHubStoreDefined() ) {
-				return getAndPrintGitHubBundles(getCurrentGitHubStore(), args);
+				getAndPrintGitHubBundles(getCurrentGitHubStore(), args);
 			}
 		}
 		return null ;
 	}
 	
-	private String getAndPrintGitHubBundles(String githubStoreName, String[] args) {
-		
-//		List<String> bundles = getBundles(githubStoreName, args) ;
-//		return printBundles(githubStoreName, bundles);
-		
-		
-//		try {
-//			BundlesFromGitHub githubBundles = getGitHubBundles(githubStoreName, args) ;
-//			printBundles(githubStoreName, githubBundles.getBundlesNames());
-//		} catch (TelosysToolsException e) {
-//			printError(e);
-//		}
+	private void getAndPrintGitHubBundles(String githubStoreName, String[] args) {
 		
 		try {
 			// Get all bundles from GitHub 
@@ -88,20 +77,7 @@ public class ListGitHubCommand extends CommandWithGitHub {
 		} catch (TelosysToolsException e) {
 			printError(e);
 		}
-		
-		return null ;
 	}
-	
-//	private List<String> getBundles(String githubStoreName, String[] args) {
-//		List<String> criteria = BundlesFilter.buildCriteriaFromArgs(args);
-//		TelosysProject telosysProject = getTelosysProject();
-//		try {
-//			return GitHubBundlesUtil.getBundles(telosysProject, githubStoreName, criteria);
-//		} catch (TelosysToolsException e) {
-//			printError(e);
-//			return null ;
-//		}
-//	}
 	
 	/**
 	 * Prints the given bundles
@@ -110,19 +86,14 @@ public class ListGitHubCommand extends CommandWithGitHub {
 	 * @return
 	 */
 	private void printBundles(String githubStore, List<String> bundles) {
-		//StringBuilder sb = new StringBuilder();
 		if ( bundles != null && bundles.size() > 0 ) {
-			//appendLine(sb, "Bundles found in GitHub store '" + githubStore + "' : ");
 			print("Bundles found in GitHub store '" + githubStore + "' : ");
 			for ( String s : bundles ) {
-				//appendLine(sb, " . " + s);
 				print( " . " + s);
 			}
 		}
 		else {
-			//appendLine(sb, "No bundle found in GitHub store '" + githubStore + "'.");
 			print( "No bundle found in GitHub store '" + githubStore + "'.");
 		}
-		//return sb.toString();
 	}
 }

@@ -84,17 +84,7 @@ public class InstallBundlesCommand extends CommandWithGitHub {
 		//   TODO if already exists : prompt "overwrite ? [y/n] : "
 		TelosysProject telosysProject = getTelosysProject();
 		
-		// List<String> bundles = getBundles(getCurrentGitHubStore(), args);
-		
 		String githubStoreName = getCurrentGitHubStore() ;
-//		BundlesFromGitHub githubBundles ;
-//		try {
-//			githubBundles = getGitHubBundles(githubStoreName, args) ;
-//		} catch (TelosysToolsException e) {
-//			printError(e);
-//			return null ;
-//		}
-//		List<String> bundles = githubBundles.getBundlesNames() ;
 		
 		// Get bundles from GitHub 
 		BundlesFromGitHub githubBundles;
@@ -124,15 +114,4 @@ public class InstallBundlesCommand extends CommandWithGitHub {
 		}
 	}
 	
-//	private List<String> getBundles(String githubStoreName, String[] args) {
-//		List<String> criteria = BundlesFilter.buildCriteriaFromArgs(args);
-//		TelosysProject telosysProject = getTelosysProject();
-//		try {
-//			return GitHubBundlesUtil.getBundles(telosysProject, githubStoreName, criteria);
-//		} catch (TelosysToolsException e) {
-//			printError(e);
-//			return null ;
-//		}
-//	}
-
 }

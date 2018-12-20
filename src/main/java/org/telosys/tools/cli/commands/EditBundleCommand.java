@@ -72,7 +72,6 @@ public class EditBundleCommand extends CommandWithBundles {
 
 	private String editBundle(String[] commandArgs) {
 		try {
-//			List<String> bundleNames = BundlesUtil.getExistingBundles(getTelosysProject(), commandArgs);	
 			List<String> bundleNames = getInstalledBundles(commandArgs);
 			if ( bundleNames.size() > 1 ) {
 				print( "Too much bundles found (" + bundleNames.size() + " bundles)") ;

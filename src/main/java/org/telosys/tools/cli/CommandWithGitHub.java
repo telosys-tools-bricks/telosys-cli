@@ -18,7 +18,6 @@ package org.telosys.tools.cli;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.bundles.BundlesFromGitHub;
-import org.telosys.tools.commons.bundles.BundlesNames;
 
 import jline.console.ConsoleReader;
 
@@ -39,49 +38,14 @@ public abstract class CommandWithGitHub extends Command {
 		super(consoleReader, environment);
 	}
 
-//	/**
-//	 * Returns a list of bundles matching the given arguments
-//	 * @param githubStoreName
-//	 * @param args
-//	 * @return
-//	 */
-//	protected final BundlesFromGitHub getGitHubBundles(String githubStoreName, String[] args) throws TelosysToolsException {
-//		List<String> criteria = BundlesUtil.buildCriteriaFromArgs(args);
-//		TelosysProject telosysProject = getTelosysProject();
-//		return getGitHubBundles(telosysProject, githubStoreName, criteria);
-//	}
-
-	protected final BundlesNames getInstalledBundles() throws TelosysToolsException {
-		TelosysProject telosysProject = getTelosysProject();
-		// get all installed bundles
-		//List<String> bundles = telosysProject.getInstalledBundles();
-		return telosysProject.getInstalledBundles();
-	}
-
+	/**
+	 * @param githubStoreName
+	 * @return
+	 * @throws TelosysToolsException
+	 */
 	protected final BundlesFromGitHub getGitHubBundles(String githubStoreName) throws TelosysToolsException {
 		TelosysProject telosysProject = getTelosysProject();
 		return telosysProject.getGitHubBundlesList(githubStoreName);
 	}
 	
-//	/**
-//	 * Returns a list of bundles matching the given criteria
-//	 * @param telosysProject
-//	 * @param githubStoreName
-//	 * @param criteria
-//	 * @return
-//	 * @throws TelosysToolsException
-//	 */
-//	private BundlesFromGitHub getGitHubBundles(TelosysProject telosysProject, String githubStoreName, List<String> criteria) throws TelosysToolsException {
-//	
-//		
-//		// Get all the bundles available in the GitHub store
-//		BundlesFromGitHub bundles = telosysProject.getGitHubBundlesList(githubStoreName);
-//	
-//		// Filter with criteria
-//		List<String> filteredList = BundlesUtil.filter(bundles.getBundlesNames(), criteria);
-//		return new BundlesFromGitHub(filteredList, bundles.getRateLimitMessage());
-//		
-//		bundles.
-//	}	
-
 }
