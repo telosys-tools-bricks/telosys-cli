@@ -17,6 +17,7 @@ package org.telosys.tools.cli.commands;
 
 import java.util.List;
 
+import org.telosys.tools.cli.Color;
 import org.telosys.tools.cli.CommandWithGitHub;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.TelosysToolsException;
@@ -57,10 +58,8 @@ public class ListGitHubCommand extends CommandWithGitHub {
 	
 	@Override
 	public String execute(String[] args) {
-		if ( checkHomeDirectoryDefined() ) {
-			if ( checkGitHubStoreDefined() ) {
-				getAndPrintGitHubBundles(getCurrentGitHubStore(), args);
-			}
+		if ( checkHomeDirectoryDefined() && checkGitHubStoreDefined() ) {
+			getAndPrintGitHubBundles(getCurrentGitHubStore(), args);
 		}
 		return null ;
 	}
@@ -70,13 +69,28 @@ public class ListGitHubCommand extends CommandWithGitHub {
 		try {
 			// Get all bundles from GitHub 
 			BundlesFromGitHub githubBundles = getGitHubBundles(githubStoreName);
-			// Filter bundles with args if necessary
-			List<String> bundlesNames = githubBundles.getBundlesNames().filter(args);
-			// Print the result
-			printBundles(githubStoreName, bundlesNames);
 			
-			print("GitHub API rate limit : "+ githubBundles.getRemaining() + "/" + githubBundles.getLimit() ) ; 
-					
+			if ( githubBundles.getHttpStatusCode() == 200 ) {
+				// Filter bundles with args if necessary
+				List<String> bundlesNames = githubBundles.getBundlesNames().filter(args);
+				// Print the result
+				printBundles(githubStoreName, bundlesNames);
+				// Print current API rate limit returned by GitHub 
+				print("GitHub API rate limit : "+ githubBundles.getRemaining() + "/" + githubBundles.getLimit() ) ; 
+			}
+			else if ( githubBundles.getHttpStatusCode() == 403 ) {
+				String msg = "GitHub API request refused : http status '" + githubBundles.getHttpStatusCode() + "'" ;
+				print(Color.colorize(msg, Color.RED_BRIGHT));
+				print("GitHub API rate limit status : " ) ; 
+				print(" . remaining : " + githubBundles.getRemaining() ) ; 
+				print(" . limit     : " + githubBundles.getLimit() ) ; 
+				print(" . reset     : " + githubBundles.getReset() ) ; 
+			}
+			else {
+				String msg = "Unexpected http status '" + githubBundles.getHttpStatusCode() + "'" ;
+				print(Color.colorize(msg, Color.RED_BRIGHT));
+			}
+			
 		} catch (TelosysToolsException e) {
 			printError(e);
 		}
@@ -89,7 +103,7 @@ public class ListGitHubCommand extends CommandWithGitHub {
 	 * @return
 	 */
 	private void printBundles(String githubStore, List<String> bundles) {
-		if ( bundles != null && bundles.size() > 0 ) {
+		if ( bundles != null && ! bundles.isEmpty() ) {
 			print("Bundles found in GitHub store '" + githubStore + "' : ");
 			for ( String s : bundles ) {
 				print( " . " + s);

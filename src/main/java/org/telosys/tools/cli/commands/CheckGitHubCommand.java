@@ -15,6 +15,9 @@
  */
 package org.telosys.tools.cli.commands;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.telosys.tools.cli.Color;
 import org.telosys.tools.cli.CommandWithGitHub;
 import org.telosys.tools.cli.Environment;
@@ -80,9 +83,11 @@ public class CheckGitHubCommand extends CommandWithGitHub {
 		}		
 		else if ( remainingValue == 0 ) {
 			remaining = Color.colorize(response.getRemaining(), Color.RED_BRIGHT );
-		}		
+		}
+		SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss");
+		String hhmmss = fmt.format(new Date());
 		print( "GitHub is responding." ); 
-		print( "Current API rate limit : " ); 
+		print( "Current API rate limit (at " + hhmmss + ") : " ); 
 		print( " . remaining  : " + remaining ); 
 		print( " . limit      : " + response.getLimit() ); 
 		print( " . reset      : " + response.getReset() ); 
