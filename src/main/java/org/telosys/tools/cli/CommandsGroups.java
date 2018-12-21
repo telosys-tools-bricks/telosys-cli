@@ -117,6 +117,7 @@ public class CommandsGroups {
 		String name = "GitHub commands" ;
 		commands.add("gh");
 		commands.add("lgh");
+		commands.add("cgh");
 		
 		return new CommandsGroup(name, commands);
 	}

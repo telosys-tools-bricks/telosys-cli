@@ -23,6 +23,7 @@ import java.util.Map;
 import org.telosys.tools.cli.commands.BundleCommand;
 import org.telosys.tools.cli.commands.CdCommand;
 import org.telosys.tools.cli.commands.CheckDatabaseCommand;
+import org.telosys.tools.cli.commands.CheckGitHubCommand;
 import org.telosys.tools.cli.commands.CheckModelCommand;
 import org.telosys.tools.cli.commands.DeleteBundleCommand;
 import org.telosys.tools.cli.commands.DeleteEntityCommand;
@@ -122,6 +123,8 @@ public class CommandProvider {
 		// GitHub store management
 		register(new GitHubCommand(consoleReader, environment)); // gh : gh [store-name] 
 		register(new ListGitHubCommand(consoleReader, environment)); // lgh [filter-criteria] 
+		register(new CheckGitHubCommand(consoleReader, environment)); // cgh 
+		
 /**
 //		 or
 //		   sb (select bundle from GitHub) :

@@ -74,6 +74,9 @@ public class ListGitHubCommand extends CommandWithGitHub {
 			List<String> bundlesNames = githubBundles.getBundlesNames().filter(args);
 			// Print the result
 			printBundles(githubStoreName, bundlesNames);
+			
+			print("GitHub API rate limit : "+ githubBundles.getRemaining() + "/" + githubBundles.getLimit() ) ; 
+					
 		} catch (TelosysToolsException e) {
 			printError(e);
 		}
