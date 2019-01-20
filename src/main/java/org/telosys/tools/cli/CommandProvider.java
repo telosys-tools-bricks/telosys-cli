@@ -38,6 +38,7 @@ import org.telosys.tools.cli.commands.EnvCommand;
 import org.telosys.tools.cli.commands.ErrorCommand;
 import org.telosys.tools.cli.commands.GenerateCommand;
 import org.telosys.tools.cli.commands.GitHubCommand;
+import org.telosys.tools.cli.commands.GitHubUserCommand;
 import org.telosys.tools.cli.commands.GuideCommand;
 import org.telosys.tools.cli.commands.HelpCommand;
 import org.telosys.tools.cli.commands.HomeCommand;
@@ -122,6 +123,7 @@ public class CommandProvider {
 		
 		// GitHub store management
 		register(new GitHubCommand(consoleReader, environment)); // gh : gh [store-name] 
+		register(new GitHubUserCommand(consoleReader, environment)); // ghu : ghu user-name
 		register(new ListGitHubCommand(consoleReader, environment)); // lgh [filter-criteria] 
 		register(new CheckGitHubCommand(consoleReader, environment)); // cgh 
 		

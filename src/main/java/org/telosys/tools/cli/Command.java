@@ -119,22 +119,51 @@ public abstract class Command {
 		}
 	}
 	
+	/**
+	 * Read user response 
+	 * @return
+	 */
 	protected String readResponse() {
+		return readString(true);
+	}
+	
+	/**
+	 * Read user response in 'secret' mode
+	 * @return
+	 */
+	protected String readSecret(String message) {
+		if ( message != null ) {
+			out.print( message );
+			out.flush();			
+		}
+		return readString(false);
+	}
+	
+	private String readString(boolean showInputChar) {
 		StringBuilder sb = new StringBuilder();
 		while ( true ) {
 			char c = (char) readChar();
 			if ( c >= ' ' ) {
+				// Standard character --> keep it in the buffer
 				sb.append(c);
-				out.print(c);
+				if ( showInputChar ) {
+					out.print(c);
+				}
+				else {
+					out.print('*');
+				}
 				out.flush();
 			}
 			else {
 				switch(c) {
+				// CR or LF : end of input --> return all chars as string
 				case '\n' :
 				case '\r' :
 					out.println("");
 					out.flush();
 					return sb.toString();
+
+				// BACKSPACE
 				case '\b' :
 					backspace();
 					if ( sb.length() > 0 ) {
