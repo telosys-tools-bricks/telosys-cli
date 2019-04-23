@@ -96,7 +96,8 @@ public class Environment {
 		}
 		else {
 			// No specific editor command => get the default edito command
-			return determineDefaultEditorCommand(osType);
+			// return determineDefaultEditorCommand(osType);
+			return null;
 		}
 	}
 	

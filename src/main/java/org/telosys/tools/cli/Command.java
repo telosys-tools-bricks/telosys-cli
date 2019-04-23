@@ -20,13 +20,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import jline.console.ConsoleReader;
-
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.commons.FileUtil;
 import org.telosys.tools.commons.StrUtil;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.bundles.TargetsDefinitions;
+import org.telosys.tools.editor.TextEditorManager;
+
+import jline.console.ConsoleReader;
 
 /**
  * Command abstract class
@@ -268,6 +269,8 @@ public abstract class Command {
 	protected void setCurrentHome() {
 		environment.setHomeDirectory();
 		updatePrompt();
+		// Propagation to the Text Editor if any
+		TextEditorManager.setHomeDir( environment.getHomeDirectory() );
 	}
 	
 	/**
@@ -276,6 +279,8 @@ public abstract class Command {
 	protected void setCurrentHome(String directory) {
 		environment.setHomeDirectory(directory);
 		updatePrompt();
+		// Propagation to the Text Editor if any
+		TextEditorManager.setHomeDir( environment.getHomeDirectory() );
 	}
 	
 	/**
@@ -492,7 +497,9 @@ public abstract class Command {
 		// Check the editor command is defined
 		String editorCommand = environment.getEditorCommand();
 		if ( editorCommand == null ) { 
-			return "No editor command. Check the configuration.";
+			//return "No editor command. Check the configuration.";
+			TextEditorManager.editFile( new File(fileFullPath) ) ;
+			return "Embedded editor : edit '" + fileFullPath + "'";
 		}
 		
 		// Is there a file to be edited ?

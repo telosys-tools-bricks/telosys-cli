@@ -22,6 +22,11 @@
 		<!-- TELOSYS DEPENDENCIES -->
 		<dependency>
 			<groupId>org.telosys</groupId>
+			<artifactId>telosys-editor</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.telosys</groupId>
 			<artifactId>telosys-tools-all</artifactId> <!-- TELOSYS-ALL : the "UBER JAR" with everything -->
 			<version>3.1.0</version>
 		</dependency>
