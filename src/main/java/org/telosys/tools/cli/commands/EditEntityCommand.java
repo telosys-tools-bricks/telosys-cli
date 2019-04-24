@@ -16,10 +16,13 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
+import java.util.List;
 
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
+import org.telosys.tools.cli.Const;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.cli.commons.FileFinder;
 import org.telosys.tools.commons.TelosysToolsException;
 
 import jline.console.ConsoleReader;
@@ -83,11 +86,22 @@ public class EditEntityCommand extends Command {
 		if ( telosysProject != null ) {
 			try {
 				File file = telosysProject.buildDslEntityFile(getCurrentModel(), entityName);
-				if ( file.exists() ) {
+				if ( file.exists() && file.getName().equals(entityName) ) { // Check entity name for exact matching (case sensitive)
 					return launchEditor(file.getAbsolutePath() );
 				}
 				else {
-					print("No entity '" + entityName + "' in the model.");
+					// Try to find the file with abbreviation
+					File dir = file.getParentFile() ;
+					List<File> files = FileFinder.find(entityName, dir, Const.DOT_ENTITY);
+					if ( files.isEmpty() ) {
+						print("No entity '" + entityName + "' in the current model.");
+					}
+					else if ( files.size() == 1 ) {
+						return launchEditor(files.get(0).getAbsolutePath() ) ;
+					}
+					else {
+						print("Ambiguous name '" + entityName + "' (" + files.size() + " entities found).");
+					}
 				}
 			} catch (TelosysToolsException e) {
 				printError(e);

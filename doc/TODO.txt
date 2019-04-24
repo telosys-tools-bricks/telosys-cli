@@ -11,8 +11,6 @@ COMMANDS ENHANCEMENT :
 
 'ib -l' : Install Bundle Locally (download manually)
 
-'ee abbreviation' : search ENTITY name matching the abbreviation
-
 
 NEW COMMANDS ( IN THE FUTURE ):
 
