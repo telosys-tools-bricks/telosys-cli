@@ -35,5 +35,6 @@ public class Const {
 	public static final String DATABASES_DBCFG   = "databases.dbcfg" ;
 	
 	public static final String DOT_ENTITY        = ".entity" ;
+	public static final String DOT_VM            = ".vm" ;
 
 }

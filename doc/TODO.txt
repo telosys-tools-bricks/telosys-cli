@@ -1,4 +1,7 @@
 
+TODO in core ( for EditTemplateCommand )
+    TelosysProject .getBundleDirectory(bundle_name) 
+    TelosysProject .buildTemplateFile(bundle_name) 
  
 GENERAL COMMANDS :
   'cfg' : print configuration ( telosys-tools.cfg )
@@ -13,8 +16,6 @@ COMMANDS ENHANCEMENT :
 
 
 NEW COMMANDS ( IN THE FUTURE ):
-
-'et abbreviation' : Edit Template ( search TEMPLATE name matching the abbreviation )
 
 'sql' : to run sql scripts
       eg : "sql myscript.sql" ( or "sql 2 myscript.sql" for database #2 ) 

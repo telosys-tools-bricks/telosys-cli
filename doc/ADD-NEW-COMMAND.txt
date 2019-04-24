@@ -1,0 +1,10 @@
+
+To add a new command in Telosys CLI :
+
+ - Create the new command Java class ( eg XxxxCommand.java )
+ 
+ - Register the new command in CommandProvider.java
+ 
+ - Declare the command in CommandsGroups.java 
+ 
+  

@@ -15,7 +15,7 @@
  */
 package org.telosys.tools.cli;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +34,7 @@ import org.telosys.tools.cli.commands.EditConfigCommand;
 import org.telosys.tools.cli.commands.EditDatabasesCommand;
 import org.telosys.tools.cli.commands.EditEntityCommand;
 import org.telosys.tools.cli.commands.EditModelCommand;
+import org.telosys.tools.cli.commands.EditTemplateCommand;
 import org.telosys.tools.cli.commands.EnvCommand;
 import org.telosys.tools.cli.commands.ErrorCommand;
 import org.telosys.tools.cli.commands.GenerateCommand;
@@ -73,7 +74,7 @@ import jline.console.ConsoleReader;
  */
 public class CommandProvider {
 
-	private final Map<String, Command> commands = new Hashtable<>();
+	private final Map<String, Command> commands = new HashMap<>();
 	
 	private final void register(Command command) {
 		commands.put(command.getName(), command);
@@ -150,6 +151,7 @@ public class CommandProvider {
 		// Templates commands
 		register(new ListTemplatesCommand(consoleReader, environment)); // lt : list templates				
 		register(new ListResourcesCommand(consoleReader, environment)); // lr : list resources				
+		register(new EditTemplateCommand(consoleReader, environment)); // et : edit template				
 		// et (edit template --> .vm ) : ee foo --> edit foo.vm
 		// dt (delete template)
 		
