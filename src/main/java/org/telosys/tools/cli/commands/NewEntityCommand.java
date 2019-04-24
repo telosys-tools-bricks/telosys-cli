@@ -44,7 +44,7 @@ public class NewEntityCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "Creates a new entity in the current model";
+		return "Create a new entity in the current model";
 	}
 	
 	@Override

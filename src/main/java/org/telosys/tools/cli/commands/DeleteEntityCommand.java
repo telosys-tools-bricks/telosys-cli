@@ -44,7 +44,7 @@ public class DeleteEntityCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "Deletes the given entity in the current model";
+		return "Delete the given entity in the current model";
 	}
 	
 	@Override

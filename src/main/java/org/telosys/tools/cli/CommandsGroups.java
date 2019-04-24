@@ -36,7 +36,7 @@ public class CommandsGroups {
 		all.add(getBundleCommands()) ;
 		all.add(getTemplateCommands()) ;
 		all.add(getGenerationCommands()) ;
-		all.add(getLauncherCommands()) ;
+//		all.add(getLauncherCommands()) ;
 	}
 
 	public final List<CommandsGroup> getAll() {
@@ -140,10 +140,10 @@ public class CommandsGroups {
 		List<String> commands = new LinkedList<>() ;
 		
 		String name = "Template commands" ;
-		commands.add("t");
+//		commands.add("t");
 		commands.add("lt");
 		commands.add("et");
-		commands.add("dt");
+//		commands.add("dt");
 		
 		return new CommandsGroup(name, commands);
 	}

@@ -46,7 +46,7 @@ public class DeleteBundleCommand extends CommandWithBundles {
 
 	@Override
 	public String getDescription() {
-		return "Deletes the given bundle";
+		return "Delete the given bundle";
 	}
 	
 	@Override

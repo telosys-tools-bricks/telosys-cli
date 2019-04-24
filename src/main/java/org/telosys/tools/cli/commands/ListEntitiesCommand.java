@@ -48,7 +48,7 @@ public class ListEntitiesCommand extends CommandWithModel {
 
 	@Override
 	public String getDescription() {
-		return "List the entities for the current model";
+		return "List the entities defined in the current model";
 	}
 	
 	@Override

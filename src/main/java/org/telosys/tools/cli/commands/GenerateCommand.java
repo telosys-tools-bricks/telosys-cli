@@ -62,7 +62,7 @@ public class GenerateCommand extends CommandWithModel {
 
 	@Override
 	public String getDescription() {
-		return "Generates the given targets for the given entities";
+		return "Generate the given targets for the given entities";
 	}
 	
 	@Override
