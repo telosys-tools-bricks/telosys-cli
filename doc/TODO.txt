@@ -7,14 +7,22 @@ GENERAL COMMANDS :
   'lst' : LS TelosysTools
   'mkdir ' 
 
+COMMANDS ENHANCEMENT :
+
+'ib -l' : Install Bundle Locally (download manually)
+
+'ee abbreviation' : search ENTITY name matching the abbreviation
+
+
 NEW COMMANDS ( IN THE FUTURE ):
+
+'et abbreviation' : Edit Template ( search TEMPLATE name matching the abbreviation )
 
 'sql' : to run sql scripts
       eg : "sql myscript.sql" ( or "sql 2 myscript.sql" for database #2 ) 
 
 'cb' : check bundle
  
-'ib -l' : Install Bundle Locally (download manually)
  
  
 DB MODEL COMMANDS : (NB : "db" is for "Delete Bundle" )
