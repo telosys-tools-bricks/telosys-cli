@@ -494,12 +494,19 @@ public abstract class Command {
 	 */
 	protected String launchEditor(String fileFullPath) {
 		
-		// Check the editor command is defined
+		// Check if the editor command is defined
 		String editorCommand = environment.getEditorCommand();
-		if ( editorCommand == null ) { 
-			//return "No editor command. Check the configuration.";
-			TextEditorManager.editFile( new File(fileFullPath) ) ;
-			return "Embedded editor : edit '" + fileFullPath + "'";
+		if ( editorCommand == null ) {
+			// No specific editor command defined => use the default embedded editor
+			if ( StrUtil.nullOrVoid(fileFullPath) ) {
+				// No file to edit
+				TextEditorManager.openEditor();
+				return "Embedded editor (no file to edit)";
+			}
+			else {
+				TextEditorManager.editFile( new File(fileFullPath) ) ;
+				return "Embedded editor : edit file '" + fileFullPath + "'";
+			}
 		}
 		
 		// Is there a file to be edited ?
