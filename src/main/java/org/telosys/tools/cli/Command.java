@@ -270,7 +270,7 @@ public abstract class Command {
 		environment.setHomeDirectory();
 		updatePrompt();
 		// Propagation to the Text Editor if any
-		TextEditorManager.setHomeDir( environment.getHomeDirectory() );
+		TextEditorManager.setHomeDirectory(environment.getHomeDirectory() );
 	}
 	
 	/**
@@ -280,7 +280,7 @@ public abstract class Command {
 		environment.setHomeDirectory(directory);
 		updatePrompt();
 		// Propagation to the Text Editor if any
-		TextEditorManager.setHomeDir( environment.getHomeDirectory() );
+		TextEditorManager.setHomeDirectory(environment.getHomeDirectory() );
 	}
 	
 	/**
