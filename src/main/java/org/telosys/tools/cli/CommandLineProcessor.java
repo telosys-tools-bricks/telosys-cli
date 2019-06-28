@@ -55,6 +55,11 @@ public class CommandLineProcessor {
 			debug("(args length = " + args.length +")");
 			String commandName = args[0];
 			debug("(commandName = '" + commandName +"')");
+			// is it a comment ?
+			if ( commandName.startsWith("//") ) {
+				return true; // OK (nothing to do)
+			}
+			// try to find a command 
 			Command command = commandProvider.getCommand(commandName);
 			if ( command != null ) {
 				try {
