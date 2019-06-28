@@ -67,7 +67,7 @@ public class GenerateCommand extends CommandWithModel {
 	
 	@Override
 	public String getUsage() {
-		return "gen *|entity-name *|template-name [-r]";
+		return "gen *|entity-name *|template-name [-r] [-y]";
 	}
 
 	@Override
