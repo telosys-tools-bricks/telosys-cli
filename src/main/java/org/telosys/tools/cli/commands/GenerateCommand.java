@@ -75,11 +75,13 @@ public class GenerateCommand extends CommandWithModel {
 		if ( checkModelDefined() && checkBundleDefined() ) {
 			// Check arguments :
 			// 1 : gen -r
-			// 2 : gen * * 
-			// 3 : gen * * -r 
-			if ( checkArguments(args, 1, 2, 3 ) ) {
-				generate(args);
-				return null;
+			// 2 : gen * *     |  gen -r -y
+			// 3 : gen * * -r  |  gen * * -y
+			// 4 : gen * * -r  -y
+			if ( checkArguments(args, 1, 2, 3, 4 ) && checkOptions(args, "-r", "-y") ) {
+				String[] newArgs = registerAndRemoveYesOption(args);
+				// newArgs = args without '-y' if any
+				generate(newArgs);
 			}
 		}
 		return null ;
@@ -90,19 +92,20 @@ public class GenerateCommand extends CommandWithModel {
 	 * @param args all the arguments as provided by the command line (0 to N)
 	 */
 	private void generate(String[] args)  {
+		int nbArgs = args.length - 1 ;
 		GenerationTaskResult result = null ;
 		try {
-			if ( args.length == 3 ) {
+			if ( nbArgs == 2 ) {
 				// gen * * 
 				result = generate(args[1], args[2], false);
 			}
-			else if ( args.length == 4 ) {
+			else if ( nbArgs == 3 ) {
 				// gen * * -r 
 				if ( checkResourcesOption(args[3]) ) {
 					result = generate(args[1], args[2], true);
 				}
 			}
-			else if ( args.length == 2 ) {
+			else if ( nbArgs == 1 ) {
 				// gen -r 
 				if ( checkResourcesOption(args[1]) ) {
 					result = generateResources();

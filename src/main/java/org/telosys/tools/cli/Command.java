@@ -41,6 +41,8 @@ public abstract class Command {
 	private final PrintWriter out ;
 	private final Environment environment ;
 	
+	private boolean sayYes ; // Flag to say 'yes' if '-y' option is set
+	
 	/**
 	 * Constructor
 	 * @param consoleReader
@@ -181,10 +183,15 @@ public abstract class Command {
 	}
 	
 	protected boolean confirm(String message) {
-		out.print( message + " [y/n] ? " );
-		out.flush();
-		String r = readResponse() ;
-		return "Y".equalsIgnoreCase(r) ;
+		if ( sayYes ) {
+			return true ;
+		}
+		else {
+			out.print( message + " [y/n] ? " );
+			out.flush();
+			String r = readResponse() ;
+			return "Y".equalsIgnoreCase(r) ;
+		}
 	}
 
 	protected void print(String message) {
@@ -312,6 +319,72 @@ public abstract class Command {
 		return ok ;
 	}
 
+	/**
+	 * Check options validity for all args starting with '-' 
+	 * @param args all the arguments retrieved from the command line
+	 * @param options list of acceptable options
+	 * @return
+	 */
+	protected boolean checkOptions(String[] args, String ... options) {
+		for ( String a : args ) {
+			if ( a.startsWith("-") ) {
+				// This ar is an option
+				if ( ! isValidOption(a, options) ) {
+					print("Invalid option '" + a + "'");
+					return false ;
+				}
+			}
+		}
+		return true;
+	}
+	
+	private boolean isValidOption(String arg, String ... options) {
+		if ( options.length == 0 ) {
+			return true ;
+		}
+		for ( String o : options ) {
+			if ( arg.equals(o) ) {
+				return true ;
+			}
+		}
+		return false ;
+	}
+	
+	protected int countYesOption(String[] args) {
+		int n = 0 ;
+		for ( String a : args ) {
+			if ( a.equals("-y") ) {
+				n++ ;
+			}
+		}
+		return n ;
+	}
+	
+	protected void sayYes(boolean value) {
+		sayYes = value ;
+	}
+	
+	protected String[] registerAndRemoveYesOption(String[] args) {
+		sayYes(false); // Reset "yes" option 
+		int n = countYesOption(args) ;
+		if ( n > 0 ) {
+			// At least 1 "-y" option
+			sayYes(true); // Set "yes" option 
+			String[] newArgs = new String[args.length-n];
+			int i = 0 ;
+			for ( String a : args ) {
+				if ( ! a.equals("-y") ) {
+					newArgs[i++] = a ;
+				}
+			}
+			return newArgs;
+		}
+		else {
+			// No "-y" option
+			return args ; // no change
+		}
+	}
+	
 	//-------------------------------------------------------------------------
 	// Model
 	//-------------------------------------------------------------------------
