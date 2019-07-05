@@ -16,14 +16,15 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
-
-import jline.console.ConsoleReader;
 
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.TelosysToolsException;
+
+import jline.console.ConsoleReader;
 
 public class ListModelsCommand extends Command {
 	
@@ -58,24 +59,32 @@ public class ListModelsCommand extends Command {
 	@Override
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
-			return listModels();
+			listModels();
 		}
 		return null ;
 	}
 
-	private String listModels() {
+	private void listModels() {
 		TelosysProject telosysProject = getTelosysProject();
 		try {
-			List<File> files = telosysProject.getModels();
-			StringBuilder sb = new StringBuilder();
-			for ( File f : files ) {
-				appendLine(sb, " . " + f.getName() );
+			List<File> files = telosysProject.getModels();			
+			if ( files.isEmpty() ) {
+				print("No model found.") ;
 			}
-			return sb.toString();
+			else {
+				// Convert files to file names (strings)
+				LinkedList<String> names = new LinkedList<>();
+				for ( File f : files ) {
+					names.add(f.getName());
+				}
+				// Print file names 
+				print( names.size() + " model(s) :") ;
+				printList(names) ;
+			}
+			
 		} catch (TelosysToolsException e) {
 			printError(e);
 		}
-		return null ;
 	}
 
 }

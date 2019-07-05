@@ -75,12 +75,26 @@ public class BundleCommand extends Command {
 				return bundleName + " : " + templatesCount + " template(s), " + resources ;
 			}
 			else {
-				return "Undefined (no current bundle)";
+				return "Undefined (no bundle selected)";
 			}
 		}
 		return null ;
 	}
 
+	private String findExactMatching(String name, List<String> names ) {
+		for ( String s : names ) {
+			if ( s.equals(name) ) {
+				return s;
+			}
+		}
+		return null ;
+	}
+	
+	private String selectBundle(String bundleName ) {
+		setCurrentBundle(bundleName);
+		return "Current bundle is now '" + getCurrentBundle() + "'";
+	}
+	
 	private String setBundle(String[] args) {
 		TelosysProject telosysProject = getTelosysProject();
 		try {
@@ -97,11 +111,21 @@ public class BundleCommand extends Command {
 				return "No bundle found!" ;
 			}
 			else if ( filteredBundles.size() == 1 ) {
-				setCurrentBundle(filteredBundles.get(0));
-				return "Current bundle is now '" + getCurrentBundle() + "'";
+				// Only 1 bundle matching arg
+//				setCurrentBundle(filteredBundles.get(0));
+//				return "Current bundle is now '" + getCurrentBundle() + "'";
+				return selectBundle(filteredBundles.get(0));
 			}
 			else {
-				return filteredBundles.size() + " bundles found!" ;
+				if ( args.length == 1 ) {
+					// Only 1 arg matching exactly one of the filtered bundles  
+					// e.g. : command 'b foo' with 3 filtered names : 'foo', 'foo1', 'foo2' => return 'foo'
+					String name = findExactMatching(args[0], filteredBundles ) ;
+					if ( name != null ) {
+						return selectBundle(name);
+					}
+				}
+				return "Ambiguous : " + filteredBundles.size() + " bundles found" ;
 			}
 			
 		} catch (TelosysToolsException e) {

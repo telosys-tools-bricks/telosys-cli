@@ -1,6 +1,6 @@
 <project default="dist">
 	
-	<property name="version"   value="3.1.0-001" />
+	<property name="version"   value="3.1.0-002" />
 	
 	<property name="dest_dir"  value="./dist" />
 	<property name="zip_file"  value="${dest_dir}/telosys-cli-${version}.zip" />

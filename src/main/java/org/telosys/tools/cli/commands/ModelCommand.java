@@ -67,14 +67,15 @@ public class ModelCommand extends CommandWithModel {
 			}
 		}
 		else {
-			return undefinedIfNull(getCurrentModel());
+			String modelName = getCurrentModel() ;
+			return modelName != null ? modelName : "Undefined (no model selected)" ;
 		}
 		return null ;
 	}
 	
 	private String tryToSetCurrentModel(String modelNamePattern) {
 		File modelFile = findModelFile(modelNamePattern) ;
-		// if found => launch the editor
+		// if found 
 		if ( modelFile != null ) {
 			setCurrentModel(modelFile.getName());
 			return "Current model is now '" + getCurrentModel() + "'";
