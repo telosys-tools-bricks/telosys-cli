@@ -17,8 +17,6 @@ package org.telosys.tools.cli;
 
 import java.io.PrintWriter;
 
-import jline.console.ConsoleReader;
-
 /**
  * CLI command line processor 
  * 
@@ -30,13 +28,24 @@ public class CommandLineProcessor {
 	private final PrintWriter     out ;
 	private final CommandProvider commandProvider ;
 	
+//	/**
+//	 * Constructor
+//	 * @param consoleReader
+//	 */
+//	public CommandLineProcessor(ConsoleReader consoleReader, CommandProvider commandProvider) {
+//		super();
+//		this.out = new PrintWriter(consoleReader.getOutput());
+//		this.commandProvider = commandProvider;
+//	}
+
 	/**
 	 * Constructor
-	 * @param consoleReader
+	 * @param output  
+	 * @param commandProvider 
 	 */
-	public CommandLineProcessor(ConsoleReader consoleReader, CommandProvider commandProvider) {
+	public CommandLineProcessor(PrintWriter output, CommandProvider commandProvider) {
 		super();
-		this.out = new PrintWriter(consoleReader.getOutput());
+		this.out = output ;
 		this.commandProvider = commandProvider;
 	}
 

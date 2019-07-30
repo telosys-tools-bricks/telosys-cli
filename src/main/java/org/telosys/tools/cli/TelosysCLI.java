@@ -15,9 +15,13 @@
  */
 package org.telosys.tools.cli;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.telosys.tools.cli.args.Argument;
+import org.telosys.tools.cli.args.Arguments;
+import org.telosys.tools.cli.args.ArgumentsParser;
 import org.telosys.tools.cli.observer.DbMetadataObserver;
 import org.telosys.tools.cli.observer.DbModelObserver;
 import org.telosys.tools.db.observer.DatabaseObserverProvider;
@@ -46,24 +50,39 @@ public class TelosysCLI {
 		this.consoleReader = new ConsoleReader() ;
 		this.out = new PrintWriter(consoleReader.getOutput());
 		this.commandProvider = new CommandProvider(consoleReader);
-		this.commandLineProcessor = new CommandLineProcessor( consoleReader, commandProvider ) ;
+		
+		this.commandLineProcessor = new CommandLineProcessor( out, commandProvider ) ;
 	}
 	
 	/**
-	 * Strats Telosys CLI
+	 * Start Telosys CLI
 	 * @param args
 	 */
 	public void start(String[] args) {
 		
-		// Initialize the CLI
+		// Initialize Telosys CLI
 		init();		
 		
 		// Process launch arguments if any
-		LaunchArgumentsProcessor argsProcessor = new LaunchArgumentsProcessor(commandProvider, out);
-		argsProcessor.processLaunchArguments(args);
+		ArgumentsParser argumentsParser = new ArgumentsParser(out);
+		Arguments arguments = argumentsParser.parseArguments(args);
 		
-		// Launch the line processor...
-		launch();
+		// "-h home-directory"
+		Argument hArg = arguments.getArgument(Arguments.H_ARG);
+		if ( hArg != null ) {
+			setHomeDirectoryFromArg(hArg);
+		}
+		
+		// "-i input-file"
+		Argument iArg = arguments.getArgument(Arguments.I_ARG);
+		if ( iArg != null ) {
+			File inputFile = (File) iArg.getValue();
+			processCommandsFromFile(inputFile);
+		}
+		else {
+			// Launch the line processor...
+			processCommandsFromConsole();
+		}
 	}
 	
 	private void print(String message) {
@@ -89,9 +108,9 @@ public class TelosysCLI {
 	}
 
 	/**
-	 * Launches the command line processor
+	 * Execute commands from the console 
 	 */
-	private void launch() {
+	private void processCommandsFromConsole() {
 		try {
 			while (true) {
 				String line = consoleReader.readLine() ;
@@ -102,4 +121,33 @@ public class TelosysCLI {
 		}
 	}
 
+	/**
+	 * Execute commands from the given file 
+	 * @param fileName
+	 */
+	private void processCommandsFromFile(File file) {
+		
+		CommandsFileProcessor commandsFileProcessor = new CommandsFileProcessor(commandLineProcessor);
+		try {
+			commandsFileProcessor.processFile(file);
+		} catch ( Exception e) {
+			print("ERROR : Unexpected exception " + e.getMessage() );
+		}
+	}
+
+	private void setHomeDirectoryFromArg(Argument hArgument) {
+		File homeFile = (File) hArgument.getValue();
+		//--- Set current working directory : command "cd path" 
+		executeCommand(commandProvider.getCommand("cd"), homeFile);
+		//--- Set 'HOME' : command "h path"
+		String r = executeCommand(commandProvider.getCommand("h"), homeFile);
+		print(r) ; // Prints the "h" command result : Home set ('xxx')
+	}
+	
+	private String executeCommand(Command command, File homeFile) {
+		String[] args = new String[2] ;
+		args[0] = command.getName();
+		args[1] = homeFile.getAbsolutePath();
+		return command.execute( args );
+	}
 }
