@@ -6,6 +6,7 @@ TODO in core ( for EditTemplateCommand )
 
 COMMANDS ENHANCEMENT :
   "cm" command : add warning if no ID in one or more entity 
+                 Message : "warning N entity(ies) without ID  
 
   'ib -l' : Install Bundle Locally (download manually)
 

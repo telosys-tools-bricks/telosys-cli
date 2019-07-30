@@ -36,10 +36,12 @@ import jline.console.ConsoleReader;
  */
 public class TelosysCLI {
 
-	private final PrintWriter out ;
+//	private final PrintWriter out ;
+	private final PrintWriter stdout = new PrintWriter(System.out, true);
+	
 	private final ConsoleReader consoleReader ;
 	private final CommandProvider commandProvider ;
-	private final CommandLineProcessor commandLineProcessor;
+//	private final CommandLineProcessor commandLineProcessor;
 	
 	/**
 	 * Constructor
@@ -48,10 +50,13 @@ public class TelosysCLI {
 	public TelosysCLI() throws IOException {
 		super();
 		this.consoleReader = new ConsoleReader() ;
-		this.out = new PrintWriter(consoleReader.getOutput());
+//		this.out = new PrintWriter(consoleReader.getOutput());
 		this.commandProvider = new CommandProvider(consoleReader);
 		
-		this.commandLineProcessor = new CommandLineProcessor( out, commandProvider ) ;
+//		this.commandLineProcessor = new CommandLineProcessor( out, commandProvider ) ;
+		// Set prompt initial status
+		consoleReader.setPrompt(Color.colorize(Const.INITIAL_PROMPT, Const.PROMPT_COLOR) );
+
 	}
 	
 	/**
@@ -60,11 +65,14 @@ public class TelosysCLI {
 	 */
 	public void start(String[] args) {
 		
+//		printStdOut("Starting Telosys-CLI...");
+		
 		// Initialize Telosys CLI
 		init();		
 		
 		// Process launch arguments if any
-		ArgumentsParser argumentsParser = new ArgumentsParser(out);
+		ArgumentsParser argumentsParser = new ArgumentsParser(stdout);
+//		ArgumentsParser argumentsParser = new ArgumentsParser(new PrintWriter(System.out, true));
 		Arguments arguments = argumentsParser.parseArguments(args);
 		
 		// "-h home-directory"
@@ -85,22 +93,32 @@ public class TelosysCLI {
 		}
 	}
 	
-	private void print(String message) {
-		out.println(message);
-		out.flush();
+	private void printStdOut(String message) {
+		stdout.println(message);
+		stdout.flush();
+	}
+
+	private void printBanner(PrintWriter printWriter, String color) {
+		String banner = new Banner().bannerSlant();
+//		print(Color.colorize(banner, Color.CYAN_BRIGHT));
+		if ( color != null ) {
+			printWriter.println(Color.colorize(banner, color));
+		}
+		else {
+			printWriter.println(banner);
+		}
+		printWriter.flush();
 	}
 
 	/**
 	 * Initializes the CLI 
 	 */
 	private void init() {
-		// set the initial prompt
-		consoleReader.setPrompt(Color.colorize(Const.INITIAL_PROMPT, Const.PROMPT_COLOR) );
-		// print the banner
-		String banner = new Banner().bannerSlant();
-		print(Color.colorize(banner, Color.CYAN_BRIGHT));
-		// print few messages
-		print("Enter ? for help");
+//		// set the initial prompt
+//		consoleReader.setPrompt(Color.colorize(Const.INITIAL_PROMPT, Const.PROMPT_COLOR) );
+//		// print the banner
+//		String banner = new Banner().bannerSlant();
+//		print(Color.colorize(banner, Color.CYAN_BRIGHT));
 		
 		DatabaseObserverProvider.setModelObserverClass(DbModelObserver.class);
 		DatabaseObserverProvider.setMetadataObserverClass(DbMetadataObserver.class);
@@ -111,13 +129,23 @@ public class TelosysCLI {
 	 * Execute commands from the console 
 	 */
 	private void processCommandsFromConsole() {
+		// Use Console output instead of stdout
+		PrintWriter consoleOutput = new PrintWriter(consoleReader.getOutput());
+		// Print banner with color
+		printBanner(consoleOutput, Color.CYAN_BRIGHT);
+		// print few messages
+		//consoleOutput.println("Enter ? for help"); consoleOutput.flush();
+		printStdOut("Enter ? for help");
+
+		// start command processing
+		CommandLineProcessor commandLineProcessor = new CommandLineProcessor( consoleOutput, commandProvider ) ;
 		try {
 			while (true) {
 				String line = consoleReader.readLine() ;
 				commandLineProcessor.processLine(line);
 			}
 		} catch (Exception e) {
-			print("ERROR : Unexpected exception " + e.getMessage() );
+			printStdOut("ERROR : Unexpected exception " + e.getMessage() );
 		}
 	}
 
@@ -127,11 +155,14 @@ public class TelosysCLI {
 	 */
 	private void processCommandsFromFile(File file) {
 		
+		printBanner(stdout, null);
+		
+		CommandLineProcessor commandLineProcessor = new CommandLineProcessor( stdout, commandProvider ) ;
 		CommandsFileProcessor commandsFileProcessor = new CommandsFileProcessor(commandLineProcessor);
 		try {
 			commandsFileProcessor.processFile(file);
 		} catch ( Exception e) {
-			print("ERROR : Unexpected exception " + e.getMessage() );
+			printStdOut("ERROR : Unexpected exception " + e.getMessage() );
 		}
 	}
 
@@ -141,7 +172,7 @@ public class TelosysCLI {
 		executeCommand(commandProvider.getCommand("cd"), homeFile);
 		//--- Set 'HOME' : command "h path"
 		String r = executeCommand(commandProvider.getCommand("h"), homeFile);
-		print(r) ; // Prints the "h" command result : Home set ('xxx')
+		printStdOut(r) ; // Prints the "h" command result : Home set ('xxx')
 	}
 	
 	private String executeCommand(Command command, File homeFile) {

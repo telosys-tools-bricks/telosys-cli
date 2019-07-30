@@ -1,0 +1,17 @@
+// Telosys commands file example
+// Usage : tt -i commands.txt
+
+
+// Print home
+h
+
+// Print current directory
+pwd
+
+ls
+// Print versions info
+ver
+// List Models
+lm
+// quit
+q

@@ -54,13 +54,18 @@ public class CommandsFileProcessor {
 //		if ( ! file.isFile() ) {
 //			throw new RuntimeException( fileName + " is not a file");
 //		}
-		print("commands execution from file : " + file.getAbsolutePath() ) ;
+		print("---") ;
+		print("Executing commands from file : ") ;
+		print(file.getAbsolutePath() ) ;
+		print("---") ;
+		print("") ;
 		try ( FileReader fileReader = new FileReader(file) ) {
 			try ( BufferedReader br = new BufferedReader(fileReader) ) {
 				String line = "";
 				while ( ( line = br.readLine() ) != null) {
 				    print("command> " + line);
 				    commandLineProcessor.processLine(line);
+				    print("");
 				}
 			}
 		}
