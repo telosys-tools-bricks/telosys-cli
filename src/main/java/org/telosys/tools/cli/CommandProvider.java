@@ -40,7 +40,7 @@ import org.telosys.tools.cli.commands.ErrorCommand;
 import org.telosys.tools.cli.commands.GenerateCommand;
 import org.telosys.tools.cli.commands.GitHubCommand;
 import org.telosys.tools.cli.commands.GitHubUserCommand;
-import org.telosys.tools.cli.commands.GuideCommand;
+import org.telosys.tools.cli.commands.TestCommand;
 import org.telosys.tools.cli.commands.HelpCommand;
 import org.telosys.tools.cli.commands.HomeCommand;
 import org.telosys.tools.cli.commands.InitCommand;
@@ -88,7 +88,7 @@ public class CommandProvider {
 		register(new CdCommand(consoleReader, environment)); // cd
 		register(new EditCommand(consoleReader, environment)); // e
 		register(new EnvCommand(consoleReader, environment)); // env
-		register(new GuideCommand(consoleReader, environment)); // guide
+		register(new TestCommand(consoleReader, environment)); // Special command (just for tests)
 		register(new HelpCommand(consoleReader, environment)); // ? - help
 		register(new LsCommand(consoleReader, environment)); // ls
 		register(new PwdCommand(consoleReader, environment)); // pwd

@@ -36,12 +36,10 @@ import jline.console.ConsoleReader;
  */
 public class TelosysCLI {
 
-//	private final PrintWriter out ;
 	private final PrintWriter stdout = new PrintWriter(System.out, true);
 	
 	private final ConsoleReader consoleReader ;
 	private final CommandProvider commandProvider ;
-//	private final CommandLineProcessor commandLineProcessor;
 	
 	/**
 	 * Constructor
@@ -49,14 +47,15 @@ public class TelosysCLI {
 	 */
 	public TelosysCLI() throws IOException {
 		super();
-		this.consoleReader = new ConsoleReader() ;
-//		this.out = new PrintWriter(consoleReader.getOutput());
-		this.commandProvider = new CommandProvider(consoleReader);
 		
-//		this.commandLineProcessor = new CommandLineProcessor( out, commandProvider ) ;
+		// Init the console reader with its prompt
+		this.consoleReader = new ConsoleReader() ;
 		// Set prompt initial status
 		consoleReader.setPrompt(Color.colorize(Const.INITIAL_PROMPT, Const.PROMPT_COLOR) );
 
+		// Init the commands provider
+		this.commandProvider = new CommandProvider(consoleReader);
+		
 	}
 	
 	/**
@@ -72,7 +71,6 @@ public class TelosysCLI {
 		
 		// Process launch arguments if any
 		ArgumentsParser argumentsParser = new ArgumentsParser(stdout);
-//		ArgumentsParser argumentsParser = new ArgumentsParser(new PrintWriter(System.out, true));
 		Arguments arguments = argumentsParser.parseArguments(args);
 		
 		// "-h home-directory"
@@ -85,10 +83,11 @@ public class TelosysCLI {
 		Argument iArg = arguments.getArgument(Arguments.I_ARG);
 		if ( iArg != null ) {
 			File inputFile = (File) iArg.getValue();
+			// Launch command processor from FILE 
 			processCommandsFromFile(inputFile);
 		}
 		else {
-			// Launch the line processor...
+			// Launch command processor from CONSOLE (user input)
 			processCommandsFromConsole();
 		}
 	}
@@ -100,7 +99,6 @@ public class TelosysCLI {
 
 	private void printBanner(PrintWriter printWriter, String color) {
 		String banner = new Banner().bannerSlant();
-//		print(Color.colorize(banner, Color.CYAN_BRIGHT));
 		if ( color != null ) {
 			printWriter.println(Color.colorize(banner, color));
 		}
@@ -114,12 +112,6 @@ public class TelosysCLI {
 	 * Initializes the CLI 
 	 */
 	private void init() {
-//		// set the initial prompt
-//		consoleReader.setPrompt(Color.colorize(Const.INITIAL_PROMPT, Const.PROMPT_COLOR) );
-//		// print the banner
-//		String banner = new Banner().bannerSlant();
-//		print(Color.colorize(banner, Color.CYAN_BRIGHT));
-		
 		DatabaseObserverProvider.setModelObserverClass(DbModelObserver.class);
 		DatabaseObserverProvider.setMetadataObserverClass(DbMetadataObserver.class);
 		DbMetadataObserver.setActive(false);
@@ -134,7 +126,6 @@ public class TelosysCLI {
 		// Print banner with color
 		printBanner(consoleOutput, Color.CYAN_BRIGHT);
 		// print few messages
-		//consoleOutput.println("Enter ? for help"); consoleOutput.flush();
 		printStdOut("Enter ? for help");
 
 		// start command processing
@@ -166,6 +157,10 @@ public class TelosysCLI {
 		}
 	}
 
+	/**
+	 * Set the current directory and set this directory as HOME
+	 * @param hArgument
+	 */
 	private void setHomeDirectoryFromArg(Argument hArgument) {
 		File homeFile = (File) hArgument.getValue();
 		//--- Set current working directory : command "cd path" 

@@ -21,29 +21,29 @@ import org.telosys.tools.cli.Environment;
 
 import jline.console.ConsoleReader;
 
-public class GuideCommand extends Command {
+public class TestCommand extends Command {
 	
 	/**
 	 * Constructor
 	 * @param out
 	 */
-	public GuideCommand(ConsoleReader consoleReader, Environment environment) {
+	public TestCommand(ConsoleReader consoleReader, Environment environment) {
 		super(consoleReader, environment);
 	}
 	
 	@Override
 	public String getName() {
-		return "guide";
+		return "test";
 	}
 
 	@Override
 	public String getShortDescription() {
-		return "Guide" ;
+		return "Test" ;
 	}
 	
 	@Override
 	public String getDescription() {
-		return "Guide ";
+		return "Special command just for tests";
 	}
 	
 	@Override
