@@ -50,30 +50,42 @@ public class UpdateDbModelCommand extends CommandWithModel {
 	
 	@Override
 	public String getUsage() {
-		return "udbm [database-id]";
+		return "udbm [database-id] [-y]";
 	}
-	
+
 	@Override
 	public String execute(String[] args) {
 		
 		if ( checkHomeDirectoryDefined() ) {
-			if ( args.length > 1 ) {
-				// udbm database-id
-				String argId = args[1];
-				Integer id = StrUtil.getIntegerObject(argId);
-				if ( id != null ) {
-					updateDatabaseModel(id);
-				}
-				else {
-					print("Invalid database id '" + argId + "'");					
-				}
+			// Check arguments :
+			// 0 : udbm 
+			// 1 : udbm -y | udbm DbId
+			// 2 : udbm DbId -y
+			if ( checkArguments(args, 0, 1, 2 ) && checkOptions(args, "-y") ) {
+				String[] newArgs = registerAndRemoveYesOption(args);
+				// newArgs = args without '-y' if any
+				execute2(newArgs);				
 			}
-			else {
-				// udbm (no db id)
-				updateDatabaseModel(null);
-			}			
 		}
 		return null;
+	}
+
+	public void execute2(String[] args) {
+		if ( args.length > 1 ) {
+			// udbm database-id
+			String argId = args[1];
+			Integer id = StrUtil.getIntegerObject(argId);
+			if ( id != null ) {
+				updateDatabaseModel(id);
+			}
+			else {
+				print("Invalid database id '" + argId + "'");					
+			}
+		}
+		else {
+			// udbm (no db id)
+			updateDatabaseModel(null);
+		}			
 	}
 		
 	private void updateDatabaseModel(Integer id) {
