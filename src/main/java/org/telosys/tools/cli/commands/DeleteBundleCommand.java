@@ -83,7 +83,7 @@ public class DeleteBundleCommand extends CommandWithBundles {
 				String currentBundle = getCurrentBundle();
 				print("You are about to delete the current bundle :") ;
 				print(" . " + currentBundle) ;
-				if ( confirm("Are you sure you want to delete this bundle ?") ) {
+				if ( confirm("Do you really want to delete this bundle ?") ) {
 					deleteBundle(currentBundle);
 				}
 			}
@@ -100,7 +100,7 @@ public class DeleteBundleCommand extends CommandWithBundles {
 			else {
 				print("You are about to delete the following bundles :") ;
 				printList(bundleNames) ;
-				if ( confirm("Are you sure you want to delete these bundles ?") ) {
+				if ( confirm("Do you really want to delete these bundles ?") ) {
 					for ( String bundleName : bundleNames ) {
 						deleteBundle(bundleName);
 					}
