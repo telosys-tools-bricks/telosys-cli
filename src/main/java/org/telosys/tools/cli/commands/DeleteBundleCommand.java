@@ -46,29 +46,53 @@ public class DeleteBundleCommand extends CommandWithBundles {
 
 	@Override
 	public String getDescription() {
-		return "Delete the given bundle";
+		return "Delete the current/given bundle";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "db bundle-part1 [bundle-part2 bundle-part3 ...]";
+		return "db [bundle-part-name] [-y]";
 	}
 	
 	@Override
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
-			if ( args.length > 1 ) {
-				deleteBundles(args);
-			}
-			else {
-				return invalidUsage("argument expected");
+			// Check arguments :
+			// 0 : db 
+			// 1 : db -y | db bundle-name
+			// 2 : db bundle-name -y
+			if ( checkArguments(args, 0, 1, 2 ) && checkOptions(args, "-y") ) {
+				String[] newArgs = registerAndRemoveYesOption(args);
+				// newArgs = args without '-y' if any
+				execute2(newArgs);				
 			}
 		}
 		return null ;
 	}
 
-	private void deleteBundles(String[] commandArgs) {
+	public void execute2(String[] args) {
+		if ( args.length > 1 ) {
+			getAndDeleteBundles(args);
+		}
+		else {
+			if ( checkBundleDefined() ) {
+				// Current bundle is defined => delete the current bundle
+//				deleteBundle(getCurrentBundle());
+				//String[] bundles = { getCurrentBundle() };
+				//deleteBundles(bundles);
+				String currentBundle = getCurrentBundle();
+				print("You are about to delete the current bundle :") ;
+				print(" . " + currentBundle) ;
+				if ( confirm("Are you sure you want to delete this bundle ?") ) {
+					deleteBundle(currentBundle);
+				}
+			}
+		}
+	}
+
+	private void getAndDeleteBundles(String[] commandArgs) {
 		try {
+			// Get bundles matching the given name parts
 			List<String> bundleNames = getInstalledBundles(commandArgs);
 			if ( bundleNames.isEmpty() ) {
 				print("No bundle found.") ;
@@ -93,6 +117,10 @@ public class DeleteBundleCommand extends CommandWithBundles {
 		try {
 			if ( telosysProject.deleteBundle(bundleName) ) {
 				print("Bundle '"+ bundleName + "' deleted.");
+				if ( bundleName.equals(getCurrentBundle()) ) {
+					// If current bundle deleted => unset current bundle
+					unsetCurrentBundle();
+				}
 			}
 			else {
 				print("Bundle '"+ bundleName + "' not found.");

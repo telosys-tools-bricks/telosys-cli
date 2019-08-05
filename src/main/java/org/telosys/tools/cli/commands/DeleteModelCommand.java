@@ -51,25 +51,37 @@ public class DeleteModelCommand extends CommandWithModel {
 	
 	@Override
 	public String getUsage() {
-		return "dm [model-name]";
+		return "dm [model-name] [-y]";
 	}
 
 	@Override
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
-			if ( args.length > 1 ) {			
-				return deleteModel(args[1]);
-			}
-			else {
-				if ( checkModelDefined() ) {
-					return deleteModel(getCurrentModel());
-				}
+			// Check arguments :
+			// 0 : dm 
+			// 1 : dm -y | dm model-name
+			// 2 : dm model-name -y
+			if ( checkArguments(args, 0, 1, 2 ) && checkOptions(args, "-y") ) {
+				String[] newArgs = registerAndRemoveYesOption(args);
+				// newArgs = args without '-y' if any
+				execute2(newArgs);				
 			}
 		}
 		return null ;
 	}
 
-	private String deleteModel(String modelName) {
+	private void execute2(String[] args) {
+		if ( args.length > 1 ) {
+			deleteModel(args[1]);
+		}
+		else {
+			if ( checkModelDefined() ) {
+				deleteModel(getCurrentModel());
+			}
+		}
+	}
+
+	private void deleteModel(String modelName) {
 		printDebug("deleteModel('" + modelName + "')");
 		File modelFile = getModelFile(modelName);
 		if ( modelFile != null ) {
@@ -82,7 +94,6 @@ public class DeleteModelCommand extends CommandWithModel {
 				}
 			}
 		}
-		return null ;
 	}
 	
 	private void deleteModel(File modelFile ) {

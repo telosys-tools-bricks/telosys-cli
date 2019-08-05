@@ -397,7 +397,8 @@ public abstract class Command {
 			return true ;
 		}
 		else {
-			print( "This command requires a model." ) ;
+//			print( "This command requires a model." ) ;
+			print( "No current model (can be set with 'm' command)" ) ;
 			return false ;
 		}
 	}	
@@ -412,7 +413,8 @@ public abstract class Command {
 				return true ;
 			}
 			else {
-				print("This command requires a DSL model.");
+//				print("This command requires a DSL model.");
+				print("No current DSL model (can be set with 'm' command)");
 			}
 		}
 		return false ;
@@ -482,7 +484,8 @@ public abstract class Command {
 			return true ;
 		}
 		else {
-			print( "Bundle-name must be set before using this command!" ) ;
+			// print( "Bundle-name must be set before using this command!" ) ;
+			print( "No current bundle (can be set with 'b' command)" ) ;
 			return false ;
 		}
 	}	
@@ -496,6 +499,14 @@ public abstract class Command {
 		updatePrompt();
 	}
 	
+	/**
+	 * Unset the current bundle name in the current environment
+	 */
+	protected void unsetCurrentBundle() {
+		environment.setCurrentBundle(null);
+		updatePrompt();
+	}
+
 	/**
 	 * Returns the current bundle in the environment
 	 */
@@ -525,7 +536,7 @@ public abstract class Command {
 			return true ;
 		}
 		else {
-			print( "GitHub store must be set before using this command!" ) ;
+			print( "GitHub store undefined (can be set with 'gh' command)" ) ;
 			return false ;
 		}
 	}	
