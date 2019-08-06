@@ -1,10 +1,27 @@
 
-To change the Telosys-CLI Version the following files must be updated :
+1) Change version in the following files :
 
- - Version.java
+   - Version.java
  
- - pom.xml
+   - pom.xml
  
- - build_dist.xml
- 
-Then build Telosys CLI 
+   - build_dist.xml
+
+
+2) Build Telosys CLI 
+
+
+3) Test deployment and usage
+
+
+4) Create a tag 
+
+     On project : Team / Advanced / Tag...
+
+     Tag name    : X.X.X-YYY    ( same version as in 'pom.xml' )
+
+     Tag message : Version X.X.X-YYY
+
+     [ Create Tag and Start Push ]
+
+     
