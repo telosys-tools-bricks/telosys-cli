@@ -1,0 +1,49 @@
+<project default="save">
+	
+	<tstamp>
+	    <format property="DSTAMP" pattern="yyyy-MM-dd" />
+	</tstamp>
+
+	<property name="dest_dir"  value="../(backup)/${DSTAMP}" />
+	
+	<property name="zip_file"  value="${dest_dir}/TELOSYS-WORKSPACE-${DSTAMP}-${TSTAMP}.zip" />
+
+	<!-- ============================================================================== -->
+	<target name="save" >
+		<echo message="Project name : ${project.name}  " />
+		<echo message="DSTAMP : ${DSTAMP}  TSTAMP : ${TSTAMP}  " />	
+		
+		<echo message="Create dir : ${dest_dir} " />
+		<mkdir dir="${dest_dir}"/>
+		
+		<echo message="Zip file : ${zip_file}  " />
+		<zip destfile="${zip_file}"  >	
+			<zipfileset dir="../telosys-cli" 
+				        prefix="telosys-cli"      excludes="**/*.class **/*.jar **/*.zip"  />		
+			<zipfileset dir="../telosys-editor"
+				        prefix="telosys-editor"   excludes="**/*.class **/*.jar **/*.zip"  />		
+
+			<zipfileset dir="../telosys-tools-all"        
+				        prefix="telosys-tools-all"         excludes="**/*.class **/*.jar **/*.zip"  />		
+			<zipfileset dir="../telosys-tools-api"  
+				        prefix="telosys-tools-api"         excludes="**/*.class **/*.jar **/*.zip"  />		
+			<zipfileset dir="../telosys-tools-commons"   
+				        prefix="telosys-tools-commons"     excludes="**/*.class **/*.jar **/*.zip"  />		
+			<zipfileset dir="../telosys-tools-database"   
+				        prefix="telosys-tools-database"    excludes="**/*.class **/*.jar **/*.zip"  />		
+			<zipfileset dir="../telosys-tools-dsl-parser" 
+				        prefix="telosys-tools-dsl-parser"  excludes="**/*.class **/*.jar **/*.zip"  />		
+			<zipfileset dir="../telosys-tools-generator"  
+				        prefix="telosys-tools-generator"   excludes="**/*.class **/*.jar **/*.zip"  />		
+			<zipfileset dir="../telosys-tools-generator-engine-velocity17"  
+				        prefix="telosys-tools-generator-engine-velocity17"   excludes="**/*.class **/*.jar **/*.zip"  />		
+			<zipfileset dir="../telosys-tools-generic-model" 
+				        prefix="telosys-tools-generic-model"     excludes="**/*.class **/*.jar **/*.zip"  />		
+			<zipfileset dir="../telosys-tools-parent"          
+				        prefix="telosys-tools-parent"            excludes="**/*.class **/*.jar **/*.zip"  />		
+			<zipfileset dir="../telosys-tools-repository"  
+				        prefix="telosys-tools-repository"        excludes="**/*.class **/*.jar **/*.zip"  />		
+		</zip>
+	</target>
+
+</project>
