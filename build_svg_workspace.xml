@@ -6,7 +6,7 @@
 
 	<property name="dest_dir"  value="../(backup)/${DSTAMP}" />
 	
-	<property name="zip_file"  value="${dest_dir}/TELOSYS-WORKSPACE-${DSTAMP}-${TSTAMP}.zip" />
+	<property name="zip_file"  value="${dest_dir}/TELOSYS-BRICKS-WORKSPACE-${DSTAMP}-${TSTAMP}.zip" />
 
 	<!-- ============================================================================== -->
 	<target name="save" >
