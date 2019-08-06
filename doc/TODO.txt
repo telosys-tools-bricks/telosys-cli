@@ -1,24 +1,35 @@
 
-TODO in core ( for EditTemplateCommand )
+NEW COMMANDS (useful for command files) :
+
+  'cfg' : print configuration ( telosys-tools.cfg )
+  'cfg SRC=xxx' : set a variable value 
+
+  'mkdir xxxx' : create directory
+
+  'im' : Install model from GitHub (like 'ib' for bundles) 
+         ( + 'im -l' : install model locally )
+  
+
+Telosys CORE improvement ( for EditTemplateCommand )
     TelosysProject .getBundleDirectory(bundle_name) 
     TelosysProject .buildTemplateFile(bundle_name) 
 
 
 COMMANDS ENHANCEMENT :
-  "cm" command : add warning if no ID in one or more entity 
+
+  'ib -l' : Install Bundle Locally (if download done manually)
+
+  'cm' : add warning if no ID in one or more entity 
                  Message : "warning N entity(ies) without ID  
 
-  'ib -l' : Install Bundle Locally (download manually)
 
 
 NEW COMMANDS ( IN THE FUTURE ):
 
-  'cfg' : print configuration ( telosys-tools.cfg )
-  'var' (or 'lv' ?) : print variables
+  'var' (or 'lv' ?) : print variables ??? ( 'cfg' enough ? ) 
   
   'vf' / 'cat' : View File
   'lst' : LS TelosysTools
-  'mkdir ' 
 
   'sql' : to run sql scripts
       eg : "sql myscript.sql" ( or "sql 2 myscript.sql" for database #2 ) 
@@ -27,8 +38,7 @@ NEW COMMANDS ( IN THE FUTURE ):
  
  
  
-DB MODEL COMMANDS : (NB : "db" is for "Delete Bundle" )
-
+DB MODEL COMMANDS :
 
 (X) udbm : update db model ( ou "udbmodel" )
   (X) udbm
@@ -37,13 +47,3 @@ DB MODEL COMMANDS : (NB : "db" is for "Delete Bundle" )
 
 Check file existence in CLI ( ndbm and udbm )
 
-Confirm for "ndbm" and "udbm" 
-
-
-
-LAUNCHERS COMMANDS : 
- 'nl' : new launcher
- 'll' : list launchers
- 'el' : edit launchers
- 'launch'/'run' : launch a launcher  or  'gen < launcher-name'
-  

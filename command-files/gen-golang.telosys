@@ -1,0 +1,30 @@
+
+// HOME is supposed to be set when starting with '-h' option 
+pwd
+h
+
+// Init Telosys environment 
+init
+ls TelosysTools
+
+// Change GitHub store 
+gh telosys-tools-beta
+// Print GitHub store 
+gh 
+
+// Install all 'golang' bundles from GitHub store
+ib golang
+// List installed bundles 
+lb 
+// Choose current bundle
+b golang-web-rest
+
+// Choose current model
+m cars
+
+// Check project configuration before code generation
+// TODO : cfg SRC=src
+
+// Generate the code 
+gen * * -r -y 
+
