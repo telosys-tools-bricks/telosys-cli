@@ -1,0 +1,16 @@
+
+// Go in the folder where to work with Telosys
+cd /tmp/tmp10
+pwd
+
+// Set this folder as Telosys HOME 
+h .
+
+// Init Telosys environment 
+init
+ls TelosysTools
+
+// Install all 'python' bundles from GitHub
+ib python
+// List installed bundles 
+lb 

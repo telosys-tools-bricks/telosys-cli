@@ -1,0 +1,21 @@
+
+// Go in the folder where to work with Telosys
+cd /tmp/tmp10
+// Set this folder as Telosys HOME 
+h .
+
+// Choose the current model
+m cars
+// Print the current model
+m
+
+// Choose the current bundle
+b mvc-bottle
+// Print the current bundle
+b
+
+// Print environment
+env
+
+// Launch code generation 
+gen * * -r -y
