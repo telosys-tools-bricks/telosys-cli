@@ -23,6 +23,9 @@
 			<zipfileset dir="../telosys-editor"
 				        prefix="telosys-editor"   excludes="**/*.class **/*.jar **/*.zip"  />		
 
+			<zipfileset dir="../telosys-doc" 
+				        prefix="telosys-doc"      excludes="**/*.class **/*.jar **/*.zip"  />		
+
 			<zipfileset dir="../telosys-tools-all"        
 				        prefix="telosys-tools-all"         excludes="**/*.class **/*.jar **/*.zip"  />		
 			<zipfileset dir="../telosys-tools-api"  
