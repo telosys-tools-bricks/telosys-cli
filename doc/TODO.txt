@@ -22,7 +22,16 @@ COMMANDS ENHANCEMENT :
   'cm' : add warning if no ID in one or more entity 
                  Message : "warning N entity(ies) without ID  
 
-
+ERRORS MANAGEMENT :
+  - ib : no error message if not installed ! 
+     (for example if no 'download' folder)
+  - Replace 'TelosysToolsException' by explicit message 
+    Examples :
+    . lb if not initialized 
+    => check 'init' before commands : 
+      ecfg, lb, ib, lm , ldb, ndbm , udbm, eb, db, nm
+      Check folders : lib, download, templates + file telosys-tools.cfg 
+     ( + prompt '#(not initialized)>' ?)  
 
 NEW COMMANDS ( IN THE FUTURE ):
 
