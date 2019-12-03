@@ -4,7 +4,7 @@
 
 	<groupId>org.telosys</groupId>
 	<artifactId>telosys-cli</artifactId>
-	<version>3.1.0-002</version>
+	<version>3.1.2-001</version>
 	<packaging>jar</packaging>
 
 	<name>telosys-cli</name>
@@ -28,7 +28,7 @@
 		<dependency>
 			<groupId>org.telosys</groupId>
 			<artifactId>telosys-tools-all</artifactId> <!-- TELOSYS-ALL : the "UBER JAR" with everything -->
-			<version>3.1.0</version>
+			<version>3.1.2</version>
 		</dependency>
 		
         <!-- FOR TESTS -->

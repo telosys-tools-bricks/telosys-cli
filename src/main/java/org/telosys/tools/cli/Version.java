@@ -28,6 +28,6 @@ public class Version {
 	/**
 	 * Current version
 	 */
-	public static final String TELOSYS_TOOLS_CLI_VERSION = GeneratorVersion.GENERATOR_VERSION + " CLI-002" ;
+	public static final String TELOSYS_TOOLS_CLI_VERSION = GeneratorVersion.GENERATOR_VERSION + " CLI-001" ;
 	
 }
