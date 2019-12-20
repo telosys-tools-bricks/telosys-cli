@@ -1,6 +1,6 @@
 <project default="dist">
 	
-	<property name="version"   value="3.1.2-001" />
+	<property name="version"   value="3.1.2-002" />
 	
 	<property name="dest_dir"  value="./dist" />
 	<property name="zip_file"  value="${dest_dir}/telosys-cli-${version}.zip" />
@@ -14,8 +14,10 @@
 		<echo message="Copy and prepare files" />
 		
 		<!-- Prepare BAT files -->
+		<!--
 		<copy file="./tl.bat.txt" tofile="./tl.bat"/>
 		<replace file="tl.bat" token="${VER}" value="${version}"/>
+		-->
 		
 		<copy file="./tt.bat.txt" tofile="./tt.bat"/>
 		<replace file="tt.bat" token="${VER}" value="${version}"/>
@@ -25,8 +27,10 @@
 		<copy file="./tt.sh.txt" tofile="./tt"/>
 		<replace file="tt"  token="${VER}" value="${version}"/>
 		
+		<!--
 		<copy file="./tl.sh.txt" tofile="./tl"/>
 		<replace file="tl"  token="${VER}" value="${version}"/>
+		-->
 		
 		<!-- Get JAR file -->
 		<copy file="./target/telosys-cli-${version}.jar" tofile="./telosys-cli-${version}.jar"/>
@@ -40,9 +44,11 @@
 			<fileset dir="." includes="telosys-term.sh"/>
 			<fileset dir="." includes="README.TXT"/>
 			<fileset dir="." includes="tt.bat"/>
-			<fileset dir="." includes="tl.bat"/>
 			<fileset dir="." includes="tt"/>
+			<!--			
+			<fileset dir="." includes="tl.bat"/>
 			<fileset dir="." includes="tl"/>
+			-->
 		</zip>
 
 		<echo message="Clean temp files" />

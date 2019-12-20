@@ -27,6 +27,8 @@ import org.telosys.tools.launcher.TelosysLauncher;
 /**
  * Application entry point for LAUNCHER
  * 
+ * ( unused for now )
+ * 
  * @author Laurent GUERIN
  *
  */
