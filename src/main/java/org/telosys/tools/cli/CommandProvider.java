@@ -40,7 +40,6 @@ import org.telosys.tools.cli.commands.ErrorCommand;
 import org.telosys.tools.cli.commands.GenerateCommand;
 import org.telosys.tools.cli.commands.GitHubCommand;
 import org.telosys.tools.cli.commands.GitHubUserCommand;
-import org.telosys.tools.cli.commands.TestCommand;
 import org.telosys.tools.cli.commands.HelpCommand;
 import org.telosys.tools.cli.commands.HomeCommand;
 import org.telosys.tools.cli.commands.InitCommand;
@@ -53,12 +52,14 @@ import org.telosys.tools.cli.commands.ListModelsCommand;
 import org.telosys.tools.cli.commands.ListResourcesCommand;
 import org.telosys.tools.cli.commands.ListTemplatesCommand;
 import org.telosys.tools.cli.commands.LsCommand;
+import org.telosys.tools.cli.commands.MkdirCommand;
 import org.telosys.tools.cli.commands.ModelCommand;
 import org.telosys.tools.cli.commands.NewDbModelCommand;
 import org.telosys.tools.cli.commands.NewEntityCommand;
 import org.telosys.tools.cli.commands.NewModelCommand;
 import org.telosys.tools.cli.commands.PwdCommand;
 import org.telosys.tools.cli.commands.QuitCommand;
+import org.telosys.tools.cli.commands.TestCommand;
 import org.telosys.tools.cli.commands.ThrowExceptionCommand;
 import org.telosys.tools.cli.commands.UpdateDbModelCommand;
 import org.telosys.tools.cli.commands.VerCommand;
@@ -84,17 +85,21 @@ public class CommandProvider {
 		
 		register(new ThrowExceptionCommand(consoleReader, environment)); // tex : FOR TESTS ONLY !
 		
-		// Global commands
+		// O.S. commands
 		register(new CdCommand(consoleReader, environment)); // cd
+		register(new LsCommand(consoleReader, environment)); // ls
+		register(new MkdirCommand(consoleReader, environment)); // mkdir
+		register(new PwdCommand(consoleReader, environment)); // pwd
+
+		// Telosys global commands
 		register(new EditCommand(consoleReader, environment)); // e
 		register(new EnvCommand(consoleReader, environment)); // env
-		register(new TestCommand(consoleReader, environment)); // Special command (just for tests)
 		register(new HelpCommand(consoleReader, environment)); // ? - help
-		register(new LsCommand(consoleReader, environment)); // ls
-		register(new PwdCommand(consoleReader, environment)); // pwd
 		register(new QuitCommand(consoleReader, environment)); // q
 		register(new ErrorCommand(consoleReader, environment)); // err
 		register(new VerCommand(consoleReader, environment)); // ver
+
+		register(new TestCommand(consoleReader, environment)); // Special command (just for tests)
 		
 		// Project commands
 		register(new HomeCommand(consoleReader, environment)); // h 

@@ -1,19 +1,34 @@
 
 NEW COMMANDS (useful for command files) :
 
-  'cfg' : print configuration ( telosys-tools.cfg )
+> 'cfg' : print configuration ( telosys-tools.cfg )
   'cfg SRC=xxx' : set a variable value 
 
-  'mkdir xxxx' : create directory
-
-  'im' : Install model from GitHub (like 'ib' for bundles) 
+>  'im' : Install model from GitHub (like 'ib' for bundles) 
          ( + 'im -l' : install model locally )
-  
+         
+>  echo msg  ( for batch files )
+>  echo msg > file-name 
+
+>  exec or  run batch_file
+
+>  ! os-command 
+
+-----------------------------------------------------------------
+
+BUGS : 
+NPE / TextEditor.java : 271  ( .actionSaveAs )
+
+> e file-non-existent 
+In editor : File / Save as ..
+ 
+-----------------------------------------------------------------
 
 Telosys CORE improvement ( for EditTemplateCommand )
     TelosysProject .getBundleDirectory(bundle_name) 
     TelosysProject .buildTemplateFile(bundle_name) 
 
+-----------------------------------------------------------------
 
 COMMANDS ENHANCEMENT :
 

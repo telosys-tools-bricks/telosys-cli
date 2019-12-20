@@ -48,9 +48,11 @@ public class CommandsGroups {
 		
 		String name = "General commands" ;
 		commands.add("?");
-		commands.add("pwd");
 		commands.add("cd");
 		commands.add("ls");
+		commands.add("mkdir");
+		commands.add("pwd");
+		
 		commands.add("e");
 		commands.add("err");
 		commands.add("env");
