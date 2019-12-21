@@ -66,10 +66,10 @@ public class CommandsGroups {
 		List<String> commands = new LinkedList<>() ;
 		
 		String name = "Project commands" ;
-		commands.add("h");		
+		commands.add("h");
 		commands.add("init");
-		commands.add("ecfg"); 
-		// commands.add("lpc"); // List Project config 
+		commands.add("cfg");
+		commands.add("ecfg");
 		
 		return new CommandsGroup(name, commands);
 	}

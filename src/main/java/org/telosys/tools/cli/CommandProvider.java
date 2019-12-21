@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.telosys.tools.cli.commands.BundleCommand;
 import org.telosys.tools.cli.commands.CdCommand;
+import org.telosys.tools.cli.commands.CfgCommand;
 import org.telosys.tools.cli.commands.CheckDatabaseCommand;
 import org.telosys.tools.cli.commands.CheckGitHubCommand;
 import org.telosys.tools.cli.commands.CheckModelCommand;
@@ -88,10 +89,11 @@ public class CommandProvider {
 		// O.S. commands
 		register(new CdCommand(consoleReader, environment)); // cd
 		register(new LsCommand(consoleReader, environment)); // ls
-		register(new MkdirCommand(consoleReader, environment)); // mkdir
+		register(new MkdirCommand(consoleReader, environment)); // mkdir (ver 3.1.2 CLI-002 )
 		register(new PwdCommand(consoleReader, environment)); // pwd
 
 		// Telosys global commands
+		register(new CfgCommand(consoleReader, environment)); // cfg (ver 3.1.2 CLI-002 )
 		register(new EditCommand(consoleReader, environment)); // e
 		register(new EnvCommand(consoleReader, environment)); // env
 		register(new HelpCommand(consoleReader, environment)); // ? - help

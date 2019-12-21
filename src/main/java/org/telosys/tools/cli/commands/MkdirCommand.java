@@ -42,7 +42,7 @@ public class MkdirCommand extends Command {
 
 	@Override
 	public String getShortDescription() {
-		return "Create a directory" ;
+		return "Make Directory" ;
 	}
 
 	@Override

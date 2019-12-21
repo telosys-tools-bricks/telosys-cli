@@ -1,11 +1,15 @@
 
 NEW COMMANDS (useful for command files) :
 
-> 'cfg' : print configuration ( telosys-tools.cfg )
-  'cfg SRC=xxx' : set a variable value 
+  'cfg VAR=value' : set a variable value 
 
->  'im' : Install model from GitHub (like 'ib' for bundles) 
+> 'im' : Install model from HTTP server or FILE server (like 'ib' for bundles) 
          ( + 'im -l' : install model locally )
+         Download from URL ( eg http://host:port/xx/xx/model.zip )
+         or
+         Copy from folder ( eg file://xx/xx/model.zip )
+   prerequisite :
+    . Config : "models origin" 
          
 >  echo msg  ( for batch files )
 >  echo msg > file-name 
