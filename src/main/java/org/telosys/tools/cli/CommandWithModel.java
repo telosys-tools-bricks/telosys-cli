@@ -129,22 +129,20 @@ public abstract class CommandWithModel extends Command {
 		TelosysProject telosysProject = getTelosysProject();
 		try {
 			return telosysProject.loadModel(modelFile);
-		} catch (TelosysToolsException ex) {
-			if ( ex instanceof TelosysModelException ) {
-				printError("Invalid model !");
-				// Print parsing errors
-				TelosysModelException tme = (TelosysModelException) ex ;
-				Map<String,String> parsingErrors = tme.getParsingErrors();
-				if ( parsingErrors != null ) {
-					print( parsingErrors.size() + " parsing error(s)" );
-					for ( Map.Entry<String,String> entry : parsingErrors.entrySet() ) {
-						print( "'" + entry.getKey() + "' : " + entry.getValue() );
-					}					
+		} catch (TelosysModelException tme) {
+			printError("Invalid model !");
+			// Print parsing errors
+			print(tme.getMessage());
+			Map<String,List<String>> errorsMap = tme.getParsingErrors();
+			if ( errorsMap != null ) {
+				for ( List<String> list : errorsMap.values() ) {
+	    			for ( String err : list ) {
+						print( " . " + err );
+	    			}
 				}
 			}
-			else {
-				printError(ex);					
-			}
+		} catch (TelosysToolsException ex) {
+			printError(ex);					
 		}
 		return null ; // Model cannot be loaded
 	}

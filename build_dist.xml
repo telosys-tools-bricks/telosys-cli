@@ -1,6 +1,6 @@
 <project default="dist">
 	
-	<property name="version"   value="3.1.2-002" />
+	<property name="version"   value="3.2.2-001" />
 	
 	<property name="dest_dir"  value="./dist" />
 	<property name="zip_file"  value="${dest_dir}/telosys-cli-${version}.zip" />
@@ -11,28 +11,16 @@
 		<echo message="Create dir : ${dest_dir} " />
 		<mkdir dir="${dest_dir}"/>
 		
-		<echo message="Copy and prepare files" />
-		
-		<!-- Prepare BAT files -->
-		<!--
-		<copy file="./tl.bat.txt" tofile="./tl.bat"/>
-		<replace file="tl.bat" token="${VER}" value="${version}"/>
-		-->
-		
+		<echo message="Copy and prepare BAT file" />
 		<copy file="./tt.bat.txt" tofile="./tt.bat"/>
 		<replace file="tt.bat" token="${VER}" value="${version}"/>
 		<copy file="./tt.bat" todir="./target"/>
 		
-		<!-- Prepare SHELL files -->
+		<echo message="Copy and prepare SHELL file" />
 		<copy file="./tt.sh.txt" tofile="./tt"/>
 		<replace file="tt"  token="${VER}" value="${version}"/>
 		
-		<!--
-		<copy file="./tl.sh.txt" tofile="./tl"/>
-		<replace file="tl"  token="${VER}" value="${version}"/>
-		-->
-		
-		<!-- Get JAR file -->
+		<echo message="Copy telosys-cli JAR file" />
 		<copy file="./target/telosys-cli-${version}.jar" tofile="./telosys-cli-${version}.jar"/>
 		
 		<!-- Package all in a ZIP -->
@@ -45,18 +33,12 @@
 			<fileset dir="." includes="README.TXT"/>
 			<fileset dir="." includes="tt.bat"/>
 			<fileset dir="." includes="tt"/>
-			<!--			
-			<fileset dir="." includes="tl.bat"/>
-			<fileset dir="." includes="tl"/>
-			-->
 		</zip>
 
 		<echo message="Clean temp files" />
 		<delete file="./telosys-cli-${version}.jar"/>
 		<delete file="./tt.bat"/>
-		<delete file="./tl.bat"/>
 		<delete file="./tt"/>
-		<delete file="./tl"/>
 		
 	</target>
 

@@ -15,19 +15,16 @@
  */
 package org.telosys.tools.cli;
 
-import org.telosys.tools.generator.GeneratorVersion;
-
 public class Version {
 
 	/**
-	 * Private constructor
+	 * Current version (printed in banner and 'ver' command)
 	 */
-	private Version() {
-	}
+	public static final String TELOSYS_TOOLS_CLI_VERSION = "3.2.2 CLI-001" ;
 	
 	/**
-	 * Current version
+	 * Private constructor
 	 */
-	public static final String TELOSYS_TOOLS_CLI_VERSION = GeneratorVersion.GENERATOR_VERSION + " CLI-002" ;
+	private Version() {}
 	
 }
