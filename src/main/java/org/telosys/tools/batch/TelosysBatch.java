@@ -46,7 +46,7 @@ public class TelosysBatch {
 		
 		// Force values for tests 
 		projectFullPath = "D:/workspaces-TELOSYS-TOOLS/wks-46-telosys-tools-bricks/test-telosys-cli/project";
-		modelFileName = "foo.model" ;
+		modelFileName = "cars.model" ;
 		bundlePattern = "*";
 //		bundlePattern = "java-domain-T300";
 //		bundlePattern = "python";
@@ -105,11 +105,15 @@ public class TelosysBatch {
 		print("|  End of Telosys-Batch  | ");
 		print("+------------------------+ ");
 		printStatus(projectFullPath, modelFileName, bundlePattern, destFolder);
-		print("Result : " );
+		print("Global result : " );
 		print(" . number of bundles used      : " + r.getNumberOfBundlesUsed() );
 		print(" . number of files generated   : " + r.getNumberOfFilesGenerated() );
 		print(" . number of generation errors : " + r.getNumberOfGenerationErrors() );
 		print(" . number of resources copied  : " + r.getNumberOfResourcesCopied() );
+		print("Results by bundle : " );
+		for ( String s : r.getBundlesStatus() ) {
+			print(s);
+		}
 	}
 	
 }

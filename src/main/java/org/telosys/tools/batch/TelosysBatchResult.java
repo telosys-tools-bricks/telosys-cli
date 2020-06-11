@@ -15,6 +15,11 @@
  */
 package org.telosys.tools.batch;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.telosys.tools.generator.task.GenerationTaskResult;
 
 public class TelosysBatchResult {
@@ -27,15 +32,37 @@ public class TelosysBatchResult {
 
 	private int numberOfBundlesUsed;
 
+	private final Map<String,GenerationTaskResult> results;
+
 	public TelosysBatchResult() {
 		super();
+		this.results = new HashMap<>();
 	}
 
 	public void update(String bundleName, GenerationTaskResult generationTaskResult) {
 		this.numberOfBundlesUsed++;
+		this.results.put(bundleName, generationTaskResult);
 		this.numberOfFilesGenerated += generationTaskResult.getNumberOfFilesGenerated();
 		this.numberOfGenerationErrors += generationTaskResult.getNumberOfGenerationErrors();
 		this.numberOfResourcesCopied += generationTaskResult.getNumberOfResourcesCopied();
+	}
+	
+	public List<String> getBundlesStatus() {
+		List<String> list = new LinkedList<>();
+		for ( Map.Entry<String, GenerationTaskResult> e : results.entrySet() ) {
+			GenerationTaskResult r = e.getValue();
+			StringBuilder sb = new StringBuilder();
+			if ( r.getNumberOfGenerationErrors() > 0 ) {
+				sb.append("(!) ");
+			} else {
+				sb.append("    ");
+			}
+			sb.append(e.getKey()).append(" : ");
+			sb.append(r.getNumberOfFilesGenerated()).append(" files generated, ");
+			sb.append(r.getNumberOfGenerationErrors()).append(" error(s)");
+			list.add(sb.toString());
+		}
+		return list;
 	}
 	
 	public int getNumberOfBundlesUsed() {
