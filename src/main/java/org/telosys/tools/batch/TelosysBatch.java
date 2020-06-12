@@ -15,105 +15,105 @@
  */
 package org.telosys.tools.batch;
 
-import org.telosys.tools.api.TelosysApiVersion;
+import java.util.Properties;
+
+import org.telosys.tools.batch.generation.BatchGen;
+import org.telosys.tools.commons.DirUtil;
+import org.telosys.tools.commons.FileUtil;
+import org.telosys.tools.commons.PropertiesManager;
 import org.telosys.tools.commons.StrUtil;
 import org.telosys.tools.generator.GeneratorVersion;
-import org.telosys.tools.generic.model.GenericModelVersion;
 
 public class TelosysBatch {
+	
+	private static final String PROPERTIES_FILE = "telosys-batch.properties" ;
+	
+	private static int configErrors = 0 ;
+	
+	private static void print(String s) {
+		System.out.println(s);
+	}
 
 	public static void main(String[] args) {
 		
 		print("Telosys-Batch" );
-		if ( args.length < 3 ) {
-			print("Invalid usage : 3 or 4 arguments expected");
-			print("Usage : ") ;
-			print("  arg #1 : project path " ) ;
-			print("  arg #2 : model file in project  " ) ;
-			print("  arg #3 : bundle name pattern (unique name, part of names, '*' for all) " ) ;
-			print("  arg #4 : destination folder (this argument is optional) " ) ;
-			print("           (full path expected, it can contain ${VER} and ${BUNDLE}) " ) ;
+		if ( args.length < 1 ) {
+			print("Invalid usage : 'command' argument expected");
+			print("usable commands : ") ;
+			print("  'gen' : to launch code generation for multiple bundles " ) ;
+			print("  'cmp' : to launch multiple files comparison " ) ;
 			return;
 		}
 
-		String projectFullPath = args[0] ;
-		String modelFileName = args[1] ;
-		String bundlePattern = args[2] ;
-		String destFolder = null;
-		if ( args.length > 3 ) {
-			destFolder = args[3];
+		// Current working directory 
+		String workingDir = DirUtil.getUserWorkingDirectory() ;
+		print("Working directory : " + workingDir );
+		
+		// Batch configuration in properties file
+		String propertiesFile = FileUtil.buildFilePath(workingDir, PROPERTIES_FILE );
+		PropertiesManager pm = new PropertiesManager(propertiesFile);
+		Properties p = pm.load();
+		if ( p == null ) {
+			print("ERROR : Properties file '" + PROPERTIES_FILE + "' not found");
+			return;
 		}
 		
-		// Force values for tests 
-		projectFullPath = "D:/workspaces-TELOSYS-TOOLS/wks-46-telosys-tools-bricks/test-telosys-cli/project";
-		modelFileName = "cars.model" ;
-		bundlePattern = "*";
-//		bundlePattern = "java-domain-T300";
-//		bundlePattern = "python";
-//		bundlePattern = "java";
-//		bundlePattern = "csharp";
-		destFolder = "D:/TMP/TMPTMP/TELOSYS-BATCH-${VER}/BUNDLE-${BUNDLE}" ;
-		
-		if ( destFolder != null ) {
-			destFolder = StrUtil.replaceVar(destFolder, "${VER}", GeneratorVersion.GENERATOR_VERSION );
+		String command = args[0] ;
+		if ( "gen".equals(command) ) {
+			gen(p);
 		}
-		run(projectFullPath, modelFileName, bundlePattern, destFolder);
+		else if  ( "cmp".equals(command) ) {
+			cmp(p);
+		}
+		else {
+			print("ERROR : invalid command '" + command + "'");
+		}
 	}
 	
-	public static void print(String s) {
-		System.out.println(s);
+	private static String getProperty(Properties p, String name, boolean mandatory) {
+		String s = p.getProperty(name);
+		if ( s != null ) {
+			return s.trim();
+		} else {
+			if ( mandatory ) {
+				configErrors++;
+				print("ERROR: property '" + name +"' not defined in '" + PROPERTIES_FILE + "'");
+			}
+		}
+		return s;
 	}
 	
-	public static void printStatus(String projectFullPath, String modelFileName, String bundlePattern, String destFolder) {
-		print("Versions : " );
-		print(" . Telosys API   : " + TelosysApiVersion.VERSION );
-		print(" . Generator     : " + GeneratorVersion.GENERATOR_VERSION );
-		print(" . Generic Model : " + GenericModelVersion.VERSION);
-		print("Context : " );
+	/**
+	 * 'gen' command
+	 * @param p
+	 */
+	private static void gen(Properties p) {
+		String projectFullPath = getProperty(p, "gen.projectFullPath", true);
+		String modelFileName = getProperty(p, "gen.modelFileName", true);
+		String bundlesPattern = getProperty(p, "gen.bundlesPattern", true);
+		String destDir1 = getProperty(p, "gen.destDir", false);
+		String destDir2 = destDir1 ;
+		if ( destDir1 != null ) {
+			destDir2 = StrUtil.replaceVar(destDir1, "${VER}", GeneratorVersion.GENERATOR_VERSION );
+		}
+		if ( configErrors > 0 ) {
+			return ;
+		}
+		print("Batch code generation properties : " );
 		print(" . project path   : '" + projectFullPath + "'" );
 		print(" . model file     : '" + modelFileName + "'" );
-		print(" . bundle pattern : '" + bundlePattern + "'" );
-		print(" . dest folder    : '" + destFolder + "' " );
-	}
+		print(" . bundle pattern : '" + bundlesPattern + "'" );
+		print(" . dest directory : '" + destDir1 + "' " );
+		print("                    '" + destDir2 + "' " );
+		
+		BatchGen.run(projectFullPath, modelFileName, bundlesPattern, destDir2);
+	}	
 	
-	public static void run(String projectFullPath, String modelFileName, String bundlePattern, String destFolder) {
-
-		printStatus(projectFullPath, modelFileName, bundlePattern, destFolder);
-		print("");
-					
-		print("+------------------------+ ");
-		print("| Starting Telosys-Batch | ");
-		print("+------------------------+ ");
-		TelosysBatchResult r ;
-		try {
-			print("Creating launcher..." );
-			TelosysLauncher launcher = new TelosysLauncher(projectFullPath, modelFileName);
-
-			print("Initializing launcher..." );
-			launcher.init(destFolder);
-			
-			print("Launching code generation..." );
-			print("");
-			r = launcher.launchGeneration(bundlePattern);
-		} catch (Exception e) {
-			print("ERROR :");
-			print(" " + e.getMessage());
-			return;
-		}
-		print("");
-		print("+------------------------+ ");
-		print("|  End of Telosys-Batch  | ");
-		print("+------------------------+ ");
-		printStatus(projectFullPath, modelFileName, bundlePattern, destFolder);
-		print("Global result : " );
-		print(" . number of bundles used      : " + r.getNumberOfBundlesUsed() );
-		print(" . number of files generated   : " + r.getNumberOfFilesGenerated() );
-		print(" . number of generation errors : " + r.getNumberOfGenerationErrors() );
-		print(" . number of resources copied  : " + r.getNumberOfResourcesCopied() );
-		print("Results by bundle : " );
-		for ( String s : r.getBundlesStatus() ) {
-			print(s);
-		}
+	/**
+	 * 'cmp' command
+	 * @param p
+	 */
+	private static void cmp(Properties p) {
+		print("'cmp' command : not yet implemented" );
 	}
-	
 }

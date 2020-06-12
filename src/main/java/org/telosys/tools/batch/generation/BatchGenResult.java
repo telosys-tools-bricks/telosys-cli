@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.telosys.tools.batch;
+package org.telosys.tools.batch.generation;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.telosys.tools.generator.task.GenerationTaskResult;
 
-public class TelosysBatchResult {
+public class BatchGenResult {
 
 	private int numberOfFilesGenerated;
 
@@ -34,7 +34,7 @@ public class TelosysBatchResult {
 
 	private final Map<String,GenerationTaskResult> results;
 
-	public TelosysBatchResult() {
+	public BatchGenResult() {
 		super();
 		this.results = new HashMap<>();
 	}

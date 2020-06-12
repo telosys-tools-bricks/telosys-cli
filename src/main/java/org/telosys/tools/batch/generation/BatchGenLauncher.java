@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.telosys.tools.batch;
+package org.telosys.tools.batch.generation;
 
 import java.io.File;
 import java.util.List;
@@ -26,7 +26,7 @@ import org.telosys.tools.commons.bundles.BundlesNames;
 import org.telosys.tools.generator.task.GenerationTaskResult;
 import org.telosys.tools.generic.model.Model;
 
-public class TelosysLauncher {
+public class BatchGenLauncher {
 
 	private final String projectFullPath ;
 	private final String modelFileName ;
@@ -40,7 +40,7 @@ public class TelosysLauncher {
 	 * @param projectFullPath
 	 * @param modelFileName
 	 */
-	public TelosysLauncher(String projectFullPath, String modelFileName ) {
+	public BatchGenLauncher(String projectFullPath, String modelFileName ) {
 		this.projectFullPath = projectFullPath ;
 		this.modelFileName = modelFileName ;
 	}
@@ -95,7 +95,7 @@ public class TelosysLauncher {
 	 * @param bundlePattern : can be a single bundle name, '*' for all, a part of bundles names 
 	 * @return
 	 */
-	public TelosysBatchResult launchGeneration(String bundlePattern) {
+	public BatchGenResult launchGeneration(String bundlePattern) {
 		checkInit();
 		BundlesNames bundlesNames ;
 		try {
@@ -111,7 +111,7 @@ public class TelosysLauncher {
 		List<String> selectedBundleNames = bundlesNames.filter(parts);
 
 		// Launch generation for each bundle
-		TelosysBatchResult batchResult = new TelosysBatchResult();
+		BatchGenResult batchResult = new BatchGenResult();
 //		int n = 0 ;
 		for (String bundleName : selectedBundleNames ) {
 			//n = n + launchBundleGeneration(bundleName); 
