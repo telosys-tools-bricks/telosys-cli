@@ -15,8 +15,11 @@
  */
 package org.telosys.tools.batch;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
+import org.telosys.tools.batch.comparison.BatchCmp;
 import org.telosys.tools.batch.generation.BatchGen;
 import org.telosys.tools.commons.DirUtil;
 import org.telosys.tools.commons.FileUtil;
@@ -114,6 +117,21 @@ public class TelosysBatch {
 	 * @param p
 	 */
 	private static void cmp(Properties p) {
-		print("'cmp' command : not yet implemented" );
+		print("Batch files comparison properties :" );
+		String dir1 = getProperty(p, "cmp.dir1", true);
+		String dir2 = getProperty(p, "cmp.dir2", true);
+		List<String> patterns = new ArrayList<>() ;
+		int n = 20;
+		String maxRegEx = getProperty(p, "cmp.maxIgnore", false);
+		if ( maxRegEx != null ) {
+			n = StrUtil.getInt(maxRegEx, n);
+		}
+		for ( int i = 1 ; i <= n ; i++) {
+			String s = getProperty(p, "cmp.ignore"+i, false);
+			if ( s != null ) {
+				patterns.add(s);
+			}
+		}
+		BatchCmp.run(dir1, dir2, patterns);
 	}
 }
