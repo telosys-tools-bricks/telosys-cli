@@ -29,6 +29,7 @@ import org.telosys.tools.commons.bundles.TargetDefinition;
 import org.telosys.tools.commons.bundles.TargetsDefinitions;
 import org.telosys.tools.generator.task.ErrorReport;
 import org.telosys.tools.generator.task.GenerationTaskResult;
+import org.telosys.tools.generator.task.MsgBox;
 import org.telosys.tools.generic.model.Entity;
 import org.telosys.tools.generic.model.Model;
 
@@ -223,29 +224,20 @@ public class GenerateCommand extends CommandWithModel {
 	}
 	
 	private void printResult( GenerationTaskResult result ) {
-		print("Generation completed.");
-		print(" " + result.getNumberOfFilesGenerated() + " file(s) generated");
-		print(" " + result.getNumberOfResourcesCopied() + " resource(s) copied");
-		print(" " + result.getNumberOfGenerationErrors() + " error(s)");
-		List<ErrorReport> errors = result.getErrors() ;
-		if ( errors != null && errors.size() > 0 ) {
-			int i = 0 ;
-			for ( ErrorReport err : errors ) {
-				i++ ;
-				print ( " - Error #" + i ) ;
-				print ( "   Type : " + err.getErrorType() ) ;
-				print ( "   Message : " + err.getMessage() ) ;
-				Throwable ex = err.getException();
-				if ( ex != null ) {
-					print ( "   Exception : " + ex.getClass().getSimpleName() + " : " + ex.getMessage() ) ;
-					Throwable cause = ex.getCause() ;
-					while ( cause != null ) {
-						print ( "    Cause : " + cause.getClass().getSimpleName() + " : " + cause.getMessage() ) ;
-						cause = cause.getCause();
-					}
-				}
-			}
-		}
+		// Useless (duplicated with previous output)
+		return ;
+		// TODO : write result in "gen-result.txt" file 
+		
+//		print("Generation completed.");
+//		print(" " + result.getNumberOfFilesGenerated() + " file(s) generated");
+//		print(" " + result.getNumberOfResourcesCopied() + " resource(s) copied");
+//		print(" " + result.getNumberOfGenerationErrors() + " error(s)");
+//		List<ErrorReport> errors = result.getErrors() ;
+//		if ( errors != null && errors.size() > 0 ) {
+//			for ( ErrorReport err : errors ) {
+//				MsgBox.error(err);
+//			}
+//		}
 	}
 	
 }
