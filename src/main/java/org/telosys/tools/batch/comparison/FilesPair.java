@@ -17,7 +17,7 @@ package org.telosys.tools.batch.comparison;
 
 import java.io.File;
 
-public class FilesPair {
+public class FilesPair implements Comparable<FilesPair> {
 
 	private final File file1 ;
 	private final File file2 ;
@@ -39,6 +39,21 @@ public class FilesPair {
 
 	public File getFile2() {
 		return file2;
+	}
+	
+	@Override
+	public int compareTo(FilesPair other) {
+		// Compare "file 1" 
+		File thisFile = this.getFile1();
+		File otherFile = other.getFile1();
+		// 1rst compare folders
+		int foldersResult = thisFile.getParent().compareTo(otherFile.getParent());
+		if ( foldersResult == 0 ) {
+			// same folder => compare file name 
+			return thisFile.getName().compareTo(otherFile.getName());
+		} else {
+			return foldersResult ;
+		}
 	}
 
 }

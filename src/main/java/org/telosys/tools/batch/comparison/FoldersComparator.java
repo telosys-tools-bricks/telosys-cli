@@ -16,6 +16,7 @@
 package org.telosys.tools.batch.comparison;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class FoldersComparator {
 			currentFolder = folder1 ;
 			print("[DIR] " + currentFolder);
 		}
+		// JUST FOR DEBUG : print("    . " + r.getFile1().getAbsolutePath() );
 		if ( r.differenceFound() ) {
 			print(r.getFile1().getAbsolutePath());
 			print(" > " + r.getDifferenceLine1());
@@ -101,6 +103,7 @@ public class FoldersComparator {
 			FilesPair pair = new FilesPair( file1FullPath, file2FullPath);
 			pairs.add(pair);
 		}
+		Collections.sort(pairs);
 		return pairs;
 	}
 	
