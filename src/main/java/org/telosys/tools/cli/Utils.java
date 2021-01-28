@@ -38,4 +38,8 @@ public class Utils {
         }
         return new String[0]; 
 	}
+	
+	public static String getCurrentDir() {
+		return System.getProperty("user.dir");
+	}
 }

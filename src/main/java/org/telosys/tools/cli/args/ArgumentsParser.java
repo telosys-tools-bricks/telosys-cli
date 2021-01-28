@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 import static org.telosys.tools.cli.args.Arguments.*;
 
 import org.telosys.tools.cli.Trace;
+import org.telosys.tools.cli.Utils;
 
 /**
  * Application entry point for CLI
@@ -89,9 +90,18 @@ public class ArgumentsParser {
 		for ( int i = 0 ; i < args.length ; i++ ) {
 			String arg = args[i];
 			if ( H_ARG.equals(arg) ) {
+				// -h home-directory
 				debug(H_ARG) ;
 				String home = getNextArg(args, i);
-				File homeFile = getFile( home );
+				File homeFile ;
+				if ( ".".equals(home) ) {
+					// -h .
+					homeFile = getFile( Utils.getCurrentDir() );
+				}
+				else {
+					// -h xxx
+					homeFile = getFile( home );
+				}
 				if ( homeFile != null && homeFile.exists() && homeFile.isDirectory() ) {
 					arguments.put(new Argument(H_ARG, homeFile) );
 				}

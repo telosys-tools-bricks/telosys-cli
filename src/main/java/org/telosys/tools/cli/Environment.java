@@ -68,7 +68,7 @@ public class Environment {
 		this.commandsGroups  = new CommandsGroups();
 		this.jarFileFullPath   = findJarFileFullPath();
 		this.jarFolderFullPath = findJarFolderFullPath();
-		this.originalDirectory = System.getProperty("user.dir"); 
+		this.originalDirectory = Utils.getCurrentDir();  
 		this.osName = System.getProperty("os.name");
 		this.osType = findOSType(this.osName); 
 		this.editorCommand = findEditorCommand(this.osType);
