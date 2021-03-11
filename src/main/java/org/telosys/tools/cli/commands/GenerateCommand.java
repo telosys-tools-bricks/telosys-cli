@@ -144,6 +144,10 @@ public class GenerateCommand extends CommandWithModel {
 		TelosysProject telosysProject = getTelosysProject();
 		// Loads the model for the current model name
 		Model model = loadCurrentModel();
+		if ( model == null) {
+			print("Cannot load model => stopping code generation.");
+			return null ;
+		}
 		List<Entity> entities = buildEntitiesList(argEntityNames, model);
 		
 		String bundleName = getCurrentBundle() ;
