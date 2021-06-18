@@ -20,7 +20,7 @@ public class Version {
 	/**
 	 * Current version (printed in banner and 'ver' command)
 	 */
-	public static final String TELOSYS_TOOLS_CLI_VERSION = "3.3.0 CLI-001" ;
+	public static final String TELOSYS_TOOLS_CLI_VERSION = "3.3.0 CLI-002" ;
 	
 	/**
 	 * Private constructor
