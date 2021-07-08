@@ -4,7 +4,7 @@
 
 	<groupId>org.telosys</groupId>
 	<artifactId>telosys-cli</artifactId>
-	<version>3.3.0-002</version> <!-- also update version in JAVA file "Version.java" -->
+	<version>3.3.0-003</version> <!-- also update version in JAVA file "Version.java" -->
 	<packaging>jar</packaging>
 
 	<name>telosys-cli</name>

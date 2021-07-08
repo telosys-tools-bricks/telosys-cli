@@ -1,4 +1,9 @@
 
+- Check version in  :
+    . pom.xml
+    . Version.java  
+    . build_dist.xml
+
 - Maven clean 
 
 - Maven install 
