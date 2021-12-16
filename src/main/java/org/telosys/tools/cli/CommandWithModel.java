@@ -22,6 +22,7 @@ import java.util.Map;
 
 import jline.console.ConsoleReader;
 
+import org.telosys.tools.api.ApiUtil;
 import org.telosys.tools.api.TelosysModelException;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.commons.TelosysToolsException;
@@ -120,6 +121,27 @@ public abstract class CommandWithModel extends Command {
 		}
 	}
 	
+	protected File getCurrentModelFile() {
+		String modelName = getCurrentModel();
+		if ( modelName != null ) {
+			return getModelFile(modelName);
+		}
+		return null;
+	}
+
+	protected File getCurrentModelFolder() {
+		String modelName = getCurrentModel();
+		if ( modelName != null ) {
+			return getModelFolder(modelName);
+		}
+		return null;
+	}
+	
+	protected File getModelFolder(String modelName) {
+		File modelFile = getModelFile(modelName);
+		return ApiUtil.getDslModelFolder(modelFile, true);
+	}
+
 	/**
 	 * Loads the given model file (and print errors if any)
 	 * @param modelFile

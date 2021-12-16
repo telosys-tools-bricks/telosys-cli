@@ -34,7 +34,16 @@ public class Const {
 	
 	public static final String DATABASES_DBCFG   = "databases.dbcfg" ;
 	
-	public static final String DOT_ENTITY        = ".entity" ;
+	
+//	public static final String DOT_ENTITY        = ".entity" ;
 	public static final String DOT_VM            = ".vm" ;
+	
+	public static final String  DSL_MODEL_FILE_SUFFIX   = ".model" ;
+	public static final String  DSL_MODEL_FOLDER_SUFFIX = "_model" ;
+	public static final String  DSL_ENTITY_FILE_SUFFIX  = ".entity" ;
+
+	public static final String  DBREP_SUFFIX   = ".dbrep"  ;
+	public static final String  DBMODEL_SUFFIX = ".dbmodel"  ;
+
 
 }

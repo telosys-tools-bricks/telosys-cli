@@ -92,7 +92,7 @@ public class EditEntityCommand extends Command {
 				else {
 					// Try to find the file with abbreviation
 					File dir = file.getParentFile() ;
-					List<File> files = FileFinder.find(entityName, dir, Const.DOT_ENTITY);
+					List<File> files = FileFinder.find(entityName, dir, Const.DSL_ENTITY_FILE_SUFFIX);
 					if ( files.isEmpty() ) {
 						print("No entity '" + entityName + "' in the current model.");
 					}

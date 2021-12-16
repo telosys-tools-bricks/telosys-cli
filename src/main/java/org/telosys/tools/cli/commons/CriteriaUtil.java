@@ -15,6 +15,7 @@
  */
 package org.telosys.tools.cli.commons;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -60,6 +61,41 @@ public class CriteriaUtil {
 			}
 			return list;
 		}
-	}	
-	
+	}
+
+	/**
+	 * Select the strings matching the given criteria
+	 * @param strings 
+	 * @param criteria
+	 * @return
+	 */
+	public static List<String> select( List<String> strings, List<String> criteria) {
+		if ( criteria != null ) {
+			List<String> list = new LinkedList<>();
+			for ( String criterion : criteria ) {
+				for ( String s : strings ) {
+					if ( s.contains(criterion) ) {
+						list.add(s); 
+					}
+				}				
+			}
+			return list;	
+		}
+		else {
+			return strings ; // No critera => ALL
+		}
+	}
+
+	/**
+	 * Select and sort the given strings according with the given criteria
+	 * @param strings
+	 * @param criteria
+	 * @return
+	 */
+	public static List<String> selectAndSort( List<String> strings, List<String> criteria ) {
+		List<String> list = select(strings, criteria);
+		Collections.sort(list);
+		return list;
+	}
+
 }

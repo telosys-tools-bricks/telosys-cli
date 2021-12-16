@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+import org.telosys.tools.api.ApiUtil;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.commons.FileUtil;
 import org.telosys.tools.commons.StrUtil;
@@ -472,10 +473,25 @@ public abstract class Command {
 	 */
 	protected boolean isDslModel(String modelName) {
 		if ( modelName != null ) {
-			return modelName.endsWith(".model");
+//			return modelName.endsWith(".model");
+			return modelName.endsWith(Const.DSL_MODEL_FILE_SUFFIX);
 		}
 		return false ;
 	}
+
+	/**
+	 * Returns true if the given file is a DSL model (ends with ".model")
+	 * @param file
+	 * @return
+	 */
+	protected boolean isDslModelFile(File file) {
+		if ( file != null ) {
+			return ApiUtil.isDslModelFile(file);
+		}
+		return false ;
+	}
+	
+	
 	//-------------------------------------------------------------------------
 	// Bundle
 	//-------------------------------------------------------------------------
