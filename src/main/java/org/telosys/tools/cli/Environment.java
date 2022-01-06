@@ -24,7 +24,6 @@ import java.util.Properties;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.commons.FileUtil;
 import org.telosys.tools.commons.PropertiesManager;
-import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.cfg.TelosysToolsCfg;
 
 
@@ -416,14 +415,18 @@ public class Environment {
 	 */
 	private File getEnvironmentPropertiesFile() {
 		if ( homeDirectory != null ) {
-			String dir = null ;
-			try {
-				TelosysToolsCfg telosysToolsCfg = (new TelosysProject(homeDirectory)).getTelosysToolsCfg();
-				dir = telosysToolsCfg.getTelosysToolsFolderAbsolutePath();
-			} catch (TelosysToolsException e) {
-				// Cannot get Telosys configuration
-				return null ;
-			}
+//			String dir = null ;
+//			try {
+//				TelosysToolsCfg telosysToolsCfg = (new TelosysProject(homeDirectory)).getTelosysToolsCfg();
+//				dir = telosysToolsCfg.getTelosysToolsFolderAbsolutePath();
+//			} catch (TelosysToolsException e) {
+//				// Cannot get Telosys configuration
+//				return null ;
+//			}
+
+			TelosysToolsCfg telosysToolsCfg = (new TelosysProject(homeDirectory)).getTelosysToolsCfg();
+			String dir = telosysToolsCfg.getTelosysToolsFolderAbsolutePath();
+			
 			// Check 'TelosysTools' directory existence ( if not yet init => no TelosysTools directory )
 			File telosysToolsDir = new File(dir);
 			if ( telosysToolsDir.exists() && telosysToolsDir.isDirectory() ) {

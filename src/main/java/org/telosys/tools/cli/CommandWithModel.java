@@ -18,15 +18,16 @@ package org.telosys.tools.cli;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
-import jline.console.ConsoleReader;
 
 import org.telosys.tools.api.ApiUtil;
 import org.telosys.tools.api.TelosysModelException;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.commons.TelosysToolsException;
+import org.telosys.tools.dsl.DslModelError;
+import org.telosys.tools.dsl.DslModelErrors;
 import org.telosys.tools.generic.model.Model;
+
+import jline.console.ConsoleReader;
 
 /**
  * Specialization of 'Command' providing methods to work with models
@@ -155,16 +156,22 @@ public abstract class CommandWithModel extends Command {
 			printError("Invalid model !");
 			// Print parsing errors
 			print(tme.getMessage());
-			Map<String,List<String>> errorsMap = tme.getParsingErrors();
-			if ( errorsMap != null ) {
-				for ( List<String> list : errorsMap.values() ) {
-	    			for ( String err : list ) {
-						print( " . " + err );
-	    			}
+//			Map<String,List<String>> errorsMap = tme.getParsingErrors();
+//			if ( errorsMap != null ) {
+//				for ( List<String> list : errorsMap.values() ) {
+//	    			for ( String err : list ) {
+//						print( " . " + err );
+//	    			}
+//				}
+//			}
+			DslModelErrors errors = tme.getDslModelErrors();
+			if ( errors != null ) {
+				for ( DslModelError e : errors.getErrors() ) {
+					print( " . " + e.getReportMessage() );
 				}
 			}
-		} catch (TelosysToolsException ex) {
-			printError(ex);					
+//		} catch (TelosysToolsException ex) {
+//			printError(ex);					
 		}
 		return null ; // Model cannot be loaded
 	}

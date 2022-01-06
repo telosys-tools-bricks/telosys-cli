@@ -18,7 +18,6 @@ package org.telosys.tools.cli.commands;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandWithBundles;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.cfg.TelosysToolsCfg;
 import org.telosys.tools.commons.variables.Variable;
 
@@ -64,13 +63,14 @@ public class CfgCommand extends CommandWithBundles {
 
 	private void printConfiguration() {
 		TelosysProject project = getTelosysProject();
-		try {
-			TelosysToolsCfg cfg = project.getTelosysToolsCfg();
-			printConfiguration(cfg);
-		} catch (TelosysToolsException e) {
-			print("Error: Cannot get project configuration"); 
-			print("Exception '" + e.getClass().getCanonicalName() + "' : " + e.getMessage()); 
-		}
+//		try {
+//			TelosysToolsCfg cfg = project.getTelosysToolsCfg();
+//			printConfiguration(cfg);
+//		} catch (TelosysToolsException e) {
+//			print("Error: Cannot get project configuration"); 
+//			print("Exception '" + e.getClass().getCanonicalName() + "' : " + e.getMessage()); 
+//		}
+		printConfiguration(project.getTelosysToolsCfg());
 	}
 
 	private void printConfiguration(TelosysToolsCfg cfg) {

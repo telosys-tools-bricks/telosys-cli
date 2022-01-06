@@ -18,6 +18,7 @@ package org.telosys.tools.launcher;
 import java.util.List;
 import java.util.Scanner;
 
+import org.telosys.tools.api.TelosysModelException;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.cfg.TelosysToolsCfg;
 import org.telosys.tools.generator.GeneratorException;
@@ -40,14 +41,14 @@ public class ApplicationLauncher {
 	 * @throws TelosysToolsException
 	 * @throws GeneratorException
 	 */
-	public static void main(String[] args) throws TelosysToolsException, GeneratorException {
+	public static void main(String[] args) throws TelosysToolsException, TelosysModelException { //GeneratorException {
 
 		String workingDirectory = "."; // the current directory
 		
 		launch(workingDirectory, args);
 	}
 	
-	private static void launch( String workingDirectory, String[] args) throws TelosysToolsException, GeneratorException {
+	private static void launch( String workingDirectory, String[] args) throws TelosysToolsException, TelosysModelException { // GeneratorException {
 
 		print("--------------------------" );
 		print("Telosys Generator Launcher" );
@@ -144,7 +145,8 @@ public class ApplicationLauncher {
 		System.out.println(s);
 	}
 
-	private static GenerationTaskResult launchGeneration(TelosysLauncher launcher) throws TelosysToolsException, GeneratorException {
+//	private static GenerationTaskResult launchGeneration(TelosysLauncher launcher) throws TelosysToolsException, GeneratorException {
+	private static GenerationTaskResult launchGeneration(TelosysLauncher launcher) throws TelosysToolsException, TelosysModelException {
 		print("Lauching generation..." );
 		GenerationTaskResult result = launcher.launchGeneration();
 		print("End of generation : " );

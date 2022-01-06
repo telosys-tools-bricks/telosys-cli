@@ -79,8 +79,8 @@ public class BatchGenLauncher {
 			return telosysProject.loadModel(modelFileName);
 		} catch (TelosysModelException tme) {
 			throw new RuntimeException("Cannot load model (TelosysModelException): " + tme.getMessage() );
-		} catch (TelosysToolsException ex) {
-			throw new RuntimeException("Cannot load model (TelosysToolsException): " + ex.getMessage() );
+//		} catch (TelosysToolsException ex) {
+//			throw new RuntimeException("Cannot load model (TelosysToolsException): " + ex.getMessage() );
 		}		
 	}
 	
@@ -133,11 +133,12 @@ public class BatchGenLauncher {
 			// Replace ${BUNDLE} variable if any 
 			String newDestinationFolder = StrUtil.replaceVar(specificDestinationFolder, "${BUNDLE}", bundleName);
 			// Set the new destination folder for this bundle generation 
-			try {
-				telosysProject.getTelosysToolsCfg().setSpecificDestinationFolder(newDestinationFolder);
-			} catch (TelosysToolsException e) {
-				throw new RuntimeException("Cannot set destination folder (TelosysToolsException): " + e.getMessage() );
-			}
+//			try {
+//				telosysProject.getTelosysToolsCfg().setSpecificDestinationFolder(newDestinationFolder);
+//			} catch (TelosysToolsException e) {
+//				throw new RuntimeException("Cannot set destination folder (TelosysToolsException): " + e.getMessage() );
+//			}
+			telosysProject.getTelosysToolsCfg().setSpecificDestinationFolder(newDestinationFolder);
 		}
 		
 		// Launch code generation 
