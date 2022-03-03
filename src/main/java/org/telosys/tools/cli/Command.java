@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.telosys.tools.api.ApiUtil;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.commons.FileUtil;
 import org.telosys.tools.commons.StrUtil;
@@ -410,44 +409,65 @@ public abstract class Command {
 	 */
 	protected boolean checkDslModelDefined() {
 		if ( checkModelDefined() ) {
-			if ( isDslModel( getCurrentModel() ) ) {
-				return true ;
-			}
-			else {
-//				print("This command requires a DSL model.");
-				print("No current DSL model (can be set with 'm' command)");
-			}
+//			if ( isDslModel( getCurrentModel() ) ) {
+//				return true ;
+//			}
+//			else {
+//				print("No current DSL model (can be set with 'm' command)");
+//			}
+			return true ;
 		}
 		return false ;
 	}	
 
-	/**
-	 * Set the current model in the current environment
-	 * @param modelName
-	 */
-	protected void setCurrentModel(File modelFile) {
-		if ( modelFile.exists() ) {
-			setCurrentModel(modelFile.getName());
+//	/**
+//	 * Set the current model in the current environment
+//	 * @param modelName
+//	 */
+//	protected void setCurrentModel(File modelFile) {
+//		if ( modelFile.exists() ) {
+//			setCurrentModel(modelFile.getName());
+//		}
+//		else {
+//			printError("Model file '" + modelFile.getName() + "' does not exist");
+//		}
+//	}
+
+//	/**
+//	 * Set the current model name in the current environment
+//	 * @param modelName
+//	 */
+//	protected void setCurrentModel(String modelName) {
+//		environment.setCurrentModel(modelName);
+//		updatePrompt();
+//	}
+	
+	protected void setCurrentModel(String modelName) {
+		if ( getTelosysProject().dslModelFolderExists(modelName) ) {
+			environment.setCurrentModel(modelName);
+			updatePrompt();
 		}
 		else {
-			printError("Model file '" + modelFile.getName() + "' does not exist");
+			printError("Model '" + modelName + "' does not exist");
 		}
 	}
 	
-	protected boolean isCurrentModel(File modelFile) {
-		if ( modelFile != null ) {
-			return modelFile.getName().equals(environment.getCurrentModel() ) ;
+//	protected boolean isCurrentModel(File modelFile) {
+//		if ( modelFile != null ) {
+//			return modelFile.getName().equals(environment.getCurrentModel() ) ;
+//		}
+//		return false ;
+//	}
+	/**
+	 * Returns true if the given model name is the current model 
+	 * @param modelName
+	 * @return
+	 */
+	protected boolean isCurrentModel(String modelName) {
+		if ( modelName != null ) {
+			return modelName.equals(environment.getCurrentModel() ) ;
 		}
 		return false ;
-	}
-	
-	/**
-	 * Set the current model name in the current environment
-	 * @param modelName
-	 */
-	protected void setCurrentModel(String modelName) {
-		environment.setCurrentModel(modelName);
-		updatePrompt();
 	}
 	
 	/**
@@ -466,30 +486,30 @@ public abstract class Command {
 		return environment.getCurrentModel();
 	}
 	
-	/**
-	 * Returns true if the given model name is a DSL model (ends with ".model")
-	 * @param modelName
-	 * @return
-	 */
-	protected boolean isDslModel(String modelName) {
-		if ( modelName != null ) {
-//			return modelName.endsWith(".model");
-			return modelName.endsWith(Const.DSL_MODEL_FILE_SUFFIX);
-		}
-		return false ;
-	}
+//	/**
+//	 * Returns true if the given model name is a DSL model (ends with ".model")
+//	 * @param modelName
+//	 * @return
+//	 */
+//	protected boolean isDslModel(String modelName) {
+//		if ( modelName != null ) {
+////			return modelName.endsWith(".model");
+//			return modelName.endsWith(Const.DSL_MODEL_FILE_SUFFIX);
+//		}
+//		return false ;
+//	}
 
-	/**
-	 * Returns true if the given file is a DSL model (ends with ".model")
-	 * @param file
-	 * @return
-	 */
-	protected boolean isDslModelFile(File file) {
-		if ( file != null ) {
-			return ApiUtil.isDslModelFile(file);
-		}
-		return false ;
-	}
+//	/**
+//	 * Returns true if the given file is a DSL model (ends with ".model")
+//	 * @param file
+//	 * @return
+//	 */
+//	protected boolean isDslModelFile(File file) {
+//		if ( file != null ) {
+//			return ApiUtil.isDslModelFile(file);
+//		}
+//		return false ;
+//	}
 	
 	
 	//-------------------------------------------------------------------------

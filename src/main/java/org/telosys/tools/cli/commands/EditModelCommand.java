@@ -61,7 +61,7 @@ public class EditModelCommand extends CommandWithModel {
 	@Override
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
-			File modelFile = findModelFile(args) ;
+			File modelFile = findModelFile(args);
 			// if found => launch the editor
 			if ( modelFile != null ) {
 				return launchEditor(modelFile.getAbsolutePath());
@@ -70,22 +70,18 @@ public class EditModelCommand extends CommandWithModel {
 		return null ;
 	}
 
-//	/**
-//	 * Edit the model file for the given model name
-//	 * @param modelName ( eg 'car.model', 'bookstore.dbmodel', 'bookstore.dbrep' )
-//	 * @return
-//	 */
-//	private String editModel(String modelName) {
-//		TelosysProject telosysProject = getTelosysProject();
-//		if ( telosysProject != null ) {
-//			try {
-//				File file = telosysProject.getModelFile(modelName);
-//				return launchEditor(file.getAbsolutePath() );
-//			} catch (TelosysToolsException e) {
-//				printError(e);
-//			}
-//		}
-//		return null ;
-//	}
-
+	private File findModelFile(String[] args) {
+		File modelFolder = findModelFolder(args);
+		if (modelFolder != null) {
+			File modelFile = getTelosysProject().getModelInfoFile(modelFolder);
+			if ( modelFile.exists() ) {
+				return modelFile;
+			}
+			else {
+				print("No model file in model '" + modelFolder.getName() + "'") ;
+				return null;
+			}
+		}
+		return null;
+	}
 }

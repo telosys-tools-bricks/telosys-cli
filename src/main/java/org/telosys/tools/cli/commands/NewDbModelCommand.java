@@ -60,15 +60,16 @@ public class NewDbModelCommand extends CommandWithModel {
 	public String execute(String[] args) {
 		
 		if ( checkHomeDirectoryDefined() ) {
-			// Check arguments :
-			// 0 : ndbm 
-			// 1 : ndbm -y | ndbm DbId
-			// 2 : ndbm DbId -y
-			if ( checkArguments(args, 0, 1, 2 ) && checkOptions(args, "-y") ) {
-				String[] newArgs = registerAndRemoveYesOption(args);
-				// newArgs = args without '-y' if any
-				execute2(newArgs);				
-			}
+//			// Check arguments :
+//			// 0 : ndbm 
+//			// 1 : ndbm -y | ndbm DbId
+//			// 2 : ndbm DbId -y
+//			if ( checkArguments(args, 0, 1, 2 ) && checkOptions(args, "-y") ) {
+//				String[] newArgs = registerAndRemoveYesOption(args);
+//				// newArgs = args without '-y' if any
+//				execute2(newArgs);				
+//			}
+			print("This command is temporarily unusable");					
 		}
 		return null;
 	}
@@ -110,7 +111,7 @@ public class NewDbModelCommand extends CommandWithModel {
 			if ( confirm("Do you really want to launch the model creation ? ") ) {
 				print("");
 				print("Generating the new model...");
-				telosysProject.createNewDbModel(id) ;
+//				telosysProject.createNewDbModel(id) ;
 				print("New model created.");
 			}
 		} catch (TelosysToolsException e) {

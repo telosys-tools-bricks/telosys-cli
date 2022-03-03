@@ -15,12 +15,11 @@
  */
 package org.telosys.tools.cli.commands;
 
-import jline.console.ConsoleReader;
-
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.TelosysToolsException;
+
+import jline.console.ConsoleReader;
 
 public class NewEntityCommand extends Command {
 
@@ -69,13 +68,8 @@ public class NewEntityCommand extends Command {
 
 		TelosysProject telosysProject = getTelosysProject();
 		String modelName = getCurrentModel();
-		try {
-			telosysProject.createNewDslEntity(modelName, entityName);
-			print("Entity '"+ entityName + "' created.");
-		} catch (TelosysToolsException e) {
-			printError(e);
-		}
-		
+		telosysProject.createNewDslEntity(modelName, entityName);
+		print("Entity '"+ entityName + "' created.");		
 		return null ;
 	}
 

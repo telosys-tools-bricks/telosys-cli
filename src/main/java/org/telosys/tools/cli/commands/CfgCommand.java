@@ -23,6 +23,12 @@ import org.telosys.tools.commons.variables.Variable;
 
 import jline.console.ConsoleReader;
 
+/**
+ * 'cfg' command 
+ * 
+ * @author Laurent GUERIN
+ *
+ */
 public class CfgCommand extends CommandWithBundles {
 	
 	/**

@@ -22,7 +22,6 @@ import java.util.List;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.TelosysToolsException;
 
 import jline.console.ConsoleReader;
 
@@ -66,24 +65,19 @@ public class ListModelsCommand extends Command {
 
 	private void listModels() {
 		TelosysProject telosysProject = getTelosysProject();
-		try {
-			List<File> files = telosysProject.getModels();			
-			if ( files.isEmpty() ) {
-				print("No model found.") ;
+		List<File> files = telosysProject.getModels();
+		if ( files.isEmpty() ) {
+			print("No model found.") ;
+		}
+		else {
+			// Convert files to file names (strings)
+			LinkedList<String> names = new LinkedList<>();
+			for ( File f : files ) {
+				names.add(f.getName());
 			}
-			else {
-				// Convert files to file names (strings)
-				LinkedList<String> names = new LinkedList<>();
-				for ( File f : files ) {
-					names.add(f.getName());
-				}
-				// Print file names 
-				print( names.size() + " model(s) :") ;
-				printList(names) ;
-			}
-			
-		} catch (TelosysToolsException e) {
-			printError(e);
+			// Print file names 
+			print( names.size() + " model(s) :") ;
+			printList(names) ;
 		}
 	}
 

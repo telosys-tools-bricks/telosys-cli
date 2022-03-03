@@ -89,15 +89,16 @@ public class UpdateDbModelCommand extends CommandWithModel {
 	}
 		
 	private void updateDatabaseModel(Integer id) {
-		if ( confirm("Do you really want to update your model from the database ?") ) {
-			try {
-				TelosysProject telosysProject = getTelosysProject();
-				telosysProject.updateDbModel(id) ;
-				print("Model updated.");
-			} catch (TelosysToolsException e) {
-				printError(e);
-			}
-		}
+//		if ( confirm("Do you really want to update your model from the database ?") ) {
+//			try {
+//				TelosysProject telosysProject = getTelosysProject();
+//				telosysProject.updateDbModel(id) ;
+//				print("Model updated.");
+//			} catch (TelosysToolsException e) {
+//				printError(e);
+//			}
+//		}
+		print("This command is no longer usable since version 3.4.0.");
 	}
 	
 }

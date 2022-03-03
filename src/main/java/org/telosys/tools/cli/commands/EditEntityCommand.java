@@ -84,8 +84,9 @@ public class EditEntityCommand extends Command {
 	private String editEntityDSL(String entityName) {
 		TelosysProject telosysProject = getTelosysProject();
 		if ( telosysProject != null ) {
-			try {
-				File file = telosysProject.buildDslEntityFile(getCurrentModel(), entityName);
+//			try {
+				//File file = telosysProject.buildDslEntityFile(getCurrentModel(), entityName);
+				File file = telosysProject.getDslEntityFile(getCurrentModel(), entityName);// v 3.4.0
 				if ( file.exists() && file.getName().equals(entityName) ) { // Check entity name for exact matching (case sensitive)
 					return launchEditor(file.getAbsolutePath() );
 				}
@@ -103,9 +104,9 @@ public class EditEntityCommand extends Command {
 						print("Ambiguous name '" + entityName + "' (" + files.size() + " entities found).");
 					}
 				}
-			} catch (TelosysToolsException e) {
-				printError(e);
-			}
+//			} catch (TelosysToolsException e) {
+//				printError(e);
+//			}
 		}
 		return null ;
 	}

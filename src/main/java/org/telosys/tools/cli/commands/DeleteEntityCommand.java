@@ -15,12 +15,11 @@
  */
 package org.telosys.tools.cli.commands;
 
-import jline.console.ConsoleReader;
-
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.TelosysToolsException;
+
+import jline.console.ConsoleReader;
 
 public class DeleteEntityCommand extends Command {
 
@@ -69,16 +68,16 @@ public class DeleteEntityCommand extends Command {
 
 		TelosysProject telosysProject = getTelosysProject();
 		String modelName = getCurrentModel();
-		try {
+//		try {
 			if ( telosysProject.deleteDslEntity(modelName, entityName) ) {
 				print("Entity '"+ entityName + "' deleted.");
 			}
 			else {
 				print("Entity '"+ entityName + "' not found.");
 			}
-		} catch (TelosysToolsException e) {
-			printError(e);
-		}
+//		} catch (TelosysToolsException e) {
+//			printError(e);
+//		}
 		return null ;
 	}
 

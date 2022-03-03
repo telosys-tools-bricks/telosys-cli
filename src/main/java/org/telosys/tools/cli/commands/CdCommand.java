@@ -23,6 +23,12 @@ import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.FileUtil;
 
+/**
+ * 'cd' command
+ * 
+ * @author Laurent GUERIN
+ *
+ */
 public class CdCommand extends Command {
 
 	/**

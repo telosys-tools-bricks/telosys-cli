@@ -26,7 +26,7 @@ import org.telosys.tools.generic.model.Model;
 /**
  * 'cm' command
  * 
- * @author Lauren GUERIN 
+ * @author Laurent GUERIN 
  *
  */
 public class CheckModelCommand extends CommandWithModel {
@@ -63,21 +63,23 @@ public class CheckModelCommand extends CommandWithModel {
 	public String execute(String[] args) {
 		
 		if ( checkHomeDirectoryDefined() ) {
-			File modelFile = findModelFile(args) ;
+			//File modelFile = findModelFile(args) ;
+			File modelFolder = findModelFolder(args);
 			// if found => launch the editor
-			if ( modelFile != null ) {
-				return checkModel(modelFile);
+			if ( modelFolder != null ) {
+//				return checkModel(modelFile);
+				return checkModel(modelFolder);
 			}
 		}
 		return null;
 	}
 		
-	private String checkModel(File modelFile) {
+	private String checkModel(File modelFolder) {
 		// Just try to load the model to check it 
-		Model model = loadModel(modelFile);
+		Model model = loadModel(modelFolder);
 		if ( model != null ) {
 			int n = model.getEntities() != null ? model.getEntities().size() : 0 ; 
-			print( "Model OK (file '" + modelFile.getName() + "' loaded : " + n + " entities)" );
+			print( "Model OK ('" + modelFolder.getName() + "' loaded : " + n + " entities)" );
 		}
 		return null ;
 	}

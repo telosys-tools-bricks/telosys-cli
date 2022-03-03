@@ -17,12 +17,10 @@ package org.telosys.tools.cli.commands;
 
 import java.io.File;
 
-import jline.console.ConsoleReader;
-
-import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.TelosysToolsException;
+
+import jline.console.ConsoleReader;
 
 public class NewModelCommand extends Command {
 	
@@ -71,17 +69,12 @@ public class NewModelCommand extends Command {
 	}
 
 	private String newModel(String modelName) {
-
-		String projectFullPath = getCurrentHome();
-		TelosysProject telosysProject = new TelosysProject(projectFullPath);
-		try {
-			File modelFile = telosysProject.createNewDslModel(modelName);
-			setCurrentModel(modelFile);
-			return "Model '" + modelName + "' created (" + modelFile.getName() + "), current model is now '" 
-					+ modelName + "'" ;
-		} catch (TelosysToolsException e) {
-			return "Cannot create model '" + modelName + "'"
-					+ " Exception : " + e.getMessage() ;
-		}
+//		String projectFullPath = getCurrentHome();
+//		TelosysProject telosysProject = new TelosysProject(projectFullPath);
+		File modelFile = getTelosysProject().createNewDslModel(modelName);
+//		setCurrentModel(modelFile);
+		setCurrentModel(modelName);
+		return "Model '" + modelName + "' created (" + modelFile.getName() + "), current model is now '" 
+				+ modelName + "'" ;
 	}
 }
