@@ -44,12 +44,12 @@ public class NewModelCommand extends Command {
 	
 	@Override
 	public String getDescription() {
-		return "New Telosys DSL model";
+		return "Create a new Telosys model";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "nm [model-name]";
+		return "nm model-name";
 	}
 	
 	@Override
@@ -74,7 +74,6 @@ public class NewModelCommand extends Command {
 		File modelFile = getTelosysProject().createNewDslModel(modelName);
 //		setCurrentModel(modelFile);
 		setCurrentModel(modelName);
-		return "Model '" + modelName + "' created (" + modelFile.getName() + "), current model is now '" 
-				+ modelName + "'" ;
+		return "Model '" + modelName + "' created, current model is now '"+ modelName + "'" ;
 	}
 }

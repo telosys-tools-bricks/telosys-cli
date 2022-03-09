@@ -20,10 +20,9 @@ import java.util.List;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.StrUtil;
 import org.telosys.tools.commons.TelosysToolsException;
-import org.telosys.tools.commons.dbcfg.DatabaseConfiguration;
-import org.telosys.tools.commons.dbcfg.DatabasesConfigurations;
+import org.telosys.tools.commons.dbcfg.yaml.DatabaseDefinition;
+import org.telosys.tools.commons.dbcfg.yaml.DatabaseDefinitions;
 
 import jline.console.ConsoleReader;
 
@@ -59,32 +58,35 @@ public class ListDatabasesCommand extends Command {
 
 	@Override
 	public String execute(String[] args) {
-		if ( checkHomeDirectoryDefined() ) {
+		if ( checkHomeDirectoryDefined() && checkArguments(args, 0, 1 ) ) {
 			if ( args.length > 1 ) {
 				// database-id
-				String argId = args[1];
-				Integer id = StrUtil.getIntegerObject(argId);
-				if ( id != null ) {
-					return listDatabases(id);
-				}
-				else {
-					print("Invalid database id '" + argId + "'");					
-				}
+//				String argId = args[1];
+//				Integer id = StrUtil.getIntegerObject(argId);
+//				if ( id != null ) {
+//					return listDatabases(id);
+//					
+//				}
+//				else {
+//					print("Invalid database id '" + argId + "'");					
+//				}
+				return listDatabases(args[1]);
 			}
 			else {
 				// no database-id
 				return listDatabases(null);
-			}			
+			}
 		}
 		return null ;
 	}
 
-	private String listDatabases(Integer id) {
+	private String listDatabases(String id) {
 		TelosysProject telosysProject = getTelosysProject();
 		try {
 			StringBuilder sb = new StringBuilder();
 			if ( id != null ) {
-				DatabaseConfiguration dbConfig = telosysProject.getDatabaseConfiguration(id);
+				// DatabaseConfiguration dbConfig = telosysProject.getDatabaseConfiguration(id);
+				DatabaseDefinition dbConfig = telosysProject.getDatabaseDefinition(id);
 				if ( dbConfig != null ) {
 					printDbConfig(sb, dbConfig);
 				}
@@ -93,15 +95,14 @@ public class ListDatabasesCommand extends Command {
 				}
 			}
 			else {
-				DatabasesConfigurations databasesConfigurations = telosysProject.getDatabasesConfigurations();
-				appendLine(sb, databasesConfigurations.getNumberOfDatabases() + " database(s) defined" );
-				appendLine(sb, "Default database is '" + databasesConfigurations.getDatabaseDefaultId() + "'" );
-				List<DatabaseConfiguration> databases = databasesConfigurations.getDatabaseConfigurationsList();
+				DatabaseDefinitions databasesConfigurations = telosysProject.getDatabaseDefinitions();
+				List<DatabaseDefinition> databases = databasesConfigurations.getDatabases();
 				if ( databases.isEmpty() ) {
 					appendLine(sb, "No database defined." );
 				}
 				else {
-					for ( DatabaseConfiguration dbConfig : databases ) {
+					appendLine(sb, databasesConfigurations.getDatabases().size()+ " database(s) defined" );
+					for ( DatabaseDefinition dbConfig : databases ) {
 						printDbConfig(sb, dbConfig);
 					}
 				}
@@ -113,22 +114,22 @@ public class ListDatabasesCommand extends Command {
 		return null ;
 	}
 
-	private void printDbConfig(StringBuilder sb, DatabaseConfiguration dbConfig) {
+	private void printDbConfig(StringBuilder sb, DatabaseDefinition dbConfig) {
 		appendLine(sb, " ");
-		appendLine(sb, "Database '" + dbConfig.getDatabaseId() + "' : " + dbConfig.getDatabaseName() );
-		appendLine(sb, " . Driver class  : " + dbConfig.getDriverClass() );
-		appendLine(sb, " . JDBC URL      : " + dbConfig.getJdbcUrl()  );
+		appendLine(sb, "Database '" + dbConfig.getId() + "' : "  );
+		appendLine(sb, " . Name          : " + dbConfig.getName() );
+		appendLine(sb, " . Type          : " + dbConfig.getType() );
+		appendLine(sb, " . JDBC URL      : " + dbConfig.getUrl()  );
+		appendLine(sb, " . Driver class  : " + dbConfig.getDriver() );
 		appendLine(sb, " . User          : " + dbConfig.getUser() );
 		appendLine(sb, " . Password      : " + dbConfig.getPassword() );
-		appendLine(sb, " . Type name     : " + dbConfig.getTypeName() );
-		appendLine(sb, " . Dialect       : " + dbConfig.getDialect() );
 		
-		appendLine(sb, " . Catalog       : " + dbConfig.getMetadataCatalog() );
-		appendLine(sb, " . Schema        : " + dbConfig.getMetadataSchema() );
+		appendLine(sb, " . Catalog       : " + dbConfig.getCatalog() );
+		appendLine(sb, " . Schema        : " + dbConfig.getSchema() );
 		appendLine(sb, " . Table filters : " );
-		appendLine(sb, "   - pattern : " + dbConfig.getMetadataTableNamePattern() );
-		appendLine(sb, "   - types   : " + dbConfig.getMetadataTableTypes() );
-		appendLine(sb, "   - exclude : " + dbConfig.getMetadataTableNameExclude() );
-		appendLine(sb, "   - include : " + dbConfig.getMetadataTableNameInclude() );
+		appendLine(sb, "   - pattern : " + dbConfig.getTableNamePattern() );
+		appendLine(sb, "   - types   : " + dbConfig.getTableTypes() );
+		appendLine(sb, "   - exclude : " + dbConfig.getTableNameExclude() );
+		appendLine(sb, "   - include : " + dbConfig.getTableNameInclude() );
 	}
 }

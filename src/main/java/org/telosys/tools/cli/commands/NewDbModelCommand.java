@@ -15,13 +15,12 @@
  */
 package org.telosys.tools.cli.commands;
 
-import java.io.File;
-
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.StrUtil;
 import org.telosys.tools.commons.TelosysToolsException;
+import org.telosys.tools.commons.dbcfg.yaml.DatabaseDefinition;
 
 import jline.console.ConsoleReader;
 
@@ -48,12 +47,12 @@ public class NewDbModelCommand extends CommandWithModel {
 
 	@Override
 	public String getDescription() {
-		return "New model for the current/given database";
+		return "New database model from the given database";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "ndbm [database-id] [-y]";
+		return "ndbm model-name database-id";
 	}
 	
 	@Override
@@ -69,53 +68,61 @@ public class NewDbModelCommand extends CommandWithModel {
 //				// newArgs = args without '-y' if any
 //				execute2(newArgs);				
 //			}
-			print("This command is temporarily unusable");					
+//			print("This command is temporarily unusable");					
+			if ( checkArguments(args, 2 ) ) {
+				execute(args[1], args[2]);				
+			}
 		}
 		return null;
 	}
 		
-	private void execute2(String[] args) {
-		if ( args.length > 1 ) {
-			// database-id
-			String argId = args[1];
-			Integer id = StrUtil.getIntegerObject(argId);
-			if ( id != null ) {
-				newDatabaseModel(id);
+	private void execute(String modelName, String databaseId) {
+		TelosysProject telosysProject = getTelosysProject();
+		try {
+			DatabaseDefinition databaseDefinition = telosysProject.getDatabaseDefinition(databaseId);
+			if ( databaseDefinition != null ) {
+				newDatabaseModel(modelName, databaseDefinition);
 			}
 			else {
-				print("Invalid database id '" + argId + "'");					
+				print("No database with id '" + databaseId + "'");					
 			}
-		}
-		else {
-			// no database-id
-			newDatabaseModel(null);
+		} catch (Exception e) {
+			print("Cannot get database definition (id '" + databaseId + "')" );
+			print(e.getMessage());
 		}
 	}
 	
-	private void newDatabaseModel(Integer id) {
-		try {
-			TelosysProject telosysProject = getTelosysProject();
-			File dbModelFile = telosysProject.getDbModelFile(id);
-			String existingModelFile = null ;
-			if ( dbModelFile != null && dbModelFile.exists() ) {
-				existingModelFile = dbModelFile.getName() ;
-			}
-
-			print("WARNING : ");
-			print("  You're about to create a new model from a database");
-			print("  This operation can take a lot of time (especially for Oracle databases)");
-			if ( existingModelFile != null ) {
-				print("  The model file '" + dbModelFile.getName() + "' already exists.");
-				print("  The existing file will be overridden !");
-			}
-			if ( confirm("Do you really want to launch the model creation ? ") ) {
-				print("");
-				print("Generating the new model...");
-//				telosysProject.createNewDbModel(id) ;
-				print("New model created.");
-			}
-		} catch (TelosysToolsException e) {
-			printError(e);
-		}
+	private void newDatabaseModel(String modelName, DatabaseDefinition databaseDefinition) {
+		TelosysProject telosysProject = getTelosysProject();
+		
+		// TODO
+		//telosysProject.createNewDatabaseModel(modelName);
 	}
+	
+//	private void newDatabaseModel(Integer id) {
+//		try {
+//			TelosysProject telosysProject = getTelosysProject();
+////			File dbModelFile = telosysProject.getDbModelFile(id);
+//			String existingModelFile = null ;
+//			if ( dbModelFile != null && dbModelFile.exists() ) {
+//				existingModelFile = dbModelFile.getName() ;
+//			}
+//
+//			print("WARNING : ");
+//			print("  You're about to create a new model from a database");
+//			print("  This operation can take a lot of time (especially for Oracle databases)");
+//			if ( existingModelFile != null ) {
+//				print("  The model file '" + dbModelFile.getName() + "' already exists.");
+//				print("  The existing file will be overridden !");
+//			}
+//			if ( confirm("Do you really want to launch the model creation ? ") ) {
+//				print("");
+//				print("Generating the new model...");
+////				telosysProject.createNewDbModel(id) ;
+//				print("New model created.");
+//			}
+//		} catch (TelosysToolsException e) {
+//			printError(e);
+//		}
+//	}
 }

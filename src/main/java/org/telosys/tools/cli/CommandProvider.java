@@ -112,8 +112,8 @@ public class CommandProvider {
 		// Database commands
 		register(new ListDatabasesCommand(consoleReader, environment)); // ldb
 		register(new CheckDatabaseCommand(consoleReader, environment)); // cdb
-		register(new NewDbModelCommand(consoleReader, environment)); // ndbm
-		register(new UpdateDbModelCommand(consoleReader, environment)); // udbm
+		register(new NewDbModelCommand(consoleReader, environment));    // ndbm 
+		// register(new UpdateDbModelCommand(consoleReader, environment)); // udbm // removed in v 3.4.0
 		
 		// Model commands
 		register(new ModelCommand(consoleReader, environment));       // m 

@@ -20,11 +20,10 @@ import java.util.List;
 
 import org.telosys.tools.api.MetaDataOptions;
 import org.telosys.tools.api.MetaDataOptionsImpl;
-import org.telosys.tools.commons.StrUtil;
 
 public class CheckDatabaseArguments  {
 
-	private Integer databaseId = null ;
+	private String databaseId = null ;
 	
 	private boolean verboseOption = false ;
 	
@@ -89,15 +88,16 @@ public class CheckDatabaseArguments  {
 			}
 			else {
 				// supposed to be the database id
-				int id = StrUtil.getInt(arg, -1);
-				if ( id >= 0 ) {
-					databaseId = id ;
-				}
+//				int id = StrUtil.getInt(arg, -1);
+//				if ( id >= 0 ) {
+//					databaseId = id ;
+//				}
+				databaseId = arg;
 			}
 		}
 	}
 	
-	public Integer getDatabaseId() {
+	public String getDatabaseId() {
 		return databaseId;
 	}
 

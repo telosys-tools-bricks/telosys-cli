@@ -77,17 +77,17 @@ public class CheckDatabaseCommand extends CommandWithModel {
 		return null;
 	}
 		
-	private String checkDatabase(Integer id, CheckDatabaseArguments arguments) {
+	private String checkDatabase(String databaseId, CheckDatabaseArguments arguments) {
 		try {
-			print("Checking database" + ( id != null ? " #"+id : "" ) + "..."); 
+			print("Checking database" + ( databaseId != null ? " #"+databaseId : "" ) + "..."); 
 			if ( arguments.hasMetaDataOptions() ) {
-				getMetaData(id, arguments.getMetaDataOptions() ) ;
+				getMetaData(databaseId, arguments.getMetaDataOptions() ) ;
 			}
 			else if ( arguments.hasVerboseOption() ) {
-				checkDatabaseConnectionVerbose(id);
+				checkDatabaseConnectionVerbose(databaseId);
 			}
 			else {
-				checkDatabaseConnection(id);
+				checkDatabaseConnection(databaseId);
 			}
 		} catch (TelosysToolsException e) {
 			printError(e);
@@ -97,38 +97,38 @@ public class CheckDatabaseCommand extends CommandWithModel {
 	
 	/**
 	 * Try to connect and get metadata
-	 * @param id
+	 * @param databaseId
 	 * @param options
 	 * @throws TelosysToolsException
 	 */
-	private void getMetaData(Integer id, MetaDataOptions options) throws TelosysToolsException {
+	private void getMetaData(String databaseId, MetaDataOptions options) throws TelosysToolsException {
 		TelosysProject telosysProject = getTelosysProject();
 		// Meta-data required
-		String metadata = telosysProject.getMetaData(id, options);
+		String metadata = telosysProject.getMetaData(databaseId, options);
 		print(metadata); 
 	}
 	
 	/**
 	 * Just try to connect (get a connection and close it) not verbose, no metadata
-	 * @param id
+	 * @param databaseId
 	 * @throws TelosysToolsException
 	 */
-	private void checkDatabaseConnection(Integer id) throws TelosysToolsException {
+	private void checkDatabaseConnection(String databaseId) throws TelosysToolsException {
 		TelosysProject telosysProject = getTelosysProject();
 		// Just try to connect to database (no meta-data)
-		telosysProject.checkDatabaseConnection(id) ;
+		telosysProject.checkDatabaseConnection(databaseId) ;
 		print("OK, connection test is successful.");
 	}
 
 	/**
 	 * Try to connect and get status (get information from connexion) 
-	 * @param id
+	 * @param databaseId
 	 * @throws TelosysToolsException
 	 */
-	private void checkDatabaseConnectionVerbose(Integer id) throws TelosysToolsException {
+	private void checkDatabaseConnectionVerbose(String databaseId) throws TelosysToolsException {
 		TelosysProject telosysProject = getTelosysProject();
 		// Just try to connect to database (no meta-data)
-		DbConnectionStatus conStatus = telosysProject.checkDatabaseConnectionWithStatus(id) ;
+		DbConnectionStatus conStatus = telosysProject.checkDatabaseConnectionWithStatus(databaseId) ;
 		print("OK, connection test is successful.");
 		print(" . product name    : " + conStatus.getProductName() );
 		print(" . product version : " + conStatus.getProductVersion() );
