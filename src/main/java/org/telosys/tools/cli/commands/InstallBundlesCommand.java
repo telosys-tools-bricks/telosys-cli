@@ -98,19 +98,21 @@ public class InstallBundlesCommand extends CommandWithGitHub {
 		List<String> bundlesNames = githubBundles.getBundlesNames().filter(args);
 
 		// Install  bundles		
-		if ( bundlesNames != null && bundlesNames.size() > 0 ) {
-			print( "Installing " + bundlesNames.size() + " bundle(s) from GitHub... ");
+		if ( bundlesNames != null && ! bundlesNames.isEmpty() ) {
+			print( "Installing " + bundlesNames.size() + " bundle(s) from repository... ");
 			for ( String bundleName : bundlesNames ) {
-				try {
-					telosysProject.downloadAndInstallBundle(githubStoreName, bundleName);
-					print( " . '" + bundleName + "' : installed. ");
-				} catch (TelosysToolsException e) {
-					print( " . '" + bundleName + "' : ERROR (cannot install) : "+ e.getMessage() );
-				}
+//				try {
+//					telosysProject.downloadAndInstallBundle(githubStoreName, bundleName);
+//					print( " . '" + bundleName + "' : installed. ");
+//				} catch (TelosysToolsException e) {
+//					print( " . '" + bundleName + "' : ERROR (cannot install) : "+ e.getMessage() );
+//				}
+				telosysProject.downloadAndInstallBundle(githubStoreName, bundleName);
+				print( " . '" + bundleName + "' : installed. ");
 			}
 		}
 		else {
-			print("No bundle found on GitHub.") ;
+			print("No bundle found in repository.") ;
 		}
 	}
 	

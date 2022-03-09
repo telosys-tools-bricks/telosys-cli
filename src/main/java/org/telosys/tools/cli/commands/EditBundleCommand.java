@@ -18,7 +18,6 @@ package org.telosys.tools.cli.commands;
 import java.io.File;
 import java.util.List;
 
-import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandWithBundles;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.TelosysToolsException;
@@ -89,17 +88,12 @@ public class EditBundleCommand extends CommandWithBundles {
 	}
 	
 	private String editBundle(String bundleName) {
-		TelosysProject telosysProject = getTelosysProject();
-		try {
-			File file = telosysProject.getBundleConfigFile(bundleName);
-			if ( file.exists() ) {
-				return launchEditor(file.getAbsolutePath() );
-			}
-			else {
-				print("File '" + file.getAbsolutePath() + "' not found");
-			}
-		} catch (TelosysToolsException e) {
-			printError(e);
+		File file = getTelosysProject().getBundleConfigFile(bundleName);
+		if ( file.exists() ) {
+			return launchEditor(file.getAbsolutePath() );
+		}
+		else {
+			print("File '" + file.getAbsolutePath() + "' not found");
 		}
 		return null ;
 	}

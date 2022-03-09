@@ -32,7 +32,8 @@ public class Const {
 	
 	public static final String TELOSYS_TOOLS_FOLDER = "TelosysTools" ;
 	
-	public static final String DATABASES_DBCFG   = "databases.dbcfg" ;
+//	public static final String DATABASES_DBCFG   = "databases.dbcfg" ;
+	public static final String DATABASES_YAML    = "databases.yaml" ;
 	
 	
 //	public static final String DOT_ENTITY        = ".entity" ;

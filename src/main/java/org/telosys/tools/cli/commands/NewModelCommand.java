@@ -17,6 +17,8 @@ package org.telosys.tools.cli.commands;
 
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.cli.LastError;
+import org.telosys.tools.commons.TelosysToolsException;
 
 import jline.console.ConsoleReader;
 
@@ -55,26 +57,33 @@ public class NewModelCommand extends Command {
 		
 		if ( checkHomeDirectoryDefined() && checkArguments(args, 1, 2) ) {
 			if ( args.length == 2 ) {
-				return newModel(args[1]);
+				newModel(args[1]);
 			}
 			else if ( args.length == 3 ) {
-				return newModelFromDatabase(args[1], args[2]);
+				newModelFromDatabase(args[1], args[2]);
 			}
 		}
 		return null ;
 	}
 
-	private String newModel(String modelName) {
+	private void newModel(String modelName) {
 		getTelosysProject().createNewDslModel(modelName);
-		setCurrentModel(modelName);
-		return "Model '" + modelName + "' created. Current model is now '"+ modelName + "'" ;
+		afterCreationOK(modelName);
 	}
 
-	private String newModelFromDatabase(String modelName, String databaseId) {
-		return "Not yet implemented";
-		// TODO
-//		getTelosysProject().createNewDslModelFromDatabase(modelName, databaseId);
-//		setCurrentModel(modelName);
-//		return "Model '" + modelName + "' created. Current model is now '"+ modelName + "'" ;
+	private void newModelFromDatabase(String modelName, String databaseId) {
+		try {
+			getTelosysProject().createNewDslModelFromDatabase(modelName, databaseId);
+			afterCreationOK(modelName);
+		} catch (TelosysToolsException e) {
+			LastError.setError(e);
+			print("Cannot create model '" + modelName + "'" );
+			print(e.getMessage());
+		}
+	}
+	
+	private void afterCreationOK(String modelName) {
+		setCurrentModel(modelName);
+		print( "Model '" + modelName + "' created. Current model is now '"+ modelName + "'" );
 	}
 }

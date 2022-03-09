@@ -104,13 +104,13 @@ public class ListGitHubCommand extends CommandWithGitHub {
 	 */
 	private void printBundles(String githubStore, List<String> bundles) {
 		if ( bundles != null && ! bundles.isEmpty() ) {
-			print("Bundles found in GitHub store '" + githubStore + "' : ");
+			print("Bundles found in repository '" + githubStore + "' : ");
 			for ( String s : bundles ) {
 				print( " . " + s);
 			}
 		}
 		else {
-			print( "No bundle found in GitHub store '" + githubStore + "'.");
+			print( "No bundle found in repository '" + githubStore + "'.");
 		}
 	}
 }

@@ -397,7 +397,6 @@ public abstract class Command {
 			return true ;
 		}
 		else {
-//			print( "This command requires a model." ) ;
 			print( "No current model (can be set with 'm' command)" ) ;
 			return false ;
 		}
@@ -685,13 +684,21 @@ public abstract class Command {
 		return getFileFullPathIfExists(Const.TELOSYS_TOOLS_CFG, Const.TELOSYS_TOOLS_FOLDER);
 	}
 
+//	/**
+//	 * Returns the file full path for 'databases.dbcfg' if the file exists, else returns null
+//	 * @return
+//	 */
+//	protected String getTelosysDbCfgFullPath() {
+//		return getFileFullPathIfExists(Const.DATABASES_DBCFG, Const.TELOSYS_TOOLS_FOLDER);
+//	}
 	/**
-	 * Returns the file full path for 'databases.dbcfg' if the file exists, else returns null
+	 * Returns the file full path for 'databases.yaml' if the file exists, else returns null
 	 * @return
 	 */
-	protected String getTelosysDbCfgFullPath() {
-		return getFileFullPathIfExists(Const.DATABASES_DBCFG, Const.TELOSYS_TOOLS_FOLDER);
+	protected String getDatabasesFileFullPath() {
+		return getFileFullPathIfExists(Const.DATABASES_YAML, Const.TELOSYS_TOOLS_FOLDER);
 	}
+	
 	
 	/**
 	 * Returns the file full path or null is the file doesn't exist

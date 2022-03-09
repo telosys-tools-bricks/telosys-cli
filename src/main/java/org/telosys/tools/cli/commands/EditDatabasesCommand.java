@@ -45,7 +45,7 @@ public class EditDatabasesCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "Open an editor to edit the '" + Const.DATABASES_DBCFG + "' file ";
+		return "Open an editor to edit '" + Const.DATABASES_YAML + "' file ";
 	}
 	
 	@Override
@@ -56,11 +56,12 @@ public class EditDatabasesCommand extends Command {
 	@Override
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
-			String fileToBeEdited = getTelosysDbCfgFullPath();
+//			String fileToBeEdited = getTelosysDbCfgFullPath();
+			String fileToBeEdited = getDatabasesFileFullPath();
 			if (fileToBeEdited != null) {
 				return launchEditor(fileToBeEdited);
 			} else {
-				return "ERROR: file '" + Const.DATABASES_DBCFG + "' not found";
+				return "Databases file not found (" + Const.DATABASES_YAML + ")";
 			}			
 		}
 		return null ;
