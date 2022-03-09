@@ -15,8 +15,6 @@
  */
 package org.telosys.tools.cli.commands;
 
-import java.io.File;
-
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
 
@@ -44,36 +42,39 @@ public class NewModelCommand extends Command {
 	
 	@Override
 	public String getDescription() {
-		return "Create a new Telosys model";
+		return "Create a new Telosys model (optionally from a database)";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "nm model-name";
+		return "nm model-name [database-id]";
 	}
 	
 	@Override
 	public String execute(String[] args) {
-				
-		if ( args.length > 1 ) {
-			if ( checkHomeDirectoryDefined() ) {
+		
+		if ( checkHomeDirectoryDefined() && checkArguments(args, 1, 2) ) {
+			if ( args.length == 2 ) {
 				return newModel(args[1]);
 			}
-			else {
-				return null ;
+			else if ( args.length == 3 ) {
+				return newModelFromDatabase(args[1], args[2]);
 			}
 		}
-		else {
-			return "No model name";
-		}
+		return null ;
 	}
 
 	private String newModel(String modelName) {
-//		String projectFullPath = getCurrentHome();
-//		TelosysProject telosysProject = new TelosysProject(projectFullPath);
-		File modelFile = getTelosysProject().createNewDslModel(modelName);
-//		setCurrentModel(modelFile);
+		getTelosysProject().createNewDslModel(modelName);
 		setCurrentModel(modelName);
-		return "Model '" + modelName + "' created, current model is now '"+ modelName + "'" ;
+		return "Model '" + modelName + "' created. Current model is now '"+ modelName + "'" ;
+	}
+
+	private String newModelFromDatabase(String modelName, String databaseId) {
+		return "Not yet implemented";
+		// TODO
+//		getTelosysProject().createNewDslModelFromDatabase(modelName, databaseId);
+//		setCurrentModel(modelName);
+//		return "Model '" + modelName + "' created. Current model is now '"+ modelName + "'" ;
 	}
 }

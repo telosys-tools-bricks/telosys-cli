@@ -92,8 +92,15 @@ public abstract class CommandWithModel extends Command {
 		// filter using pattern
 		List<File> modelsFound = new LinkedList<>();
 		for ( File f : allModelsInProject ) {
-			if ( f.getName().contains(modelNamePattern) ) {
-				modelsFound.add(f);
+			if ( f.getName().equals(modelNamePattern) ) {
+				// strict equality
+				return f;
+			}
+			else {
+				// check if contains a part of the given string
+				if ( f.getName().contains(modelNamePattern) ) {
+					modelsFound.add(f);
+				}
 			}
 		}
 		// filter result 
@@ -154,16 +161,6 @@ public abstract class CommandWithModel extends Command {
 	 */
 	protected File getModelFile(String modelName) {
 		TelosysProject telosysProject = getTelosysProject();		
-//		try {
-//			File modelFile = telosysProject.getModelFile(modelName);
-//			if ( modelFile == null ) {
-//				print("Model '" + modelName + "' not found.") ;
-//			}
-//			return modelFile ;
-//		} catch (TelosysToolsException e) {
-//			print(e.getMessage()); // Ambiguous model name
-//			return null ;
-//		}
 		if ( telosysProject.dslModelFolderExists(modelName) ) {
 			File modelFile = telosysProject.getDslModelFile(modelName);
 			if ( modelFile.exists() ) {
@@ -196,8 +193,6 @@ public abstract class CommandWithModel extends Command {
 	}
 	
 	protected File getModelFolder(String modelName) {
-//		File modelFile = getModelFile(modelName);
-//		return ApiUtil.getDslModelFolder(modelFile, true);
 		File modelFolder =  getTelosysProject().getModelFolder(modelName); // v 3.4.0
 		if ( modelFolder.exists() ) {
 			return modelFolder ;
