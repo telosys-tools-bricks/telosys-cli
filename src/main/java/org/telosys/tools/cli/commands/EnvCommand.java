@@ -15,6 +15,8 @@
  */
 package org.telosys.tools.cli.commands;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -88,18 +90,35 @@ public class EnvCommand extends Command {
 
 		appendLine(sb, ". Operating System name : " + environment.getOperatingSystemName() );
 		appendLine(sb, ". Operating System type : " + environment.getOperatingSystemType() );
-		appendLine(sb, ". Java version          : " + environment.getJavaVersion() );
-		appendLine(sb, ". Editor command        : " + environment.getEditorCommand() );
-		appendLine(sb, ". '.jar' file           : " + environment.getJarLocation() );
 		
 		appendLine(sb, ". Current directory     : " + environment.getCurrentDirectory() );
 		appendLine(sb, ". Home directory        : " + undefinedIfNull(environment.getHomeDirectory()) );
+		appendLine(sb, ". Editor command        : " + environment.getEditorCommand() );
 
 		appendLine(sb, ". Current GitHub store  : " + undefinedIfNull(environment.getCurrentGitHubStore()) );
 		appendLine(sb, ". Current model         : " + undefinedIfNull(environment.getCurrentModel()) );
 		appendLine(sb, ". Current bundle        : " + undefinedIfNull(environment.getCurrentBundle()) );
 		
+		appendLine(sb, ". Java version          : " + environment.getJavaVersion() );
+		appendLine(sb, ". '.jar' file           : " + environment.getJarLocation() );
+		
+		appendLine(sb, ". Java classpath : " );
+		classPath(sb);
+//		// URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader(); // ERROR
+//		URLClassLoader urlClassLoader = (URLClassLoader) this.getClass().getClassLoader();
+//		for ( URL url : urlClassLoader.getURLs() ) {
+//			appendLine(sb, "    " + url.getFile() );
+//		}
 		return sb.toString();
+	}
+	
+	private void classPath(StringBuilder sb) {
+		String classpath = System.getProperty("java.class.path");
+		String pathSeparator = System.getProperty("path.separator");
+		String[] classpathEntries = classpath.split(pathSeparator);
+		for ( String s : classpathEntries ) {
+			appendLine(sb, "    " + s);
+		}
 	}
 	
 	private String systemProperties() {

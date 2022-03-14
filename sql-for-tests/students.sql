@@ -1,0 +1,25 @@
+-- CREATE SCHEMA IF NOT EXISTS TEST2;
+CREATE SCHEMA IF NOT EXISTS students;
+-- SET SCHEMA TEST2 ;
+-- DROP ALL OBJECTS;
+
+-- TEST WITH 2 FK REFERENCING THE SAME TABLE
+-- DROP TABLE IF EXISTS teacher ;
+-- DROP TABLE IF EXISTS student ;
+
+CREATE TABLE students.teacher (
+  code INTEGER NOT NULL,
+  name VARCHAR(40),
+  PRIMARY KEY(code)
+);
+
+CREATE TABLE students.student (
+  id INTEGER NOT NULL ,
+  first_name VARCHAR(40),
+  last_name VARCHAR(40),
+  teacher_code1 INTEGER,
+  teacher_code2 INTEGER,
+  PRIMARY KEY(id),
+  CONSTRAINT FK_STU_TEACHER1 FOREIGN KEY(teacher_code1) REFERENCES teacher(code),
+  CONSTRAINT FK_STU_TEACHER2 FOREIGN KEY(teacher_code2) REFERENCES teacher(code)
+);

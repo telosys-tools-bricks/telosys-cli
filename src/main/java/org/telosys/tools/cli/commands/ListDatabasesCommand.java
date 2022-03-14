@@ -114,22 +114,24 @@ public class ListDatabasesCommand extends Command {
 		return null ;
 	}
 
-	private void printDbConfig(StringBuilder sb, DatabaseDefinition dbConfig) {
+	private void printDbConfig(StringBuilder sb, DatabaseDefinition db) {
 		appendLine(sb, " ");
-		appendLine(sb, "Database '" + dbConfig.getId() + "' : "  );
-		appendLine(sb, " . Name          : " + dbConfig.getName() );
-		appendLine(sb, " . Type          : " + dbConfig.getType() );
-		appendLine(sb, " . JDBC URL      : " + dbConfig.getUrl()  );
-		appendLine(sb, " . Driver class  : " + dbConfig.getDriver() );
-		appendLine(sb, " . User          : " + dbConfig.getUser() );
-		appendLine(sb, " . Password      : " + dbConfig.getPassword() );
+		appendLine(sb, "Database '" + db.getId() + "' : "  );
+		appendLine(sb, " . Name          : " + db.getName() );
+		appendLine(sb, " . Type          : " + db.getType() );
 		
-		appendLine(sb, " . Catalog       : " + dbConfig.getCatalog() );
-		appendLine(sb, " . Schema        : " + dbConfig.getSchema() );
-		appendLine(sb, " . Table filters : " );
-		appendLine(sb, "   - pattern : " + dbConfig.getTableNamePattern() );
-		appendLine(sb, "   - types   : " + dbConfig.getTableTypes() );
-		appendLine(sb, "   - exclude : " + dbConfig.getTableNameExclude() );
-		appendLine(sb, "   - include : " + dbConfig.getTableNameInclude() );
+		appendLine(sb, " . Connection : " );
+		appendLine(sb, "   - JDBC URL      : " + db.getUrl()  );
+		appendLine(sb, "   - Driver class  : " + db.getDriver() );
+		appendLine(sb, "   - User          : " + db.getUser() );
+		appendLine(sb, "   - Password      : " + db.getPassword() );
+		
+		appendLine(sb, " . Metadata  : " );
+		appendLine(sb, "   - Catalog            : " + db.getCatalog() );
+		appendLine(sb, "   - Schema             : " + db.getSchema() );
+		appendLine(sb, "   - Table types        : " + db.getTableTypes() );
+		appendLine(sb, "   - Table name pattern : " + db.getTableNamePattern() );
+		appendLine(sb, "   - Table name exclude : " + db.getTableNameExclude() );
+		appendLine(sb, "   - Table name include : " + db.getTableNameInclude() );
 	}
 }

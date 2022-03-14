@@ -19,10 +19,11 @@ import org.telosys.tools.api.MetaDataOptions;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.cli.commands.util.CheckDatabaseArguments;
+import org.telosys.tools.cli.commands.util.CheckDatabaseCommandOptions;
 import org.telosys.tools.cli.observer.DbMetadataObserver;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.dbcfg.DbConnectionStatus;
+import org.telosys.tools.commons.dbcfg.yaml.DatabaseDefinition;
 
 import jline.console.ConsoleReader;
 
@@ -53,33 +54,54 @@ public class CheckDatabaseCommand extends CommandWithModel {
 	
 	@Override
 	public String getUsage() {
-		return "cdb [database-id] [-v] [-i -t -c -pk -fk -s -cat]";
+		return "cdb database-id [-v] [-i -t -c -pk -fk -s -cat]";
 	}
 	
 	@Override
 	public String execute(String[] args) {
 		
 		if ( checkHomeDirectoryDefined() ) {
-			CheckDatabaseArguments arguments = new CheckDatabaseArguments(args);
-			if ( arguments.hasErrors() ) {
-				// Invalid argument(s)
-				for ( String s : arguments.getErrors() ) {
-					print(s);
+			if ( args.length > 1 ) { // at least 2 args expected
+				// build command options if any
+				CheckDatabaseCommandOptions options = new CheckDatabaseCommandOptions(args);
+				if ( options.hasErrors() ) {
+					// Invalid options(s)
+					for ( String s : options.getErrors() ) {
+						print(s);
+					}
+				}
+				else {
+					// Option(s) OK => check database with options
+					String databaseId = args[1] ;
+					if ( databaseIsDefined(databaseId) ) {
+						DbMetadataObserver.setActive(true);
+						checkDatabase(args[1], options );
+						DbMetadataObserver.setActive(false);
+					}
 				}
 			}
 			else {
-				// Argument(s) OK => check database with arg options
-				DbMetadataObserver.setActive(true);
-				checkDatabase(arguments.getDatabaseId(), arguments );
-				DbMetadataObserver.setActive(false);
+				return invalidUsage("database-id expected");
 			}
 		}
 		return null;
 	}
-		
-	private String checkDatabase(String databaseId, CheckDatabaseArguments arguments) {
+
+	private boolean databaseIsDefined(String databaseId) {
 		try {
-			print("Checking database" + ( databaseId != null ? " #"+databaseId : "" ) + "..."); 
+			boolean exists = getTelosysProject().databaseIsDefined(databaseId);
+			if ( ! exists ) {
+				print("Database '" + databaseId + "' is not defined"); 
+			}
+			return exists ;
+		} catch (TelosysToolsException e) {
+			printError(e);
+			return false;
+		}
+	}
+	private String checkDatabase(String databaseId, CheckDatabaseCommandOptions arguments) {
+		try {
+			print("Checking database '" + databaseId + "'..."); 
 			if ( arguments.hasMetaDataOptions() ) {
 				getMetaData(databaseId, arguments.getMetaDataOptions() ) ;
 			}
@@ -103,6 +125,10 @@ public class CheckDatabaseCommand extends CommandWithModel {
 	 */
 	private void getMetaData(String databaseId, MetaDataOptions options) throws TelosysToolsException {
 		TelosysProject telosysProject = getTelosysProject();
+		DatabaseDefinition databaseDefinition = telosysProject.getDatabaseDefinition(databaseId);
+		print("Database definition : ");
+		print(". id :" + databaseDefinition.getId());
+		print(". table pattern : " + databaseDefinition.getTableNamePattern());
 		// Meta-data required
 		String metadata = telosysProject.getMetaData(databaseId, options);
 		print(metadata); 

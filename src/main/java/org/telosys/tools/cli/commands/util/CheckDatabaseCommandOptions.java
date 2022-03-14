@@ -21,20 +21,18 @@ import java.util.List;
 import org.telosys.tools.api.MetaDataOptions;
 import org.telosys.tools.api.MetaDataOptionsImpl;
 
-public class CheckDatabaseArguments  {
+public class CheckDatabaseCommandOptions  {
 
-	private String databaseId = null ;
-	
 	private boolean verboseOption = false ;
 	
 	private MetaDataOptionsImpl metadataOptions = new MetaDataOptionsImpl();
 
 	private List<String> errors = new LinkedList<>();
 	
-	public CheckDatabaseArguments(String[] args) {
-		for ( String arg : args ) {
-			if ( arg.length() >= 2 && arg.charAt(0) == '-' ) {
-				switch ( arg.substring(1) ) {
+	public CheckDatabaseCommandOptions(String[] args) {
+		for ( String argument : args ) {
+			if ( argument.length() >= 2 && argument.charAt(0) == '-' ) {
+				switch ( argument.substring(1) ) {
 				case "v" :
 					// -v : verbose
 					verboseOption = true ;
@@ -83,24 +81,12 @@ public class CheckDatabaseArguments  {
 					
 		        default:
 		        	// -?: unknown arg
-		        	errors.add("Invalid argument '" + arg+ "'");
+		        	errors.add("Invalid option '" + argument+ "'");
 				}
-			}
-			else {
-				// supposed to be the database id
-//				int id = StrUtil.getInt(arg, -1);
-//				if ( id >= 0 ) {
-//					databaseId = id ;
-//				}
-				databaseId = arg;
 			}
 		}
 	}
 	
-	public String getDatabaseId() {
-		return databaseId;
-	}
-
 	public boolean hasVerboseOption() {
 		return verboseOption ;
 	}
@@ -120,6 +106,4 @@ public class CheckDatabaseArguments  {
 	public List<String> getErrors() {
 		return errors;
 	}
-	
-	
 }
