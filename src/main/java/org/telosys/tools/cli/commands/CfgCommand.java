@@ -15,7 +15,6 @@
  */
 package org.telosys.tools.cli.commands;
 
-import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandWithBundles;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.cfg.TelosysToolsCfg;
@@ -62,21 +61,9 @@ public class CfgCommand extends CommandWithBundles {
 	@Override
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
-			printConfiguration();
+			printConfiguration(getTelosysProject().getTelosysToolsCfg());
 		}
 		return null ;
-	}
-
-	private void printConfiguration() {
-		TelosysProject project = getTelosysProject();
-//		try {
-//			TelosysToolsCfg cfg = project.getTelosysToolsCfg();
-//			printConfiguration(cfg);
-//		} catch (TelosysToolsException e) {
-//			print("Error: Cannot get project configuration"); 
-//			print("Exception '" + e.getClass().getCanonicalName() + "' : " + e.getMessage()); 
-//		}
-		printConfiguration(project.getTelosysToolsCfg());
 	}
 
 	private void printConfiguration(TelosysToolsCfg cfg) {

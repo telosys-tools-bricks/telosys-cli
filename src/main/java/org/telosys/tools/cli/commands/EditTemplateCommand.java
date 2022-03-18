@@ -23,8 +23,6 @@ import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Const;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commons.FileFinder;
-import org.telosys.tools.commons.FileUtil;
-import org.telosys.tools.commons.TelosysToolsException;
 
 import jline.console.ConsoleReader;
 
@@ -77,22 +75,6 @@ public class EditTemplateCommand extends Command {
 		return null ;
 	}
 	
-	private File getBundleDirectory(String bundleName) throws TelosysToolsException {
-		TelosysProject telosysProject = getTelosysProject();
-
-		File bundleConfigFile = telosysProject.getBundleConfigFile(bundleName);
-		return bundleConfigFile.getParentFile();
-	}
-	
-	private File buildTemplateFile(String bundleName, String templateName) throws TelosysToolsException {
-		File bundleDir = getBundleDirectory(bundleName);
-		String fileName = templateName ;
-		if ( ! fileName.endsWith(Const.DOT_VM) ) {
-			fileName = templateName + Const.DOT_VM ;
-		}
-		return new File( FileUtil.buildFilePath(bundleDir.getAbsolutePath(), fileName) );
-	}
-	
 	/**
 	 * Edit the TEMPLATE FILE  ( eg xxxx.vm ) 
 	 * @param templateName
@@ -101,41 +83,21 @@ public class EditTemplateCommand extends Command {
 	private String editTemplate(String templateName) {
 		TelosysProject telosysProject = getTelosysProject();
 		if ( telosysProject != null ) {
-			try {
-//				String bundleName = getCurrentBundle();
-//				File bundleConfigFile = telosysProject.getBundleConfigFile(bundleName);
-//				File bundleDir = bundleConfigFile.getParentFile();
-//				
-////				File file = telosysProject.buildDslEntityFile(getCurrentModel(), templateName);
-//				String fileName = templateName ;
-//				if ( ! fileName.endsWith(Const.DOT_VM) ) {
-//					fileName = templateName + Const.DOT_VM ;
-//				}
-//				File file = new File( FileUtil.buildFilePath(bundleDir.getAbsolutePath(), fileName) );
-				File file = buildTemplateFile(getCurrentBundle(), templateName);
-				
-				if ( file.exists() && file.getName().equals(templateName) ) { // Check name for exact matching (case sensitive)
-					return launchEditor(file.getAbsolutePath() );
-				}
-				else {
-					// Try to find the file with abbreviation
-					File dir = file.getParentFile() ;
-					List<File> files = FileFinder.find(templateName, dir, Const.DOT_VM);
-					if ( files.isEmpty() ) {
-						print("No template '" + templateName + "' in the current bundle.");
-					}
-					else if ( files.size() == 1 ) {
-						return launchEditor(files.get(0).getAbsolutePath() ) ;
-					}
-					else {
-						print("Ambiguous name '" + templateName + "' (" + files.size() + " files found).");
-					}
-				}
-			} catch (TelosysToolsException e) {
-				printError(e);
+			File bundleFolder = telosysProject.getBundleFolder(getCurrentBundle());
+			// Try to find one or more files matching the given name or part of name
+			FileFinder fileFinder = new FileFinder(bundleFolder, Const.DOT_VM);
+			List<File> files = fileFinder.find(templateName);
+			if ( files.isEmpty() ) {
+				print("No template matching '" + templateName + "' in the current bundle.");
+			}
+			else if ( files.size() == 1 ) {
+				return launchEditor(files.get(0).getAbsolutePath() ) ;
+			}
+			else {
+				print("Ambiguous name '" + templateName + "' (" + files.size() + " templates found).");
 			}
 		}
 		return null ;
 	}
-
+	
 }

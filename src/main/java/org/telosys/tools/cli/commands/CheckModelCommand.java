@@ -63,11 +63,8 @@ public class CheckModelCommand extends CommandWithModel {
 	public String execute(String[] args) {
 		
 		if ( checkHomeDirectoryDefined() ) {
-			//File modelFile = findModelFile(args) ;
 			File modelFolder = findModelFolder(args);
-			// if found => launch the editor
 			if ( modelFolder != null ) {
-//				return checkModel(modelFile);
 				return checkModel(modelFolder);
 			}
 		}

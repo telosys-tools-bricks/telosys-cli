@@ -17,7 +17,7 @@ package org.telosys.tools.cli.commons;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +63,7 @@ public class EntityUtil {
 	 */
 	public static List<Entity> select( List<Entity> allEntities, List<String> criteria ) {
 		if ( criteria != null ) {
-			Map<String,Entity> map = new Hashtable<>();
+			Map<String,Entity> map = new HashMap<>();
 			for ( String criterion : criteria ) {
 				for ( Entity entity : allEntities ) {
 					String entityClassName = entity.getClassName() ;

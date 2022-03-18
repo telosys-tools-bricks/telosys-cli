@@ -15,8 +15,6 @@
  */
 package org.telosys.tools.cli.commands;
 
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -104,11 +102,6 @@ public class EnvCommand extends Command {
 		
 		appendLine(sb, ". Java classpath : " );
 		classPath(sb);
-//		// URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader(); // ERROR
-//		URLClassLoader urlClassLoader = (URLClassLoader) this.getClass().getClassLoader();
-//		for ( URL url : urlClassLoader.getURLs() ) {
-//			appendLine(sb, "    " + url.getFile() );
-//		}
 		return sb.toString();
 	}
 	

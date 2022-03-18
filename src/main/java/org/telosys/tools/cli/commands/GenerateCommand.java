@@ -27,9 +27,7 @@ import org.telosys.tools.cli.commons.TargetUtil;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.bundles.TargetDefinition;
 import org.telosys.tools.commons.bundles.TargetsDefinitions;
-import org.telosys.tools.generator.task.ErrorReport;
 import org.telosys.tools.generator.task.GenerationTaskResult;
-import org.telosys.tools.generator.task.MsgBox;
 import org.telosys.tools.generic.model.Entity;
 import org.telosys.tools.generic.model.Model;
 
@@ -92,33 +90,32 @@ public class GenerateCommand extends CommandWithModel {
 	 * Generation entry point
 	 * @param args all the arguments as provided by the command line (0 to N)
 	 */
-	private void generate(String[] args)  {
+	private GenerationTaskResult generate(String[] args)  {
 		int nbArgs = args.length - 1 ;
-		GenerationTaskResult result = null ;
 		try {
 			if ( nbArgs == 2 ) {
 				// gen * * 
-				result = generate(args[1], args[2], false);
+				return generate(args[1], args[2], false);
 			}
 			else if ( nbArgs == 3 ) {
 				// gen * * -r 
 				if ( checkResourcesOption(args[3]) ) {
-					result = generate(args[1], args[2], true);
+					return generate(args[1], args[2], true);
 				}
 			}
 			else if ( nbArgs == 1 ) {
 				// gen -r 
 				if ( checkResourcesOption(args[1]) ) {
-					result = generateResources();
+					return generateResources();
 				}
 			}
-			
-			if ( result != null ) {
-				printResult(result);
+			else {
+				print("invalid arguments");
 			}
 		} catch (TelosysToolsException e) {
 			printError(e);
 		}
+		return null;
 	}
 	
 	private boolean checkResourcesOption(String option) {
@@ -225,23 +222,6 @@ public class GenerateCommand extends CommandWithModel {
 		TargetsDefinitions targetDefinitions = getCurrentTargetsDefinitions();
 		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(arg) ;
 		return TargetUtil.filter(targetDefinitions.getTemplatesTargets(), criteria);
-	}
-	
-	private void printResult( GenerationTaskResult result ) {
-		// Useless (duplicated with previous output)
-		return ;
-		// TODO : write result in "gen-result.txt" file 
-		
-//		print("Generation completed.");
-//		print(" " + result.getNumberOfFilesGenerated() + " file(s) generated");
-//		print(" " + result.getNumberOfResourcesCopied() + " resource(s) copied");
-//		print(" " + result.getNumberOfGenerationErrors() + " error(s)");
-//		List<ErrorReport> errors = result.getErrors() ;
-//		if ( errors != null && errors.size() > 0 ) {
-//			for ( ErrorReport err : errors ) {
-//				MsgBox.error(err);
-//			}
-//		}
 	}
 	
 }

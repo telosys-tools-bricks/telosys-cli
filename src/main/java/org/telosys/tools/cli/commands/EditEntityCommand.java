@@ -23,7 +23,6 @@ import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Const;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commons.FileFinder;
-import org.telosys.tools.commons.TelosysToolsException;
 
 import jline.console.ConsoleReader;
 
@@ -67,7 +66,7 @@ public class EditEntityCommand extends Command {
 	public String execute(String[] args) {
 		if ( checkDslModelDefined() ) {
 			if ( args.length > 1 ) {
-				return editEntityDSL(args[1]);
+				return editEntity(args[1]);
 			}
 			else {
 				return invalidUsage("entity-name expected");
@@ -81,32 +80,22 @@ public class EditEntityCommand extends Command {
 	 * @param entityName
 	 * @return
 	 */
-	private String editEntityDSL(String entityName) {
+	private String editEntity(String entityName) {
 		TelosysProject telosysProject = getTelosysProject();
 		if ( telosysProject != null ) {
-//			try {
-				//File file = telosysProject.buildDslEntityFile(getCurrentModel(), entityName);
-				File file = telosysProject.getDslEntityFile(getCurrentModel(), entityName);// v 3.4.0
-				if ( file.exists() && file.getName().equals(entityName) ) { // Check entity name for exact matching (case sensitive)
-					return launchEditor(file.getAbsolutePath() );
-				}
-				else {
-					// Try to find the file with abbreviation
-					File dir = file.getParentFile() ;
-					List<File> files = FileFinder.find(entityName, dir, Const.DSL_ENTITY_FILE_SUFFIX);
-					if ( files.isEmpty() ) {
-						print("No entity '" + entityName + "' in the current model.");
-					}
-					else if ( files.size() == 1 ) {
-						return launchEditor(files.get(0).getAbsolutePath() ) ;
-					}
-					else {
-						print("Ambiguous name '" + entityName + "' (" + files.size() + " entities found).");
-					}
-				}
-//			} catch (TelosysToolsException e) {
-//				printError(e);
-//			}
+			File modelFolder = telosysProject.getModelFolder(getCurrentModel());
+			// Try to find one or more files matching the given name or part of name
+			FileFinder fileFinder = new FileFinder(modelFolder, Const.DSL_ENTITY_FILE_SUFFIX);
+			List<File> files = fileFinder.find(entityName);
+			if ( files.isEmpty() ) {
+				print("No entity matching '" + entityName + "' in the current model.");
+			}
+			else if ( files.size() == 1 ) {
+				return launchEditor(files.get(0).getAbsolutePath() ) ;
+			}
+			else {
+				print("Ambiguous name '" + entityName + "' (" + files.size() + " entities found).");
+			}
 		}
 		return null ;
 	}

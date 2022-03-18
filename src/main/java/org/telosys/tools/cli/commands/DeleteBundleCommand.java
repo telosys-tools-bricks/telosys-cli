@@ -77,9 +77,6 @@ public class DeleteBundleCommand extends CommandWithBundles {
 		else {
 			if ( checkBundleDefined() ) {
 				// Current bundle is defined => delete the current bundle
-//				deleteBundle(getCurrentBundle());
-				//String[] bundles = { getCurrentBundle() };
-				//deleteBundles(bundles);
 				String currentBundle = getCurrentBundle();
 				print("You are about to delete the current bundle :") ;
 				print(" . " + currentBundle) ;

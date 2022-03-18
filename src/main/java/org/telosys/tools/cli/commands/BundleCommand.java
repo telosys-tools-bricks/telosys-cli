@@ -69,7 +69,7 @@ public class BundleCommand extends Command {
 				TargetsDefinitions targetsDefinitions = getCurrentTargetsDefinitions();
 				int templatesCount = targetsDefinitions.getTemplatesTargets().size();
 				String resources = "no resource" ;
-				if ( targetsDefinitions.getResourcesTargets().size() > 0 ) {
+				if ( ! targetsDefinitions.getResourcesTargets().isEmpty()) {
 					resources = "contains resource(s)" ;
 				}
 				return bundleName + " : " + templatesCount + " template(s), " + resources ;
@@ -99,21 +99,15 @@ public class BundleCommand extends Command {
 		TelosysProject telosysProject = getTelosysProject();
 		try {
 			// get all installed bundles
-			//List<String> bundles = telosysProject.getInstalledBundles();
 			BundlesNames bundlesNames = telosysProject.getInstalledBundles();
 			// filter with criteria if any
-//			List<String> criteria = BundlesUtil.buildCriteriaFromArgs(args);
-//			List<String> filteredBundles = BundlesUtil.filter(bundles, criteria);
-			
 			List<String> filteredBundles = bundlesNames.filter(args);
 			
-			if ( filteredBundles.size() < 0 ) {
+			if ( filteredBundles.isEmpty() ) {
 				return "No bundle found!" ;
 			}
 			else if ( filteredBundles.size() == 1 ) {
 				// Only 1 bundle matching arg
-//				setCurrentBundle(filteredBundles.get(0));
-//				return "Current bundle is now '" + getCurrentBundle() + "'";
 				return selectBundle(filteredBundles.get(0));
 			}
 			else {

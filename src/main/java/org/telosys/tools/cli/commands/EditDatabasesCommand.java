@@ -56,7 +56,6 @@ public class EditDatabasesCommand extends Command {
 	@Override
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
-//			String fileToBeEdited = getTelosysDbCfgFullPath();
 			String fileToBeEdited = getDatabasesFileFullPath();
 			if (fileToBeEdited != null) {
 				return launchEditor(fileToBeEdited);

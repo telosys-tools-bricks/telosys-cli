@@ -68,16 +68,12 @@ public class DeleteEntityCommand extends Command {
 
 		TelosysProject telosysProject = getTelosysProject();
 		String modelName = getCurrentModel();
-//		try {
-			if ( telosysProject.deleteDslEntity(modelName, entityName) ) {
-				print("Entity '"+ entityName + "' deleted.");
-			}
-			else {
-				print("Entity '"+ entityName + "' not found.");
-			}
-//		} catch (TelosysToolsException e) {
-//			printError(e);
-//		}
+		if ( telosysProject.deleteDslEntity(modelName, entityName) ) {
+			print("Entity '"+ entityName + "' deleted.");
+		}
+		else {
+			print("Entity '"+ entityName + "' not found.");
+		}
 		return null ;
 	}
 

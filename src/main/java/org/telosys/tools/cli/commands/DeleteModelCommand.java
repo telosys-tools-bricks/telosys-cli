@@ -70,34 +70,11 @@ public class DeleteModelCommand extends CommandWithModel {
 	}
 
 	private void execute2(String[] args) {
-//		if ( args.length > 1 ) {
-//			deleteModel(args[1]);
-//		}
-//		else {
-//			if ( checkModelDefined() ) {
-//				deleteModel(getCurrentModel());
-//			}
-//		}
 		File modelFolder = findModelFolder(args);
 		if ( modelFolder != null) {
 			deleteModel(modelFolder);
 		}
 	}
-
-//	private void deleteModel(String modelName) {
-//		printDebug("deleteModel('" + modelName + "')");
-//		File modelFile = getModelFile(modelName);
-//		if ( modelFile != null ) {
-//			printDebug("modelFile = " + modelFile.getAbsolutePath() );
-//			if ( confirm("Do you really want to delete model '" + modelName + "'") ) {
-//				deleteModel(modelFile );
-//				// If the current model has been deleted => update env & prompt
-//				if ( isCurrentModel(modelFile) ) {
-//					unsetCurrentModel();
-//				}
-//			}
-//		}
-//	}
 
 	private void deleteModel(File modelFolder) {
 		String modelName = modelFolder.getName();
@@ -105,38 +82,10 @@ public class DeleteModelCommand extends CommandWithModel {
 			// delete model
 			getTelosysProject().deleteDslModel(modelFolder);
 			// If the current model has been deleted => update env & prompt
-//			if ( isCurrentModel(modelFile) ) {
 			if ( isCurrentModel(modelName) ) {
 				unsetCurrentModel();
 			}
 		}
 	}
-	
-//	private void deleteModel(File modelFile ) {
-//		
-//		printDebug("deleteModel('" + modelFile + "')");
-//		if ( ApiUtil.isDslModelFile(modelFile) ) {
-//			// Delete DSL MODEL
-//			print("deleting DSL model '" + modelFile.getName() + "' ..." );
-//			TelosysProject telosysProject = getTelosysProject();			
-//			try {
-//				telosysProject.deleteDslModel(modelFile);
-//				print("Model '" + modelFile.getName() + "' deleted." );
-//			} catch (Exception e) {
-//				print("Cannot delete model '" + modelFile.getName() + "' " );
-//				printError(e);
-//			}
-//		}
-//		else {
-//			// Delete DB MODEL (a single file )
-//			print("deleting DB model '" + modelFile.getName() + "' ..." );
-//			if ( ! modelFile.delete() ) {
-//				print("Cannot delete model '" + modelFile.getName() + "' " );
-//			}
-//			else {
-//				print("Model '" + modelFile.getName() + "' deleted." );
-//			}
-//		}
-//	}
 
 }
