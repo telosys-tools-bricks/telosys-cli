@@ -79,9 +79,9 @@ public class CommandsGroups {
 		
 		String name = "Model commands" ;
 		commands.add("m");
-		commands.add("nm");
-		commands.add("ndbm");
-		commands.add("udbm");
+		commands.add("nm"); 
+		// commands.add("ndbm"); // removed in v 4.0.0
+		// commands.add("udbm"); // removed in v 4.0.0
 		commands.add("lm");
 		commands.add("em");
 		commands.add("cm");

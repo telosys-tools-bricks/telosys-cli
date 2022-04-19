@@ -55,14 +55,12 @@ import org.telosys.tools.cli.commands.ListTemplatesCommand;
 import org.telosys.tools.cli.commands.LsCommand;
 import org.telosys.tools.cli.commands.MkdirCommand;
 import org.telosys.tools.cli.commands.ModelCommand;
-import org.telosys.tools.cli.commands.NewDbModelCommand;
 import org.telosys.tools.cli.commands.NewEntityCommand;
 import org.telosys.tools.cli.commands.NewModelCommand;
 import org.telosys.tools.cli.commands.PwdCommand;
 import org.telosys.tools.cli.commands.QuitCommand;
 import org.telosys.tools.cli.commands.TestCommand;
 import org.telosys.tools.cli.commands.ThrowExceptionCommand;
-import org.telosys.tools.cli.commands.UpdateDbModelCommand;
 import org.telosys.tools.cli.commands.VerCommand;
 
 import jline.console.ConsoleReader;
@@ -112,8 +110,8 @@ public class CommandProvider {
 		// Database commands
 		register(new ListDatabasesCommand(consoleReader, environment)); // ldb
 		register(new CheckDatabaseCommand(consoleReader, environment)); // cdb
-		register(new NewDbModelCommand(consoleReader, environment));    // ndbm 
-		// register(new UpdateDbModelCommand(consoleReader, environment)); // udbm // removed in v 3.4.0
+		// register(new NewDbModelCommand(consoleReader, environment));    // ndbm // removed in v 4.0.0
+		// register(new UpdateDbModelCommand(consoleReader, environment)); // udbm // removed in v 4.0.0
 		
 		// Model commands
 		register(new ModelCommand(consoleReader, environment));       // m 
