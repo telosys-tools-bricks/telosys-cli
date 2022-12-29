@@ -32,11 +32,8 @@ public class Const {
 	
 	public static final String TELOSYS_TOOLS_FOLDER = "TelosysTools" ;
 	
-//	public static final String DATABASES_DBCFG   = "databases.dbcfg" ;
 	public static final String DATABASES_YAML    = "databases.yaml" ;
 	
-	
-//	public static final String DOT_ENTITY        = ".entity" ;
 	public static final String DOT_VM            = ".vm" ;
 	
 	public static final String  DSL_MODEL_FILE_SUFFIX   = ".model" ;
@@ -45,6 +42,5 @@ public class Const {
 
 	public static final String  DBREP_SUFFIX   = ".dbrep"  ;
 	public static final String  DBMODEL_SUFFIX = ".dbmodel"  ;
-
 
 }

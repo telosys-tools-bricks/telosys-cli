@@ -684,13 +684,6 @@ public abstract class Command {
 		return getFileFullPathIfExists(Const.TELOSYS_TOOLS_CFG, Const.TELOSYS_TOOLS_FOLDER);
 	}
 
-//	/**
-//	 * Returns the file full path for 'databases.dbcfg' if the file exists, else returns null
-//	 * @return
-//	 */
-//	protected String getTelosysDbCfgFullPath() {
-//		return getFileFullPathIfExists(Const.DATABASES_DBCFG, Const.TELOSYS_TOOLS_FOLDER);
-//	}
 	/**
 	 * Returns the file full path for 'databases.yaml' if the file exists, else returns null
 	 * @return
@@ -718,10 +711,10 @@ public abstract class Command {
 	private File getFileInHomeDir(String fileName, String subDirectory) {
 
 		// Try to get the file in the 'home' directory
-		String shortPath = fileName; // e.g. 'telosys-tools.cfg' or 'databases.dbcfg'
+		String shortPath = fileName; // e.g. 'telosys-tools.cfg' or 'databases.yaml'
 		if (subDirectory != null) {
 			shortPath = FileUtil.buildFilePath(subDirectory, fileName); 
-			// e.g. 'TelosysTools/databases.dbcfg'
+			// e.g. 'TelosysTools/databases.yaml'
 		}
 		String fileFullPath = FileUtil.buildFilePath(environment.getHomeDirectory(), shortPath);
 		return new File(fileFullPath);
