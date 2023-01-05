@@ -19,7 +19,10 @@ import org.telosys.tools.commons.observer.TaskObserver2;
 
 public abstract class AbstractObserver implements TaskObserver2<Integer, String> {
 
-	public AbstractObserver() {
+	/**
+	 * Constructor
+	 */
+	protected AbstractObserver() {
 		super();
 	}
 

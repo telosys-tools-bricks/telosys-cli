@@ -19,6 +19,9 @@ import org.telosys.tools.commons.StrUtil;
 
 public class DbModelObserver extends AbstractObserver {
 
+	/**
+	 * Constructor
+	 */
 	public DbModelObserver() {
 		super();
 	}

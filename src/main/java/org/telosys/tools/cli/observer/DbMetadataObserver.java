@@ -21,17 +21,21 @@ public class DbMetadataObserver extends AbstractObserver {
 
 	private static boolean active = false ;
 	
-	public static void setActive(boolean b) {
-		active = b ;
-	}
-	public static boolean isActive() {
-		return active ;
-	}
-	
+	/**
+	 * Constructor
+	 */
 	public DbMetadataObserver() {
 		super();
 	}
 		
+	public static void setActive(boolean b) {
+		active = b ;
+	}
+
+	public static boolean isActive() {
+		return active ;
+	}
+	
 	@Override
 	public void notify(Integer level, String msg) {
 		if ( ! active ) return ;
