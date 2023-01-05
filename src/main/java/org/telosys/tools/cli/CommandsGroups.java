@@ -57,6 +57,7 @@ public class CommandsGroups {
 		commands.add("env");
 		commands.add("ver");
 		commands.add("q");
+		commands.add("exit");
 		
 		return new CommandsGroup(name, commands);
 	}

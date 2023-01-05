@@ -38,6 +38,7 @@ import org.telosys.tools.cli.commands.EditModelCommand;
 import org.telosys.tools.cli.commands.EditTemplateCommand;
 import org.telosys.tools.cli.commands.EnvCommand;
 import org.telosys.tools.cli.commands.ErrorCommand;
+import org.telosys.tools.cli.commands.ExitCommand;
 import org.telosys.tools.cli.commands.GenerateCommand;
 import org.telosys.tools.cli.commands.GitHubCommand;
 import org.telosys.tools.cli.commands.GitHubUserCommand;
@@ -96,6 +97,7 @@ public class CommandProvider {
 		register(new EnvCommand(consoleReader, environment)); // env
 		register(new HelpCommand(consoleReader, environment)); // ? - help
 		register(new QuitCommand(consoleReader, environment)); // q
+		register(new ExitCommand(consoleReader, environment)); // exit  ( ver 4.1.0 )
 		register(new ErrorCommand(consoleReader, environment)); // err
 		register(new VerCommand(consoleReader, environment)); // ver
 
