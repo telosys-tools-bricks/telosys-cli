@@ -77,23 +77,27 @@ public class ListResourcesCommand extends Command {
 			print( "No resource" ) ; 
 		}
 		else {
-			for ( TargetDefinition td : resources ) {
-				String dest = "" ;
-				String folder = td.getFolder() ;
-				String file = td.getFile();
-				if ( ! StrUtil.nullOrVoid( folder ) && ! StrUtil.nullOrVoid(file) ) {
-					dest = folder + " / " + file ;
-				}
-				else {
-					if ( ! StrUtil.nullOrVoid( folder ) ) {
-						dest = folder ;
-					}
-					if ( ! StrUtil.nullOrVoid( file ) ) {
-						dest = file ;
-					}
-				}
-				print( " . " + td.getTemplate() + " -> " + dest  ) ; 
+			printResources(resources);
+		}
+	}
+	
+	private void printResources(List<TargetDefinition> resources) {
+		for ( TargetDefinition td : resources ) {
+			String dest = "" ;
+			String folder = td.getFolder() ;
+			String file = td.getFile();
+			if ( ! StrUtil.nullOrVoid( folder ) && ! StrUtil.nullOrVoid(file) ) {
+				dest = folder + " / " + file ;
 			}
+			else {
+				if ( ! StrUtil.nullOrVoid( folder ) ) {
+					dest = folder ;
+				}
+				if ( ! StrUtil.nullOrVoid( file ) ) {
+					dest = file ;
+				}
+			}
+			print( " . " + td.getTemplate() + " -> " + dest  ) ; 
 		}
 	}
 }
