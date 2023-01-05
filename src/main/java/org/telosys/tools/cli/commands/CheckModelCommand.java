@@ -65,19 +65,18 @@ public class CheckModelCommand extends CommandWithModel {
 		if ( checkHomeDirectoryDefined() ) {
 			File modelFolder = findModelFolder(args);
 			if ( modelFolder != null ) {
-				return checkModel(modelFolder);
+				checkModel(modelFolder);
 			}
 		}
 		return null;
 	}
 		
-	private String checkModel(File modelFolder) {
+	private void checkModel(File modelFolder) {
 		// Just try to load the model to check it 
 		Model model = loadModel(modelFolder);
 		if ( model != null ) {
 			int n = model.getEntities() != null ? model.getEntities().size() : 0 ; 
 			print( "Model OK ('" + modelFolder.getName() + "' loaded : " + n + " entities)" );
 		}
-		return null ;
 	}
 }

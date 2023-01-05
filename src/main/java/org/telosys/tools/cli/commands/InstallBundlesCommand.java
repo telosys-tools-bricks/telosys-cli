@@ -101,12 +101,6 @@ public class InstallBundlesCommand extends CommandWithGitHub {
 		if ( bundlesNames != null && ! bundlesNames.isEmpty() ) {
 			print( "Installing " + bundlesNames.size() + " bundle(s) from repository... ");
 			for ( String bundleName : bundlesNames ) {
-//				try {
-//					telosysProject.downloadAndInstallBundle(githubStoreName, bundleName);
-//					print( " . '" + bundleName + "' : installed. ");
-//				} catch (TelosysToolsException e) {
-//					print( " . '" + bundleName + "' : ERROR (cannot install) : "+ e.getMessage() );
-//				}
 				telosysProject.downloadAndInstallBundle(githubStoreName, bundleName);
 				print( " . '" + bundleName + "' : installed. ");
 			}

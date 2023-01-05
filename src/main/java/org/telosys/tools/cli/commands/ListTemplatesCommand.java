@@ -66,16 +66,15 @@ public class ListTemplatesCommand extends Command {
 	@Override
 	public String execute(String[] args) {
 		if ( checkArguments(args, 0, 1) && checkHomeDirectoryDefined() && checkBundleDefined() ) {
-			return listTemplates(args);
+			listTemplates(args);
 		}
 		return null ;
 	}
 	
-	private String listTemplates(String[] args) {
+	private void listTemplates(String[] args) {
 		TargetsDefinitions targetDefinitions = getCurrentTargetsDefinitions();
 		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(args.length > 1 ? args[1] : null) ;
 		List<TargetDefinition> selectedTargets = TargetUtil.filter(targetDefinitions.getTemplatesTargets(), criteria);
 		print ( TargetUtil.buildListAsString(selectedTargets) );
-		return null ;
 	}
 }

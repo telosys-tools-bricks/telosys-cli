@@ -65,14 +65,6 @@ public class ListEntitiesCommand extends CommandWithModel {
 	
 	private void listEntities(String[] args) {
 		// Get all entities for the current model
-//		File modelFile = getCurrentModelFile();
-//		List<String> entities ;
-//		if ( isDslModelFile(modelFile) ) {
-//			entities = getDslModelEntities(modelFile);
-//		}
-//		else {
-//			entities = getDbModelEntities(modelFile);
-//		}
 		List<String> entities = DslModelUtil.getEntityNames(getCurrentModelFolder());
 		// Apply filter with criteria
 		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(args.length > 1 ? args[1] : null) ;
@@ -84,25 +76,6 @@ public class ListEntitiesCommand extends CommandWithModel {
 			printList( CriteriaUtil.selectAndSort(entities, criteria), " . " );
 		}
 	}
-	
-//	private List<String> getDslModelEntities(File modelFile) {
-//		List<String> entities = new LinkedList<>();
-//		for ( String fileName : DslModelUtil.getEntitiesSimpleFileNames(modelFile) ) {
-//			entities.add( StrUtil.removeEnd(fileName, ".entity") ); // TODO : constant
-//		}
-//		return entities;
-//	}
-	
-//	private List<String> getDbModelEntities(File modelFile) {
-//		List<String> entities = new LinkedList<>();
-//		Model model = loadModel(modelFile);
-//		if ( model != null ) {
-//			for ( Entity e : model.getEntities() ) {
-//				entities.add(e.getClassName());
-//			}
-//		}
-//		return entities;
-//	}
 	
 	protected void printList(List<String> list, String prefix) {
 		for ( String s : list) {

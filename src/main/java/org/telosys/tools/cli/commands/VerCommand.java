@@ -68,7 +68,6 @@ public class VerCommand extends Command {
 		appendLine(sb, "Generator     : " + GeneratorVersion.GENERATOR_VERSION  );
 		appendLine(sb, "Generic model : " + GenericModelVersion.VERSION  );
 		appendLine(sb, "DSL model     : " + DslModelVersion.VERSION  );
-//		appendLine(sb, "DB model      : " + DbModelVersion.VERSION  );
 		appendLine(sb, "GitHub client : " + GitHubClient.VERSION ) ;
 		appendLine(sb, "HTTP client   : " + HttpClient.VERSION ) ;
 		

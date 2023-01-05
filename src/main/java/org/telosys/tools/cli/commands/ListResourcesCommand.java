@@ -65,12 +65,12 @@ public class ListResourcesCommand extends Command {
 	@Override
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() && checkBundleDefined() ) {
-			return listResources();
+			listResources();
 		}
 		return null ;
 	}
 	
-	private String listResources() {
+	private void listResources() {
 		TargetsDefinitions targetDefinitions = getCurrentTargetsDefinitions();
 		List<TargetDefinition> resources = targetDefinitions.getResourcesTargets();
 		if ( resources.isEmpty() ) {
@@ -95,6 +95,5 @@ public class ListResourcesCommand extends Command {
 				print( " . " + td.getTemplate() + " -> " + dest  ) ; 
 			}
 		}
-		return null ;
 	}
 }

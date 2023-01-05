@@ -61,15 +61,6 @@ public class ListDatabasesCommand extends Command {
 		if ( checkHomeDirectoryDefined() && checkArguments(args, 0, 1 ) ) {
 			if ( args.length > 1 ) {
 				// database-id
-//				String argId = args[1];
-//				Integer id = StrUtil.getIntegerObject(argId);
-//				if ( id != null ) {
-//					return listDatabases(id);
-//					
-//				}
-//				else {
-//					print("Invalid database id '" + argId + "'");					
-//				}
 				return listDatabases(args[1]);
 			}
 			else {
@@ -85,7 +76,6 @@ public class ListDatabasesCommand extends Command {
 		try {
 			StringBuilder sb = new StringBuilder();
 			if ( id != null ) {
-				// DatabaseConfiguration dbConfig = telosysProject.getDatabaseConfiguration(id);
 				DatabaseDefinition dbConfig = telosysProject.getDatabaseDefinition(id);
 				if ( dbConfig != null ) {
 					printDbConfig(sb, dbConfig);

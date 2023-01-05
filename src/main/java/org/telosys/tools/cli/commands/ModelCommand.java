@@ -74,11 +74,9 @@ public class ModelCommand extends CommandWithModel {
 	}
 	
 	private String tryToSetCurrentModel(String modelNamePattern) {
-//		File modelFile = findModelFile(modelNamePattern) ;
 		File modelFolder = findModelFolder(modelNamePattern) ;
 		// if found 
 		if ( modelFolder != null ) {
-			//setCurrentModel(modelFile.getName());
 			setCurrentModel(modelFolder.getName());
 			return "Current model is now '" + getCurrentModel() + "'";
 		}

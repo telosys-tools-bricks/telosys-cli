@@ -64,7 +64,6 @@ public class ListBundlesCommand extends CommandWithBundles {
 	private void listBundles(String[] commandArgs) {
 		
 		try {
-//			List<String> bundleNames = BundlesUtil.getExistingBundles(getTelosysProject(), commandArgs);	
 			List<String> bundleNames = getInstalledBundles(commandArgs);
 			if ( bundleNames.isEmpty() ) {
 				print("No bundle found.") ;
