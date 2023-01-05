@@ -44,25 +44,6 @@ public abstract class CommandWithModel extends Command {
 		super(consoleReader, environment);
 	}
 
-//	/**
-//	 * Try to found a unique model file according with the first argument 
-//	 * or with the current model if no arg
-//	 * @param args
-//	 * @return
-//	 */
-//	protected File findModelFile(String[] args) {
-//		File modelFile = null ;
-//		if ( args.length > 1 ) {
-//			modelFile = findModelFile(args[1]);
-//		}
-//		else {
-//			if ( checkModelDefined() ) {
-//				modelFile = findModelFile(getCurrentModel());
-//			}
-//		}
-//		return modelFile ;
-//	}
-
 	/**
 	 * Try to found a unique model folder according with the first argument 
 	 * or with the current model if no arg provided
@@ -117,43 +98,6 @@ public abstract class CommandWithModel extends Command {
 		return null ;
 	}
 	
-//	/**
-//	 * Try to found a unique model file matching the given model name pattern
-//	 * @param modelNamePattern
-//	 * @return the file or null if not found or ambiguous
-//	 */
-//	protected File findModelFile(String modelNamePattern) {
-//		TelosysProject telosysProject = getTelosysProject();
-////		try {
-//			List<File> models = telosysProject.getModels();
-//			List<File> modelsFound = findModelFiles(models, modelNamePattern);
-//			if ( modelsFound.isEmpty() ) {
-//				print("No model for '" + modelNamePattern + "'") ;
-//			}
-//			else if ( modelsFound.size() > 1 ) {
-//				print("Ambiguous : " + modelsFound.size() + " models found") ;
-//			}
-//			else {
-//				return modelsFound.get(0);
-//			}
-////		} catch (TelosysToolsException e) {
-////			printError("Cannot get models.");
-////		}
-//		return null ;
-//	}
-//	
-//	private List<File> findModelFiles(List<File> models, String modelNamePattern) {
-//		List<File> modelsFound = new LinkedList<>();
-//		for ( File f : models ) {
-//			if  ( f.exists() && f.isFile() ) {
-//				if ( f.getName().contains(modelNamePattern) ) {
-//					modelsFound.add(f);
-//				}
-//			}
-//		}
-//		return modelsFound ;
-//	}
-	
 	/**
 	 * Try to find the model file for the given model name (print errors if any)
 	 * @param modelName the model name 
@@ -203,39 +147,6 @@ public abstract class CommandWithModel extends Command {
 		}
 	}
 
-//	/**
-//	 * Loads the given model file (and print errors if any)
-//	 * @param modelFile
-//	 * @return the model loaded (or null if cannot be loaded)
-//	 */
-//	private Model loadModel(File modelFile) {
-//		TelosysProject telosysProject = getTelosysProject();
-//		try {
-//			return telosysProject.loadModel(modelFile);
-//		} catch (TelosysModelException tme) {
-//			printError("Invalid model !");
-//			// Print parsing errors
-//			print(tme.getMessage());
-////			Map<String,List<String>> errorsMap = tme.getParsingErrors();
-////			if ( errorsMap != null ) {
-////				for ( List<String> list : errorsMap.values() ) {
-////	    			for ( String err : list ) {
-////						print( " . " + err );
-////	    			}
-////				}
-////			}
-//			DslModelErrors errors = tme.getDslModelErrors();
-//			if ( errors != null ) {
-//				for ( DslModelError e : errors.getErrors() ) {
-//					print( " . " + e.getReportMessage() );
-//				}
-//			}
-////		} catch (TelosysToolsException ex) {
-////			printError(ex);					
-//		}
-//		return null ; // Model cannot be loaded
-//	}
-
 	/**
 	 * Loads the model located in the given folder (print errors if any)
 	 * @param modelFolder
@@ -260,7 +171,6 @@ public abstract class CommandWithModel extends Command {
 
 	protected Model loadModel(String modelName) {
 		// 1) try to get the file 
-//		File modelFile = getModelFile(modelName); 
 		File modelFile = getModelFolder(modelName); // v 3.4.0
 		if ( modelFile != null ) {
 			// 2) try to load the model 

@@ -51,9 +51,6 @@ public class CommandsFileProcessor {
 	 * @throws IOException
 	 */
 	public void processFile(File file) throws IOException {
-//		if ( ! file.isFile() ) {
-//			throw new RuntimeException( fileName + " is not a file");
-//		}
 		print("---") ;
 		print("Executing commands from file : ") ;
 		print(file.getAbsolutePath() ) ;
@@ -69,21 +66,6 @@ public class CommandsFileProcessor {
 				}
 			}
 		}
-		
-		
-//		try {
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} finally {
-//			
-//			try {
-//				br.close();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
 		
 	}
 

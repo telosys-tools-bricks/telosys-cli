@@ -36,7 +36,7 @@ public abstract class CommandWithBundles extends Command {
 	 * @param consoleReader
 	 * @param environment
 	 */
-	public CommandWithBundles(ConsoleReader consoleReader, Environment environment) {
+	protected CommandWithBundles(ConsoleReader consoleReader, Environment environment) {
 		super(consoleReader, environment);
 	}
 

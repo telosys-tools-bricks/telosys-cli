@@ -64,8 +64,6 @@ public class TelosysCLI {
 	 */
 	public void start(String[] args) {
 		
-//		printStdOut("Starting Telosys-CLI...");
-		
 		// Initialize Telosys CLI
 		init();		
 		

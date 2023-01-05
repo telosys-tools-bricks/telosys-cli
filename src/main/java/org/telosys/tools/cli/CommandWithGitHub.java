@@ -34,7 +34,7 @@ public abstract class CommandWithGitHub extends Command {
 	 * @param consoleReader
 	 * @param environment
 	 */
-	public CommandWithGitHub(ConsoleReader consoleReader, Environment environment) {
+	protected CommandWithGitHub(ConsoleReader consoleReader, Environment environment) {
 		super(consoleReader, environment);
 	}
 

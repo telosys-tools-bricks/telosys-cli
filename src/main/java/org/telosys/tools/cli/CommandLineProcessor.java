@@ -28,16 +28,6 @@ public class CommandLineProcessor {
 	private final PrintWriter     out ;
 	private final CommandProvider commandProvider ;
 	
-//	/**
-//	 * Constructor
-//	 * @param consoleReader
-//	 */
-//	public CommandLineProcessor(ConsoleReader consoleReader, CommandProvider commandProvider) {
-//		super();
-//		this.out = new PrintWriter(consoleReader.getOutput());
-//		this.commandProvider = commandProvider;
-//	}
-
 	/**
 	 * Constructor
 	 * @param output  

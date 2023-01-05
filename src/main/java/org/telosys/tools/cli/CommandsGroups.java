@@ -36,7 +36,6 @@ public class CommandsGroups {
 		all.add(getBundleCommands()) ;
 		all.add(getTemplateCommands()) ;
 		all.add(getGenerationCommands()) ;
-//		all.add(getLauncherCommands()) ;
 	}
 
 	public final List<CommandsGroup> getAll() {
@@ -142,10 +141,9 @@ public class CommandsGroups {
 		List<String> commands = new LinkedList<>() ;
 		
 		String name = "Template commands" ;
-//		commands.add("t");
 		commands.add("lt");
 		commands.add("et");
-//		commands.add("dt");
+		// Command "dt" for "Delete Template" ???
 		
 		return new CommandsGroup(name, commands);
 	}
@@ -156,32 +154,6 @@ public class CommandsGroups {
 		String name = "Generation commands" ;
 		commands.add("gen");
 		
-		return new CommandsGroup(name, commands);
-	}
-	
-	private final CommandsGroup getLauncherCommands() {
-		List<String> commands = new LinkedList<>() ;
-		
-		String name = "Launcher commands" ;
-		commands.add("ll");
-		commands.add("l");
-		commands.add("nl");
-		commands.add("el");
-		commands.add("ele");
-		commands.add("elt");
-		commands.add("dl");
-
-		commands.add("lg");
-
-		// Launcher management
-		// ll (list launchers )
-		// l (set/print current launcher : "l" 
-		// nl (new launcher : nl launcher-name model-name or current-model --> .properties + .entities + .templates )
-		// el (edit launcher : el launcher-name --> .properties )
-		// ele ( edit launcher entities --> .entities )
-		// elt ( edit launcher templates --> .templates )
-		// dl (delete launcher : dl launcher-name )
-		// lg (launch generation : lg launcher-name )
 		return new CommandsGroup(name, commands);
 	}
 	

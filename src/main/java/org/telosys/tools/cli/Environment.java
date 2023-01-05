@@ -30,7 +30,6 @@ import org.telosys.tools.commons.cfg.TelosysToolsCfg;
 public class Environment {
 	
 	private static final String TELOSYS_CLI_CFG      = "telosys-cli.cfg" ;
-	private static final String TELOSYS_TERM_SH      = "telosys-term.sh" ;
 	
 	private static final String EDITOR_COMMAND       = "EditorCommand" ;
 	private static final String DEFAULT_GITHUB_STORE = "telosys-templates-v3" ;
@@ -70,7 +69,7 @@ public class Environment {
 		this.originalDirectory = Utils.getCurrentDir();  
 		this.osName = System.getProperty("os.name");
 		this.osType = findOSType(this.osName); 
-		this.editorCommand = findEditorCommand(this.osType);
+		this.editorCommand = findEditorCommand();
 
 		// alterable attributes
 		this.currentDirectory   = originalDirectory ;
@@ -81,12 +80,11 @@ public class Environment {
 	}
 	
 	/**
-	 * Returns the editor command to be used <br>
-	 * The specific command if defined in the '.cfg' file <br>
-	 * or the default command for the current OS<br>
+	 * Returns the editor command to be used (specific command defined in the '.cfg' file) <br>
+	 * or null if no specific editor<br>
 	 * @return
 	 */
-	private String findEditorCommand(OSType osType) {
+	private String findEditorCommand() {
 		// Try to find a specific command (defined by the user)
 		String specificEditorCommand = findSpecificEditorCommand();
 		if ( specificEditorCommand != null ) {
@@ -94,8 +92,7 @@ public class Environment {
 			return specificEditorCommand ;
 		}
 		else {
-			// No specific editor command => get the default edito command
-			// return determineDefaultEditorCommand(osType);
+			// No specific editor command => undefined
 			return null;
 		}
 	}
@@ -162,15 +159,6 @@ public class Environment {
 		return findFileInJarFolder(TELOSYS_CLI_CFG) ;
 	}
 
-	/**
-	 * Tries to find the 'telosys-term.sh' shell file <br>
-	 * located in the same folder as the '.jar' file
-	 * @return the file or null if not found
-	 */
-	private File findTelosysTerminalShellFile() {
-		return findFileInJarFolder(TELOSYS_TERM_SH) ;
-	}
-
 	private File findFileInJarFolder(String fileName) {
 		if ( this.jarFolderFullPath != null ) {
 			File file = new File( FileUtil.buildFilePath(this.jarFolderFullPath, fileName) ) ;
@@ -194,58 +182,6 @@ public class Environment {
 		}
 	}
 	
-	/**
-	 * Determine the suitable command according with the current OS
-	 * @return
-	 */
-	private String determineDefaultEditorCommand(OSType osType) {
-		
-		switch(osType) {
-		case WINDOWS :
-			return "notepad.exe $FILE" ;
-		case MACOS :
-			return "open -t $FILE" ;
-		case LINUX :
-			return getDefaultEditorCommandForLinux() ;
-		case UNKNOWN :
-		default :
-			return "ERROR-unknown-operating-system" ;
-		}
-	}
-	
-	/**
-	 * Return the command to open 'vi' in a new terminal <br>
-	 * The shell 'telosys-term.sh' is used to open a new terminal using the adaquate command
-	 * @return
-	 */
-	private String getDefaultEditorCommandForLinux() {
-		// If Linux use the shell script to open a new terminal
-		File shFile = findTelosysTerminalShellFile();
-		if ( shFile != null ) {
-			return "/bin/sh " + shFile.getAbsolutePath() + " vi $FILE" ;
-		}
-		else {
-			return "ERROR-shell-file-not-found-(" + TELOSYS_TERM_SH + ")";
-		}
-	}
-	
-//	/**
-//	 * Customize the given command if necessary in order to open a new terminal/window
-//	 * when the command will be launched
-//	 * @param fullCommand
-//	 * @return
-//	 */
-//	protected String customizeSystemCommandIfNecessary(String fullCommand) {
-//		// If Linux use the shell script to open a new terminal
-//		if ( this.osType == OSType.LINUX ) {
-//			File shFile = findTelosysTerminalShellFile();
-//			if ( shFile != null ) {
-//				return "/bin/sh " + shFile.getAbsolutePath() + " " + fullCommand ;
-//			}
-//		}
-//		return fullCommand;
-//	}
-
 	//---------------------------------------------------------------------------------
 	public String getJarLocation() {
 		return jarFileFullPath;
@@ -415,15 +351,6 @@ public class Environment {
 	 */
 	private File getEnvironmentPropertiesFile() {
 		if ( homeDirectory != null ) {
-//			String dir = null ;
-//			try {
-//				TelosysToolsCfg telosysToolsCfg = (new TelosysProject(homeDirectory)).getTelosysToolsCfg();
-//				dir = telosysToolsCfg.getTelosysToolsFolderAbsolutePath();
-//			} catch (TelosysToolsException e) {
-//				// Cannot get Telosys configuration
-//				return null ;
-//			}
-
 			TelosysToolsCfg telosysToolsCfg = (new TelosysProject(homeDirectory)).getTelosysToolsCfg();
 			String dir = telosysToolsCfg.getTelosysToolsFolderAbsolutePath();
 			
