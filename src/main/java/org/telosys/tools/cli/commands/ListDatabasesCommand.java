@@ -28,6 +28,7 @@ import jline.console.ConsoleReader;
 
 public class ListDatabasesCommand extends Command {
 	
+	private static final String SEPARATOR = "---------------------------------------------" ;
 	/**
 	 * Constructor
 	 * @param out
@@ -48,12 +49,12 @@ public class ListDatabasesCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "List the databases";
+		return "List the databases configurations";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "ldb [id]";
+		return "ldb [database-id]";
 	}
 
 	@Override
@@ -93,8 +94,10 @@ public class ListDatabasesCommand extends Command {
 				else {
 					appendLine(sb, databasesConfigurations.getDatabases().size()+ " database(s) defined" );
 					for ( DatabaseDefinition dbConfig : databases ) {
+						appendLine(sb, SEPARATOR  );
 						printDbConfig(sb, dbConfig);
 					}
+					appendLine(sb, SEPARATOR  );
 				}
 			}
 			return sb.toString();
@@ -105,8 +108,8 @@ public class ListDatabasesCommand extends Command {
 	}
 
 	private void printDbConfig(StringBuilder sb, DatabaseDefinition db) {
-		appendLine(sb, " ");
-		appendLine(sb, "Database '" + db.getId() + "' : "  );
+//		appendLine(sb, " ");
+		appendLine(sb, " . Database id   : '" + db.getId() + "' ");
 		appendLine(sb, " . Name          : " + db.getName() );
 		appendLine(sb, " . Type          : " + db.getType() );
 		

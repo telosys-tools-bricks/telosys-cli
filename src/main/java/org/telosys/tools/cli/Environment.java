@@ -32,7 +32,7 @@ public class Environment {
 	private static final String TELOSYS_CLI_CFG      = "telosys-cli.cfg" ;
 	
 	private static final String EDITOR_COMMAND       = "EditorCommand" ;
-	private static final String DEFAULT_GITHUB_STORE = "telosys-templates-v3" ;
+	private static final String DEFAULT_GITHUB_STORE = "telosys-templates" ; // "telosys-templates-v3" replaced by "telosys-templates" in v 4.1.0
 	
 	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
@@ -272,7 +272,7 @@ public class Environment {
 	// Current GITHUB STORE
 	//---------------------------------------------------------------------------------
 	/**
-	 * Returns the default GitHub store name ( eg "telosys-templates-v3" )
+	 * Returns the default GitHub store name ( eg "telosys-templates" )
 	 * @return
 	 */
 	public String getDefaultGitHubStore() {
