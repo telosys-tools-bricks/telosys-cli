@@ -49,12 +49,20 @@ public class CheckDatabaseCommand extends CommandWithModel {
 
 	@Override
 	public String getDescription() {
-		return "Check the current/given database";
+		return "Check database configuration : try to connect and get metadata";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "cdb database-id [-v] [-i -t -c -pk -fk -s -cat]";
+		return "cdb database-id [-v] [-i -t -c -pk -fk -s -cat] \n"
+			+ "   -v   : verbose mode \n"
+			+ "   -i   : try to get information (product name, version, etc) \n"
+			+ "   -s   : try to get database schemas \n"
+			+ "   -cat : try to get database catalogs \n"
+			+ "   -t   : try to get database tables \n"
+			+ "   -c   : try to get database columns \n"
+			+ "   -pk  : try to get database primary keys \n"
+			+ "   -fk  : try to get database foreign keys " ;
 	}
 	
 	@Override
@@ -72,12 +80,7 @@ public class CheckDatabaseCommand extends CommandWithModel {
 				}
 				else {
 					// Option(s) OK => check database with options
-					String databaseId = args[1] ;
-					if ( databaseIsDefined(databaseId) ) {
-						DbMetadataObserver.setActive(true);
-						checkDatabase(args[1], options );
-						DbMetadataObserver.setActive(false);
-					}
+					launchDatabaseCheck(args[1], options);
 				}
 			}
 			else {
@@ -87,6 +90,14 @@ public class CheckDatabaseCommand extends CommandWithModel {
 		return null;
 	}
 
+	private void launchDatabaseCheck(String databaseId, CheckDatabaseCommandOptions options) {
+		if ( databaseIsDefined(databaseId) ) {
+			DbMetadataObserver.setActive(true);
+			checkDatabase(databaseId, options );
+			DbMetadataObserver.setActive(false);
+		}
+	}
+	
 	private boolean databaseIsDefined(String databaseId) {
 		try {
 			boolean exists = getTelosysProject().databaseIsDefined(databaseId);
@@ -99,7 +110,8 @@ public class CheckDatabaseCommand extends CommandWithModel {
 			return false;
 		}
 	}
-	private String checkDatabase(String databaseId, CheckDatabaseCommandOptions arguments) {
+	
+	private void checkDatabase(String databaseId, CheckDatabaseCommandOptions arguments) {
 		try {
 			print("Checking database '" + databaseId + "'..."); 
 			if ( arguments.hasMetaDataOptions() ) {
@@ -114,7 +126,6 @@ public class CheckDatabaseCommand extends CommandWithModel {
 		} catch (TelosysToolsException e) {
 			printError(e);
 		}
-		return null ;
 	}
 	
 	/**
