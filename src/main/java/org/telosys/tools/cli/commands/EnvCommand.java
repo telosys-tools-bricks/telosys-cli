@@ -100,6 +100,7 @@ public class EnvCommand extends Command {
 		
 		appendLine(sb, ". CLI config file       : " + telosysCliCfgAbsolutePath );
 		appendLine(sb, ". Editor command        : " + undefinedIfNull(environment.getEditorCommand()) );
+		appendLine(sb, ". File Explorer command : " + undefinedIfNull(environment.getFileExplorerCommand()) );
 		
 		appendLine(sb, "Operating System : ");
 		appendLine(sb, ". Operating System name : " + environment.getOperatingSystemName() );

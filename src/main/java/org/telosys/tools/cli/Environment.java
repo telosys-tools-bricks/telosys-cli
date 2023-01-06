@@ -31,7 +31,9 @@ public class Environment {
 	
 	private static final String TELOSYS_CLI_CFG      = "telosys-cli.cfg" ;
 	
-	private static final String EDITOR_COMMAND       = "EditorCommand" ;
+	private static final String EDITOR_COMMAND        = "EditorCommand" ;
+	private static final String FILE_EXPLORER_COMMAND = "FileExplorerCommand" ; // v 4.1.0
+			
 	private static final String DEFAULT_GITHUB_STORE = "telosys-templates" ; // "telosys-templates-v3" replaced by "telosys-templates" in v 4.1.0
 	
 	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -45,6 +47,7 @@ public class Environment {
 	private final String osName ;
 	private final OSType osType ;
 	private final String editorCommand ;
+	private final String fileExplorerCommand ; // v 4.1.0
 	private final String originalDirectory ;
 
 	// alterable attributes
@@ -69,7 +72,12 @@ public class Environment {
 		this.originalDirectory = Utils.getCurrentDir();  
 		this.osName = System.getProperty("os.name");
 		this.osType = findOSType(this.osName); 
-		this.editorCommand = findEditorCommand();
+		
+		// configuration from "telosys-cli.cfg"
+		//this.editorCommand = findEditorCommand();
+		Properties properties = loadTelosysCliConfiguration();
+		this.editorCommand = properties.getProperty(EDITOR_COMMAND);
+		this.fileExplorerCommand = properties.getProperty(FILE_EXPLORER_COMMAND);
 
 		// alterable attributes
 		this.currentDirectory   = originalDirectory ;
@@ -79,23 +87,23 @@ public class Environment {
 		this.currentGitHubStore = DEFAULT_GITHUB_STORE ;
 	}
 	
-	/**
-	 * Returns the editor command to be used (specific command defined in the '.cfg' file) <br>
-	 * or null if no specific editor<br>
-	 * @return
-	 */
-	private String findEditorCommand() {
-		// Try to find a specific command (defined by the user)
-		String specificEditorCommand = findSpecificEditorCommand();
-		if ( specificEditorCommand != null ) {
-			// A specific editor command is defined in ".cfg" file => use it
-			return specificEditorCommand ;
-		}
-		else {
-			// No specific editor command => undefined
-			return null;
-		}
-	}
+//	/**
+//	 * Returns the editor command to be used (specific command defined in the '.cfg' file) <br>
+//	 * or null if no specific editor<br>
+//	 * @return
+//	 */
+//	private String findEditorCommand() {
+//		// Try to find a specific command (defined by the user)
+//		String specificEditorCommand = findSpecificEditorCommand();
+//		if ( specificEditorCommand != null ) {
+//			// A specific editor command is defined in ".cfg" file => use it
+//			return specificEditorCommand ;
+//		}
+//		else {
+//			// No specific editor command => undefined
+//			return null;
+//		}
+//	}
 	
 	/**
 	 * Returns the '.jar' file location (full path) 
@@ -135,20 +143,31 @@ public class Environment {
 		}		
 	}
 
-	/**
-	 * Tries to find a specific editor command defined in the configuration file
-	 * @return the specific command or null if nout found
-	 */
-	private String findSpecificEditorCommand() {
-		String cmd = null ;
+	private Properties loadTelosysCliConfiguration() {
 		File configFile = getTelosysCliConfigFile();
 		if ( configFile != null ) {
 			PropertiesManager pm = new PropertiesManager(configFile);
-			Properties p = pm.load();
-			cmd = p.getProperty(EDITOR_COMMAND);
+			return pm.load();
 		}
-		return cmd ;
+		else {
+			return new Properties();
+		}
 	}
+
+//	/**
+//	 * Tries to find a specific editor command defined in the configuration file
+//	 * @return the specific command or null if nout found
+//	 */
+//	private String findSpecificEditorCommand() {
+//		String cmd = null ;
+//		File configFile = getTelosysCliConfigFile();
+//		if ( configFile != null ) {
+//			PropertiesManager pm = new PropertiesManager(configFile);
+//			Properties p = pm.load();
+//			cmd = p.getProperty(EDITOR_COMMAND);
+//		}
+//		return cmd ;
+//	}
 
 	/**
 	 * Tries to find the 'telosys-cli.cfg' configuration file <br>
@@ -192,41 +211,47 @@ public class Environment {
 		}
 	}
 	
-	//---------------------------------------------------------------------------------
 	public String getJarLocation() {
 		return jarFileFullPath;
 	}
 
-	//---------------------------------------------------------------------------------
 	public String getOperatingSystemName() {
 		return osName;
 	}
 
-	//---------------------------------------------------------------------------------
 	public OSType getOperatingSystemType() {
 		return osType;
 	}
-	//---------------------------------------------------------------------------------
+
 	public String getJavaVersion() {
 		// property "java.version" doesn't return the buikd ( eg : "1.6.0_45" )
 		return System.getProperty("java.runtime.version"); // eg : 1.6.0_45-b06
 	}
 	
-	//---------------------------------------------------------------------------------
+	/**
+	 * Returns the "EditorCommand" defined in the configuration file (or null if not defined)
+	 * @return
+	 */
 	public String getEditorCommand() {
 		return editorCommand;
 	}
 
-	//---------------------------------------------------------------------------------
+	/**
+	 * Returns the "FileExplorerCommand" defined in the configuration file (or null if not defined)
+	 * @return
+	 */
+	public String getFileExplorerCommand() {
+		return fileExplorerCommand;
+	}
+
 	public String getOriginalDirectory() {
 		return originalDirectory;
 	}
 
-	//---------------------------------------------------------------------------------
 	public CommandProvider getCommandProvider() {
 		return commandProvider;
 	}
-	//---------------------------------------------------------------------------------
+
 	public CommandsGroups getCommandsGroups() {
 		return commandsGroups;
 	}

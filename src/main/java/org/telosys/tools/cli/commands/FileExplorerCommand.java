@@ -19,7 +19,6 @@ import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.OSType;
 import org.telosys.tools.cli.SystemCommand;
-import org.telosys.tools.commons.FileUtil;
 import org.telosys.tools.commons.StrUtil;
 
 import jline.console.ConsoleReader;
@@ -72,20 +71,11 @@ public class FileExplorerCommand extends Command {
 		else {
 			print("'File Explorer' command is undefined, check your configuration.");
 		}
-		
-		
-//		if (!StrUtil.nullOrVoid(shortFileName)) {
-//			String fileToBeEdited = FileUtil.buildFilePath(getCurrentDirectory(), shortFileName);
-//			return launchEditor(fileToBeEdited);
-//		} else {
-//			return launchEditor("");
-//		}
 	}
 	
 	private String getFileExplorerCommand(Environment environment) {
 		// Check if the 'File Explorer' command is defined
-		String fileExplorerCommand = null ;
-		// TODO : String fileExplorerCommand = environment.getFileExplorerCommand();
+		String fileExplorerCommand = environment.getFileExplorerCommand();
 		if ( fileExplorerCommand == null ) {
 			// No specific command defined => try to determine the defaut File Explorer for the current OS
 			print("No 'File Explorer' command configuration, trying to get default command");
