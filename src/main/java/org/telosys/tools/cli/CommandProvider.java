@@ -39,6 +39,7 @@ import org.telosys.tools.cli.commands.EditTemplateCommand;
 import org.telosys.tools.cli.commands.EnvCommand;
 import org.telosys.tools.cli.commands.ErrorCommand;
 import org.telosys.tools.cli.commands.ExitCommand;
+import org.telosys.tools.cli.commands.FileExplorerCommand;
 import org.telosys.tools.cli.commands.GenerateCommand;
 import org.telosys.tools.cli.commands.GitHubCommand;
 import org.telosys.tools.cli.commands.GitHubUserCommand;
@@ -94,6 +95,7 @@ public class CommandProvider {
 		// Telosys global commands
 		register(new CfgCommand(consoleReader, environment)); // cfg (ver 3.1.2 CLI-002 )
 		register(new EditCommand(consoleReader, environment)); // e
+		register(new FileExplorerCommand(consoleReader, environment)); // fx ( ver 4.1.0 )
 		register(new EnvCommand(consoleReader, environment)); // env
 		register(new HelpCommand(consoleReader, environment)); // ? - help
 		register(new QuitCommand(consoleReader, environment)); // q

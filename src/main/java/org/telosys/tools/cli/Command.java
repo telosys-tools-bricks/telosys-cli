@@ -593,15 +593,6 @@ public abstract class Command {
 		return fullCommand ;
 	}
 	
-	protected void launchSystemCommand(String fullCommand) {
-		print("Launching command : " + fullCommand );
-		try {
-			Runtime.getRuntime().exec(fullCommand);
-		} catch (IOException e) {
-			printError(e);
-		}
-	}
-
 	/**
 	 * Returns the current Telosys project, or null if HOME is not defined
 	 * @param environment

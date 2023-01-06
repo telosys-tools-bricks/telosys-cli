@@ -27,6 +27,15 @@ public class SystemCommand {
 	}
 
 	/**
+	 * Runs the given command for the current OS type defined in environment
+	 * @param fullCommand the command to be executed
+	 * @param environment the CLI environment
+	 */
+	public static void run(String fullCommand, Environment environment)  {
+		run(fullCommand, environment.getOperatingSystemType());
+	}
+	
+	/**
 	 * Runs the given command for the given OS type
 	 * @param fullCommand
 	 * @param osType

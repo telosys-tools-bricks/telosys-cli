@@ -141,7 +141,7 @@ public class Environment {
 	 */
 	private String findSpecificEditorCommand() {
 		String cmd = null ;
-		File configFile = findTelosysCliConfigFile();
+		File configFile = getTelosysCliConfigFile();
 		if ( configFile != null ) {
 			PropertiesManager pm = new PropertiesManager(configFile);
 			Properties p = pm.load();
@@ -155,8 +155,18 @@ public class Environment {
 	 * located in the same folder as the '.jar' file
 	 * @return the file or null if not found
 	 */
-	private File findTelosysCliConfigFile() {
+	public File getTelosysCliConfigFile() {
 		return findFileInJarFolder(TELOSYS_CLI_CFG) ;
+	}
+
+	public String getTelosysCliConfigFileAbsolutePath() {
+		File file = getTelosysCliConfigFile();
+		if ( file != null ) {
+			return file.getAbsolutePath();
+		}
+		else {
+			return null;
+		}
 	}
 
 	private File findFileInJarFolder(String fileName) {

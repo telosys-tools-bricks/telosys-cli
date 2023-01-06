@@ -53,6 +53,7 @@ public class CommandsGroups {
 		commands.add("pwd");
 		
 		commands.add("e");
+		commands.add("fx");
 		commands.add("err");
 		commands.add("env");
 		commands.add("ver");

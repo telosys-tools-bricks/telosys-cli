@@ -55,7 +55,9 @@ public class EnvCommand extends Command {
 	
 	@Override
 	public String getUsage() {
-		return "env [-s]";
+		return "env [-s] [-http] \n"
+		  + "   -s    : system properties \n" 	
+		  + "   -http : http components version and https.protocols system property " ; 	
 	}
 	
 	@Override
@@ -82,24 +84,30 @@ public class EnvCommand extends Command {
 	private String env() {
 		Environment environment = getEnvironment();
 		
+		String telosysCliCfgAbsolutePath = environment.getTelosysCliConfigFileAbsolutePath() ;
+		if ( telosysCliCfgAbsolutePath == null ) {
+			telosysCliCfgAbsolutePath = "(not found)";
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		
-		appendLine(sb, "ENVIRONMENT : ");
-
-		appendLine(sb, ". Operating System name : " + environment.getOperatingSystemName() );
-		appendLine(sb, ". Operating System type : " + environment.getOperatingSystemType() );
-		
-		appendLine(sb, ". Current directory     : " + environment.getCurrentDirectory() );
+		appendLine(sb, "Telosys-CLI : ");
 		appendLine(sb, ". Home directory        : " + undefinedIfNull(environment.getHomeDirectory()) );
-		appendLine(sb, ". Editor command        : " + environment.getEditorCommand() );
-
-		appendLine(sb, ". Current GitHub store  : " + undefinedIfNull(environment.getCurrentGitHubStore()) );
+		appendLine(sb, ". Current directory     : " + environment.getCurrentDirectory() );
 		appendLine(sb, ". Current model         : " + undefinedIfNull(environment.getCurrentModel()) );
 		appendLine(sb, ". Current bundle        : " + undefinedIfNull(environment.getCurrentBundle()) );
+		appendLine(sb, ". Current GitHub store  : " + undefinedIfNull(environment.getCurrentGitHubStore()) );
 		
+		appendLine(sb, ". CLI config file       : " + telosysCliCfgAbsolutePath );
+		appendLine(sb, ". Editor command        : " + undefinedIfNull(environment.getEditorCommand()) );
+		
+		appendLine(sb, "Operating System : ");
+		appendLine(sb, ". Operating System name : " + environment.getOperatingSystemName() );
+		appendLine(sb, ". Operating System type : " + environment.getOperatingSystemType() );
+
+		appendLine(sb, "Java : ");
 		appendLine(sb, ". Java version          : " + environment.getJavaVersion() );
-		appendLine(sb, ". '.jar' file           : " + environment.getJarLocation() );
-		
+		appendLine(sb, ". '.jar' file           : " + environment.getJarLocation() );		
 		appendLine(sb, ". Java classpath : " );
 		classPath(sb);
 		return sb.toString();

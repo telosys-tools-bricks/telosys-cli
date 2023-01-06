@@ -51,14 +51,14 @@ public enum OSType {
 		return this.text;
 	}
 	
-	/**
-	 * Returns true if the OS has a shell command
-	 * @return
-	 */
-	public boolean hasShell() {
-		if ( this == MACOS || this == LINUX ) return true ;
-		return false ;
-	}
+//	/**
+//	 * Returns true if the OS has a shell command
+//	 * @return
+//	 */
+//	public boolean hasShell() {
+//		if ( this == MACOS || this == LINUX ) return true ;
+//		return false ;
+//	}
 	
 	@Override
 	public String toString() {
