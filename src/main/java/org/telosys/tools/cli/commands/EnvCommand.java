@@ -15,6 +15,11 @@
  */
 package org.telosys.tools.cli.commands;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -111,6 +116,12 @@ public class EnvCommand extends Command {
 		appendLine(sb, ". '.jar' file           : " + environment.getJarLocation() );		
 		appendLine(sb, ". Java classpath : " );
 		classPath(sb);
+
+		appendLine(sb, "Default character encoding : ");
+		appendLine(sb, ". by property 'file.encoding'         : " + undefinedIfNull(System.getProperty("file.encoding")) );
+		appendLine(sb, ". by Charset.defaultCharset()         : " + Charset.defaultCharset() );
+		appendLine(sb, ". by InputStreamReader.getEncoding()  : " + getEncodingByInputStreamReader() );
+		appendLine(sb, ". by OutputStreamWriter.getEncoding() : " + getEncodingByOutputStreamWriter() );
 		return sb.toString();
 	}
 	
@@ -121,6 +132,17 @@ public class EnvCommand extends Command {
 		for ( String s : classpathEntries ) {
 			appendLine(sb, "    " + s);
 		}
+	}
+	
+	private String getEncodingByInputStreamReader() {
+		byte [] bytesArray = {'z'};
+        InputStreamReader reader = new InputStreamReader(new ByteArrayInputStream(bytesArray));
+        return reader.getEncoding();
+	}
+	
+	private String getEncodingByOutputStreamWriter() {
+		OutputStreamWriter writer = new OutputStreamWriter(new ByteArrayOutputStream());
+        return writer.getEncoding();
 	}
 	
 	private String systemProperties() {
