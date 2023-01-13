@@ -108,7 +108,7 @@ public class ListDatabasesCommand extends Command {
 	}
 
 	private void printDbConfig(StringBuilder sb, DatabaseDefinition db) {
-//		appendLine(sb, " ");
+
 		appendLine(sb, " . Database id   : '" + db.getId() + "' ");
 		appendLine(sb, " . Name          : " + db.getName() );
 		appendLine(sb, " . Type          : " + db.getType() );
@@ -126,5 +126,12 @@ public class ListDatabasesCommand extends Command {
 		appendLine(sb, "   - Table name pattern : " + db.getTableNamePattern() );
 		appendLine(sb, "   - Table name exclude : " + db.getTableNameExclude() );
 		appendLine(sb, "   - Table name include : " + db.getTableNameInclude() );
+
+		appendLine(sb, " . Model creation options  : " );
+		appendLine(sb, "   - links ManyToOne  : " + db.isLinksManyToOne() );
+		appendLine(sb, "   - links OneToMany  : " + db.isLinksOneToMany() );
+		appendLine(sb, "   - links ManyToMany : " + db.isLinksManyToMany() );
+		appendLine(sb, "   - db default value : " + db.isDatabaseDefaultValue() );
+		appendLine(sb, "   - db comment       : " + db.isDatabaseComment() );
 	}
 }
