@@ -62,76 +62,79 @@ public class ListDatabasesCommand extends Command {
 		if ( checkHomeDirectoryDefined() && checkArguments(args, 0, 1 ) ) {
 			if ( args.length > 1 ) {
 				// database-id
-				return listDatabases(args[1]);
+				listDatabases(args[1]);
 			}
 			else {
 				// no database-id
-				return listDatabases(null);
+				listDatabases(null);
 			}
 		}
 		return null ;
 	}
 
-	private String listDatabases(String id) {
+	private void listDatabases(String id) {
 		TelosysProject telosysProject = getTelosysProject();
 		try {
-			StringBuilder sb = new StringBuilder();
 			if ( id != null ) {
 				DatabaseDefinition dbConfig = telosysProject.getDatabaseDefinition(id);
 				if ( dbConfig != null ) {
-					printDbConfig(sb, dbConfig);
+					printDbConfig(dbConfig);
 				}
 				else {
-					appendLine(sb, "Database " + id + " is not defined."  );
+					print("Database " + id + " is not defined."  );
 				}
 			}
 			else {
 				DatabaseDefinitions databasesConfigurations = telosysProject.getDatabaseDefinitions();
 				List<DatabaseDefinition> databases = databasesConfigurations.getDatabases();
 				if ( databases.isEmpty() ) {
-					appendLine(sb, "No database defined." );
+					print("No database defined." );
 				}
 				else {
-					appendLine(sb, databasesConfigurations.getDatabases().size()+ " database(s) defined" );
+					print(databasesConfigurations.getDatabases().size()+ " database(s) defined" );
 					for ( DatabaseDefinition dbConfig : databases ) {
-						appendLine(sb, SEPARATOR  );
-						printDbConfig(sb, dbConfig);
+						print(SEPARATOR);
+						printDbConfig(dbConfig);
 					}
-					appendLine(sb, SEPARATOR  );
+					print(SEPARATOR);
 				}
 			}
-			return sb.toString();
 		} catch (TelosysToolsException e) {
 			printError(e);
 		}
-		return null ;
 	}
 
-	private void printDbConfig(StringBuilder sb, DatabaseDefinition db) {
+	private void printDbConfig(DatabaseDefinition db) {
 
-		appendLine(sb, " . Database id   : '" + db.getId() + "' ");
-		appendLine(sb, " . Name          : " + db.getName() );
-		appendLine(sb, " . Type          : " + db.getType() );
+		print( " . Database id   : '" + db.getId() + "' ");
+		print( " . Name          : " + db.getName() );
+		print( " . Type          : " + db.getType() );
 		
-		appendLine(sb, " . Connection : " );
-		appendLine(sb, "   - JDBC URL      : " + db.getUrl()  );
-		appendLine(sb, "   - Driver class  : " + db.getDriver() );
-		appendLine(sb, "   - User          : " + db.getUser() );
-		appendLine(sb, "   - Password      : " + db.getPassword() );
+		print( " . Connection : " );
+		print( "   - JDBC URL      : " + db.getUrl()  );
+		print( "   - Driver class  : " + db.getDriver() );
+		print( "   - User          : " + db.getUser() );
+		print( "   - Password      : " + db.getPassword() );
 		
-		appendLine(sb, " . Metadata  : " );
-		appendLine(sb, "   - Catalog            : " + db.getCatalog() );
-		appendLine(sb, "   - Schema             : " + db.getSchema() );
-		appendLine(sb, "   - Table types        : " + db.getTableTypes() );
-		appendLine(sb, "   - Table name pattern : " + db.getTableNamePattern() );
-		appendLine(sb, "   - Table name exclude : " + db.getTableNameExclude() );
-		appendLine(sb, "   - Table name include : " + db.getTableNameInclude() );
+		print( " . Metadata : " );
+		print( "   - Catalog            : " + db.getCatalog() );
+		print( "   - Schema             : " + db.getSchema() );
+		print( "   - Table types        : " + db.getTableTypes() );
+		print( "   - Table name pattern : " + db.getTableNamePattern() );
+		print( "   - Table name exclude : " + db.getTableNameExclude() );
+		print( "   - Table name include : " + db.getTableNameInclude() );
 
-		appendLine(sb, " . Model creation options  : " );
-		appendLine(sb, "   - links ManyToOne  : " + db.isLinksManyToOne() );
-		appendLine(sb, "   - links OneToMany  : " + db.isLinksOneToMany() );
-		appendLine(sb, "   - links ManyToMany : " + db.isLinksManyToMany() );
-		appendLine(sb, "   - db default value : " + db.isDatabaseDefaultValue() );
-		appendLine(sb, "   - db comment       : " + db.isDatabaseComment() );
+		print( " . Model creation options : " );
+		print( "   - links ManyToOne  : " + db.isLinksManyToOne() );
+		print( "   - links OneToMany  : " + db.isLinksOneToMany() );
+		print( "   - links ManyToMany : " + db.isLinksManyToMany() );		
+		print( "   - db comment       : " + db.isDbComment() );
+		print( "   - db catalog       : " + db.isDbCatalog() );
+		print( "   - db schema        : " + db.isDbSchema() );
+		print( "   - db table         : " + db.isDbTable() );
+		print( "   - db view          : " + db.isDbView() );
+		print( "   - db name          : " + db.isDbName() );
+		print( "   - db type          : " + db.isDbType() );
+		print( "   - db default value : " + db.isDbDefaultValue() );
 	}
 }

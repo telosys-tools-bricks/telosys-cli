@@ -60,18 +60,16 @@ public class VerCommand extends Command {
 	@Override
 	public String execute(String[] args) {
 		
-		StringBuilder sb = new StringBuilder();
+		print("Components versions : "  );
+		print("Telosys CLI   : " + Version.TELOSYS_TOOLS_CLI_VERSION  );
+		print("Telosys API   : " + TelosysApiVersion.VERSION  );
+		print("Generator     : " + GeneratorVersion.GENERATOR_VERSION  );
+		print("Generic model : " + GenericModelVersion.VERSION  );
+		print("DSL model     : " + DslModelVersion.VERSION  );
+		print("GitHub client : " + GitHubClient.VERSION ) ;
+		print("HTTP client   : " + HttpClient.VERSION ) ;
 		
-		appendLine(sb, "Components versions : "  );
-		appendLine(sb, "Telosys CLI   : " + Version.TELOSYS_TOOLS_CLI_VERSION  );
-		appendLine(sb, "Telosys API   : " + TelosysApiVersion.VERSION  );
-		appendLine(sb, "Generator     : " + GeneratorVersion.GENERATOR_VERSION  );
-		appendLine(sb, "Generic model : " + GenericModelVersion.VERSION  );
-		appendLine(sb, "DSL model     : " + DslModelVersion.VERSION  );
-		appendLine(sb, "GitHub client : " + GitHubClient.VERSION ) ;
-		appendLine(sb, "HTTP client   : " + HttpClient.VERSION ) ;
-		
-		return sb.toString();
+		return null;
 	}
 
 }

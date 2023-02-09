@@ -56,6 +56,7 @@ public class TestCommand extends Command {
 	public String execute(String[] args) {
 		if ( confirm("Do you confirm") ) {
 			print("YES");
+			printGuide();
 		}
 		else {
 			print("NO");
@@ -63,30 +64,25 @@ public class TestCommand extends Command {
 		return null ;
 	}
 	
-	protected String guide() {
-		StringBuilder sb = new StringBuilder();
+	private void printGuide() {
+		print( "1) Initialize the project environment");
+		print( " . cd [project-directory]");
+		print( " . init");
 		
-		appendLine(sb, "1) Initialize the project environment");
-		appendLine(sb, " . cd [project-directory]");
-		appendLine(sb, " . init");
-		
-		appendLine(sb, "2) Configure the project (edit the properties)");
-		appendLine(sb, " . cd [project-directory]");
-		appendLine(sb, " . edit telosys-tools.cfg");
+		print( "2) Configure the project (edit the properties)");
+		print( " . cd [project-directory]");
+		print( " . edit telosys-tools.cfg");
 
-		appendLine(sb, "3) Copy JDBC jar files in [project-directory/TelosysTools/lib]");
+		print( "3) Copy JDBC jar files in [project-directory/TelosysTools/lib]");
 
-		appendLine(sb, "4) Configure the databases ");
-		appendLine(sb, " . cd [project-directory/TelosysTools]");
-		appendLine(sb, " . edit databases.dbcfg");
+		print( "4) Configure the databases ");
+		print( " . cd [project-directory/TelosysTools]");
+		print( " . edit databases.dbcfg");
 		
-		appendLine(sb, "5) Check the database configuration");
-		appendLine(sb, " . dbtest [db-id]");
+		print( "5) Check the database configuration");
+		print( " . dbtest [db-id]");
 
-		appendLine(sb, "6) Generate the database model");
-		
-		
-		return sb.toString();
+		print( "6) Generate the database model");
 	}
 
 }
