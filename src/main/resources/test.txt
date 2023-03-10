@@ -1,0 +1,6 @@
+project ${project.name}
+version ${project.version}
+maven version = ${maven.version}
+build timestamp = ${maven.build.timestamp}
+build timestamp = ${build.timestamp}
+build timestamp = ${build.ts}

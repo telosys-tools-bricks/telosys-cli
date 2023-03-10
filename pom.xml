@@ -11,6 +11,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.7</java.version>
+		<build.ts>${maven.build.timestamp}</build.ts> <!-- for resource filtering (m2e workaround) -->		
 	</properties>
 
 	<dependencies>
@@ -42,6 +43,23 @@
 	</dependencies>
 
 	<build>
+	    <resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>test.txt</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>test.txt</exclude>
+				</excludes>
+			</resource>
+	    </resources>
+    	
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
