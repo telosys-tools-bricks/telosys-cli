@@ -61,7 +61,7 @@ public class VerCommand extends Command {
 	public String execute(String[] args) {
 		
 		print("Components versions : "  );
-		print("Telosys CLI   : " + Version.TELOSYS_TOOLS_CLI_VERSION  );
+		print("Telosys CLI   : " + Version.getVersionWithBuilId()  );
 		print("Telosys API   : " + TelosysApiVersion.VERSION  );
 		print("Generator     : " + GeneratorVersion.GENERATOR_VERSION  );
 		print("Generic model : " + GenericModelVersion.VERSION  );

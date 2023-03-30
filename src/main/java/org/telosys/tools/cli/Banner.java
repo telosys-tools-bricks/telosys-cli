@@ -124,7 +124,7 @@ Standard
  */
 	
 	public String getVersion() {
-		return Version.TELOSYS_TOOLS_CLI_VERSION ;
+		return Version.getVersionWithBuilId()  ;
 	}
 
 }
