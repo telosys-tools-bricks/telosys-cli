@@ -11,7 +11,10 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.7</java.version>
-		<build.ts>${maven.build.timestamp}</build.ts> <!-- for resource filtering (m2e workaround) -->		
+		<!-- <maven.build.timestamp.format>yyMMdd_HHmm</maven.build.timestamp.format> -->		
+		<!-- <maven.build.timestamp.format>yy.DDD.HHmm</maven.build.timestamp.format>  -->		
+		<maven.build.timestamp.format>D.mm.S</maven.build.timestamp.format>	<!-- day in the year . min . milliseconds -->	
+		<build.id>${maven.build.timestamp}</build.id> <!-- for resource filtering -->		
 	</properties>
 
 	<dependencies>
@@ -44,6 +47,8 @@
 
 	<build>
 	    <resources>
+	    	<!-- Filtering file with build.id  -->
+	    	<!-- only for tests 
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
@@ -56,6 +61,21 @@
 				<filtering>false</filtering>
 				<excludes>
 					<exclude>test.txt</exclude>
+				</excludes>
+			</resource>
+	    	 -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>telosys-cli-build.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>telosys-cli-build.properties</exclude>
 				</excludes>
 			</resource>
 	    </resources>

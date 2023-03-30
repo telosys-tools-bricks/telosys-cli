@@ -1,12 +1,22 @@
 <project default="dist">
 	
-	<property name="version"   value="4.0.0-001" />
+	<xmlproperty file="pom.xml" prefix="pom" /> <!-- read properties from 'pom.xml' -->
+	
+	<property name="version"   value="${pom.project.version}" />
 	
 	<property name="dest_dir"  value="./dist" />
 	<property name="zip_file"  value="${dest_dir}/telosys-cli-${version}.zip" />
 
 	<!-- ============================================================================== -->
 	<target name="dist" >
+		<echo message="Values from pom.xml : " />
+		<echo message="  project.groupId    = ${pom.project.groupId} " />
+		<echo message="  project.artifactId = ${pom.project.artifactId} " />
+		<echo message="  project.version    = ${pom.project.version} " />
+		<echo message="Task properties : " />
+		<echo message="  version  = ${version} " />
+		<echo message="  dest_dir = ${dest_dir} " />
+		<echo message="  zip_file = ${zip_file} " />
 		<!--
 		Copy if the source file is newer than the destination file, 
 		or when the destination file does not exist. 
