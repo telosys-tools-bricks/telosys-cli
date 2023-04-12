@@ -13,7 +13,7 @@
 		<java.version>1.7</java.version>
 		<!-- <maven.build.timestamp.format>yyMMdd_HHmm</maven.build.timestamp.format> -->		
 		<!-- <maven.build.timestamp.format>yy.DDD.HHmm</maven.build.timestamp.format>  -->		
-		<maven.build.timestamp.format>D.mm.S</maven.build.timestamp.format>	<!-- day in the year . min . milliseconds -->	
+		<maven.build.timestamp.format>yyMMdd.HHmm.S</maven.build.timestamp.format>	<!-- day in the year . min . milliseconds -->	
 		<build.id>${maven.build.timestamp}</build.id> <!-- for resource filtering -->		
 	</properties>
 

@@ -1,8 +1,8 @@
 
 - Check version in  :
     . pom.xml
-    . Version.java  
-    . build_dist.xml
+    ( OLD : Version.java + build_dist.xml : no longer used )
+    Since ver 4.1.0 version and build id comme only from 'pom.xml' (Single Source of Truth) 
 
 - Maven clean 
 
