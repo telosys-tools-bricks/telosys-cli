@@ -18,6 +18,8 @@ package org.telosys.tools.cli;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.telosys.tools.cli.commands.GenBatchCommand;
+
 public class CommandsGroups {
 
 	
@@ -155,6 +157,7 @@ public class CommandsGroups {
 		
 		String name = "Generation commands" ;
 		commands.add("gen");
+		commands.add(GenBatchCommand.COMMAND);
 		
 		return new CommandsGroup(name, commands);
 	}

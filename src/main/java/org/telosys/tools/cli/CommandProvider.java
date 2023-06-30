@@ -40,6 +40,7 @@ import org.telosys.tools.cli.commands.EnvCommand;
 import org.telosys.tools.cli.commands.ErrorCommand;
 import org.telosys.tools.cli.commands.ExitCommand;
 import org.telosys.tools.cli.commands.FileExplorerCommand;
+import org.telosys.tools.cli.commands.GenBatchCommand;
 import org.telosys.tools.cli.commands.GenerateCommand;
 import org.telosys.tools.cli.commands.GitHubCommand;
 import org.telosys.tools.cli.commands.GitHubUserCommand;
@@ -166,6 +167,7 @@ public class CommandProvider {
 		
 		// Generation management
 		register(new GenerateCommand(consoleReader, environment)); // gen : generates entities with templates				
+		register(new GenBatchCommand(consoleReader, environment)); // genbatch : generation in batch mode				
 		
 		
 		// Launcher management

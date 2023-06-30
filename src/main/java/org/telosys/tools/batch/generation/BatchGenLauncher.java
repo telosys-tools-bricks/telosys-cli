@@ -116,7 +116,7 @@ public class BatchGenLauncher {
 		for (String bundleName : selectedBundleNames ) {
 			//n = n + launchBundleGeneration(bundleName); 
 			GenerationTaskResult generationTaskResult = launchBundleGeneration(bundleName); 
-			batchResult.update(bundleName, generationTaskResult);
+			batchResult.update(model.getName(), bundleName, generationTaskResult);
 		}
 		return batchResult ;
 	}

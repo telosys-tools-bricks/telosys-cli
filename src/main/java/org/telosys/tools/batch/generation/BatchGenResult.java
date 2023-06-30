@@ -16,32 +16,42 @@
 package org.telosys.tools.batch.generation;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.telosys.tools.generator.task.GenerationTaskResult;
 
 public class BatchGenResult {
 
-	private int numberOfFilesGenerated;
-
-	private int numberOfGenerationErrors;
-
-	private int numberOfResourcesCopied;
-
-	private int numberOfBundlesUsed;
-
+	private final Set<String> models;
+	private final Set<String> bundles;
 	private final Map<String,GenerationTaskResult> results;
+	private int numberOfFilesGenerated;
+	private int numberOfGenerationErrors;
+	private int numberOfResourcesCopied;
 
 	public BatchGenResult() {
 		super();
+		this.models  = new HashSet<>();
+		this.bundles = new HashSet<>();
 		this.results = new HashMap<>();
 	}
 
-	public void update(String bundleName, GenerationTaskResult generationTaskResult) {
-		this.numberOfBundlesUsed++;
-		this.results.put(bundleName, generationTaskResult);
+	public void updateCurrentModel(String modelName) {
+		models.add(modelName); // Add if not already present
+	}
+	public void updateCurrentBundle(String bundleName) {
+		bundles.add(bundleName); // Add if not already present
+	}
+	
+	public void update(String modelName, String bundleName, GenerationTaskResult generationTaskResult) {
+		String key = "(" + modelName + ") " + bundleName;
+		this.results.put(key, generationTaskResult);
 		this.numberOfFilesGenerated += generationTaskResult.getNumberOfFilesGenerated();
 		this.numberOfGenerationErrors += generationTaskResult.getNumberOfGenerationErrors();
 		this.numberOfResourcesCopied += generationTaskResult.getNumberOfResourcesCopied();
@@ -49,15 +59,16 @@ public class BatchGenResult {
 	
 	public List<String> getBundlesStatus() {
 		List<String> list = new LinkedList<>();
-		for ( Map.Entry<String, GenerationTaskResult> e : results.entrySet() ) {
-			GenerationTaskResult r = e.getValue();
+		SortedSet<String> keys = new TreeSet<>(results.keySet());
+		for (String key : keys) {
+			GenerationTaskResult r = results.get(key);
 			StringBuilder sb = new StringBuilder();
 			if ( r.getNumberOfGenerationErrors() > 0 ) {
 				sb.append("(!) ");
 			} else {
 				sb.append("    ");
 			}
-			sb.append(e.getKey()).append(" : ");
+			sb.append(key).append(" : ");
 			sb.append(r.getNumberOfFilesGenerated()).append(" files generated, ");
 			sb.append(r.getNumberOfGenerationErrors()).append(" error(s)");
 			list.add(sb.toString());
@@ -65,8 +76,12 @@ public class BatchGenResult {
 		return list;
 	}
 	
+	public int getNumberOfModelsUsed() {
+		return this.models.size();
+	}
+
 	public int getNumberOfBundlesUsed() {
-		return numberOfBundlesUsed;
+		return this.bundles.size();
 	}
 
 	public int getNumberOfFilesGenerated() {
