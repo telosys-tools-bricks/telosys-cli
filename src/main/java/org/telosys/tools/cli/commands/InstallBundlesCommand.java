@@ -20,6 +20,7 @@ import java.util.List;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandWithGitHub;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.bundles.BundlesFromGitHub;
 
@@ -95,12 +96,13 @@ public class InstallBundlesCommand extends CommandWithGitHub {
 			return ;
 		}
 		// Filter bundles names if args		
-		List<String> bundlesNames = githubBundles.getBundlesNames().filter(args);
+		List<String> allBundles = githubBundles.getBundles();
+		List<String> bundles = Filter.filter(allBundles, buildCriteriaFromArgs(args));
 
 		// Install  bundles		
-		if ( bundlesNames != null && ! bundlesNames.isEmpty() ) {
-			print( "Installing " + bundlesNames.size() + " bundle(s) from repository... ");
-			for ( String bundleName : bundlesNames ) {
+		if ( bundles != null && ! bundles.isEmpty() ) {
+			print( "Installing " + bundles.size() + " bundle(s) from repository... ");
+			for ( String bundleName : bundles ) {
 				telosysProject.downloadAndInstallBundle(githubStoreName, bundleName);
 				print( " . '" + bundleName + "' : installed. ");
 			}

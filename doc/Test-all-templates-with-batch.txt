@@ -1,0 +1,29 @@
+
+TEST ALL TEMPLATES WITH "TELOSYS-BATCH" 
+=======================================
+
+1) Initialize a Telosys project for tests 
+-----------------------------------------
+
+Templates :
+ install all bundles from Git repo : 
+ > ib *
+
+Models :
+  Set up all the models 
+
+
+2) Configure Telosys batch
+--------------------------
+
+* Telosys batch 
+- Define properties in "telosys-batch.properties"
+- Change path in "telosys-batch.bat"  (use previous version)
+
+
+3) Launch Telosys batch
+--------------------------
+Example :
+  .\telosys-batch-400.bat gen
+
+

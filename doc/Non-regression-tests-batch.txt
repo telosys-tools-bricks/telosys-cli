@@ -1,0 +1,46 @@
+
+NON REGRESSION TESTS FOR TEMPLATES 
+==================================
+
+
+1) Download all bundles to be tested
+------------------------------------
+With Telosys install all bundles from Git repo : 
+ > ib *
+Copy all bundles in a specific folder 
+
+
+2) Test the previous version 
+----------------------------
+* Project folder 
+
+Project Config :
+  - SpecificTemplatesFolder   : points to specific templates folders
+  - SpecificDestinationFolder : specific destination with version in path
+
+Models :
+  Set up all the models 
+
+* Telosys batch 
+- Define properties in "telosys-batch.properties"
+- Change path in "telosys-batch.bat"  (use previous version)
+- Run batch
+
+
+3) Test the new version 
+-----------------------
+* Project folder 
+
+Project Config :
+  - SpecificTemplatesFolder   : points to specific templates folders
+  - SpecificDestinationFolder : specific destination with version in path
+
+Models :
+  Set up all the models 
+
+* Telosys batch 
+- Define properties in "telosys-batch.properties"
+- Change path in "telosys-batch.bat"  (use new version)
+- Run batch
+
+TO BE CONTINUED

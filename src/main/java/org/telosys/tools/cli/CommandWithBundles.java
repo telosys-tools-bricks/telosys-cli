@@ -18,8 +18,8 @@ package org.telosys.tools.cli;
 import java.util.List;
 
 import org.telosys.tools.api.TelosysProject;
+import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.TelosysToolsException;
-import org.telosys.tools.commons.bundles.BundlesNames;
 
 import jline.console.ConsoleReader;
 
@@ -41,15 +41,18 @@ public abstract class CommandWithBundles extends Command {
 	}
 
 	/**
-	 * Returns a list containing the names of all bundles installed in the current project
+	 * Returns bundles installed in the current project and matching the given arguments
+	 * @param args
 	 * @return
 	 * @throws TelosysToolsException
 	 */
 	protected final List<String> getInstalledBundles(String[] args) throws TelosysToolsException {
 		TelosysProject telosysProject = getTelosysProject();
 		// get all installed bundles
-		BundlesNames bundlesNames = telosysProject.getInstalledBundles();
-		return bundlesNames.filter(args);
+//		BundlesNames bundlesNames = telosysProject.getInstalledBundles();
+//		return bundlesNames.filter(args);
+		List<String> allBundles = telosysProject.getInstalledBundles();
+		return Filter.filter(allBundles, buildCriteriaFromArgs(args));
 	}
 
 }

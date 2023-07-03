@@ -24,8 +24,8 @@ import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.batch.generation.BatchGenResult;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.TelosysToolsException;
-import org.telosys.tools.commons.bundles.BundlesNames;
 import org.telosys.tools.commons.exception.TelosysRuntimeException;
 import org.telosys.tools.generator.task.GenerationTaskResult;
 import org.telosys.tools.generic.model.Model;
@@ -113,7 +113,7 @@ public class GenBatchCommand extends Command {
 	}
 	
 	private void generateBatch(String modelNameFilter, String bundleNameFilter) {
-		List<String> models = getAllModels(); // in the future add filter like 'bundles'
+		List<String> models = getModels(modelNameFilter); // in the future add filter like 'bundles'
 		List<String> bundles = getBundles(bundleNameFilter);
 		if ( models.isEmpty() ) {
 			print("No model.") ;
@@ -173,23 +173,26 @@ public class GenBatchCommand extends Command {
 		return batchGenResult;
 	}
 	
+	private List<String> getModelNames() { // TODO : move in API TelosysProject 
+		List<String> modelNames = new LinkedList<>();
+		// Convert files to file names (strings)
+		for ( File f : getTelosysProject().getModels() ) {
+			modelNames.add(f.getName());
+		}
+		return modelNames;
+	}
+	
 	/**
 	 * @return
 	 */
-	private List<String> getAllModels() {
-		LinkedList<String> modelNames = new LinkedList<>();
-		TelosysProject telosysProject = getTelosysProject();
-		List<File> files = telosysProject.getModels();
-		if ( files.isEmpty() ) {
+	private List<String> getModels(String modelNameFilter) {
+		//List<File> allModels = getTelosysProject().getModels();
+		List<String> allModels = getModelNames();
+		List<String> models = Filter.filter(allModels, modelNameFilter);
+		if ( models.isEmpty() ) {
 			print("No model.") ;
 		}
-		else {
-			// Convert files to file names (strings)
-			for ( File f : files ) {
-				modelNames.add(f.getName());
-			}
-		}
-		return modelNames;
+		return models;
 	}
 	
 	/**
@@ -198,10 +201,8 @@ public class GenBatchCommand extends Command {
 	 */
 	private List<String> getBundles(String bundleNameFilter) {
 		try {
-			BundlesNames allBundles = getTelosysProject().getInstalledBundles();
-			// only a single string as filter 
-			String[] filter = new String[]{bundleNameFilter}; 
-			List<String> bundles = allBundles.filter(filter);
+			List<String> allBundles = getTelosysProject().getInstalledBundles();
+			List<String> bundles = Filter.filter(allBundles, bundleNameFilter);
 			if ( bundles.isEmpty() ) {
 				print("No bundle.") ;
 			}

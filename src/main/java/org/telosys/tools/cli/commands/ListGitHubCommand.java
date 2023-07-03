@@ -20,6 +20,7 @@ import java.util.List;
 import org.telosys.tools.cli.Color;
 import org.telosys.tools.cli.CommandWithGitHub;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.bundles.BundlesFromGitHub;
 
@@ -72,9 +73,11 @@ public class ListGitHubCommand extends CommandWithGitHub {
 			
 			if ( githubBundles.getHttpStatusCode() == 200 ) {
 				// Filter bundles with args if necessary
-				List<String> bundlesNames = githubBundles.getBundlesNames().filter(args);
+//				List<String> bundlesNames = githubBundles.getBundlesNames().filter(args);
+				List<String> bundles = Filter.filter(githubBundles.getBundles(), buildCriteriaFromArgs(args));
 				// Print the result
-				printBundles(githubStoreName, bundlesNames);
+//				printBundles(githubStoreName, bundlesNames);
+				printBundles(githubStoreName, bundles);
 				// Print current API rate limit returned by GitHub 
 				print("GitHub API rate limit : "+ githubBundles.getRemaining() + "/" + githubBundles.getLimit() ) ; 
 			}

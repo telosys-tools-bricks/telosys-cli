@@ -20,8 +20,8 @@ import java.util.List;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.TelosysToolsException;
-import org.telosys.tools.commons.bundles.BundlesNames;
 import org.telosys.tools.commons.bundles.TargetsDefinitions;
 
 import jline.console.ConsoleReader;
@@ -99,9 +99,10 @@ public class BundleCommand extends Command {
 		TelosysProject telosysProject = getTelosysProject();
 		try {
 			// get all installed bundles
-			BundlesNames bundlesNames = telosysProject.getInstalledBundles();
+			List<String> bundles  = telosysProject.getInstalledBundles();
+			List<String> criteria = buildCriteriaFromArgs(args);
 			// filter with criteria if any
-			List<String> filteredBundles = bundlesNames.filter(args);
+			List<String> filteredBundles = Filter.filter(bundles, criteria);
 			
 			if ( filteredBundles.isEmpty() ) {
 				return "No bundle found!" ;

@@ -20,9 +20,9 @@ import java.util.List;
 
 import org.telosys.tools.api.TelosysModelException;
 import org.telosys.tools.api.TelosysProject;
+import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.StrUtil;
 import org.telosys.tools.commons.TelosysToolsException;
-import org.telosys.tools.commons.bundles.BundlesNames;
 import org.telosys.tools.generator.task.GenerationTaskResult;
 import org.telosys.tools.generic.model.Model;
 
@@ -97,7 +97,7 @@ public class BatchGenLauncher {
 	 */
 	public BatchGenResult launchGeneration(String bundlePattern) {
 		checkInit();
-		BundlesNames bundlesNames ;
+		List<String> bundlesNames ;
 		try {
 			bundlesNames = telosysProject.getInstalledBundles();
 		} catch (TelosysToolsException e) {
@@ -105,10 +105,11 @@ public class BatchGenLauncher {
 		}
 		
 		// get bundles matching the given pattern
-		String[] parts = new String[2];
-		parts[0] = "" ;
-		parts[1] = bundlePattern ;
-		List<String> selectedBundleNames = bundlesNames.filter(parts);
+//		String[] parts = new String[2];
+//		parts[0] = "" ;
+//		parts[1] = bundlePattern ;
+//		List<String> selectedBundleNames = bundlesNames.filter(parts);
+		List<String> selectedBundleNames = Filter.filter(bundlesNames, bundlePattern);
 
 		// Launch generation for each bundle
 		BatchGenResult batchResult = new BatchGenResult();

@@ -18,6 +18,7 @@ package org.telosys.tools.cli;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.telosys.tools.api.TelosysProject;
@@ -662,6 +663,20 @@ public abstract class Command {
 		else {
 			return "(undefined)";
 		}
-	}	
+	}
+	
+	/**
+	 * Builds a list of criteria from the given command line arguments <br>
+	 * taking all the arguments from 1 to N (except 0)
+	 * @param commandArgs 
+	 * @return
+	 */
+	protected List<String> buildCriteriaFromArgs( String[] commandArgs) {
+		List<String> criteria = new LinkedList<>();
+		for ( int i = 1 ; i < commandArgs.length ; i++ ) {
+				criteria.add(commandArgs[i]);
+		}
+		return criteria ;
+	}
 
 }   
