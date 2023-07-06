@@ -16,6 +16,10 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.telosys.tools.cli.CommandWithModel;
 import org.telosys.tools.cli.Environment;
@@ -23,6 +27,10 @@ import org.telosys.tools.cli.Environment;
 import jline.console.ConsoleReader;
 
 public class DeleteModelCommand extends CommandWithModel {
+
+	public static final String COMMAND_NAME = "dm";
+	
+	private static final Set<String> COMMAND_OPTIONS = new HashSet<>(Arrays.asList(YES_OPTION)); // -y 
 
 	/**
 	 * Constructor
@@ -35,7 +43,7 @@ public class DeleteModelCommand extends CommandWithModel {
 
 	@Override
 	public String getName() {
-		return "dm";
+		return COMMAND_NAME;
 	}
 
 	@Override
@@ -50,28 +58,52 @@ public class DeleteModelCommand extends CommandWithModel {
 	
 	@Override
 	public String getUsage() {
-		return "dm [model-name] [-y]";
+		return COMMAND_NAME + " [model-part-name] [-y]";
 	}
 
 	@Override
-	public String execute(String[] args) {
+	public String execute(String[] argsArray) {
+		List<String> commandArguments = getArgumentsAsList(argsArray);
 		if ( checkHomeDirectoryDefined() ) {
 			// Check arguments :
 			// 0 : dm 
 			// 1 : dm -y | dm model-name
 			// 2 : dm model-name -y
-			if ( checkArguments(args, 0, 1, 2 ) && checkOptions(args, "-y") ) {
-				String[] newArgs = registerAndRemoveYesOption(args);
-				// newArgs = args without '-y' if any
-				execute2(newArgs);				
+			if ( checkArguments(commandArguments, 0, 1, 2 ) && checkOptions(commandArguments, COMMAND_OPTIONS) ) {
+//				String[] newArgs = registerAndRemoveYesOption(args);
+//				// newArgs = args without '-y' if any
+//				execute2(newArgs);
+				Set<String> activeOptions = getOptions(commandArguments);
+				registerYesOptionIfAny(activeOptions);
+				List<String> argsWithoutOptions = removeOptions(commandArguments);
+				executeDeleteModel(argsWithoutOptions);
+				
 			}
 		}
 		return null ;
 	}
 
-	private void execute2(String[] args) {
-		File modelFolder = findModelFolder(args);
-		if ( modelFolder != null) {
+//	private void execute2(String[] args) {
+//		File modelFolder = findModelFolder(args);
+//		if ( modelFolder != null) {
+//			deleteModel(modelFolder);
+//		}
+//	}
+	private void executeDeleteModel(List<String> args) {
+		File modelFolder = null;
+		if ( args.size() == 0 ) {
+			// dm  (no arg) => delete current model 
+			modelFolder = findModelFolder();
+		}
+		else if ( args.size() == 1 ) {
+			// dm model-name => find model
+			modelFolder = findModelFolder(args.get(0));
+		}
+		else {
+			print("invalid arguments"); // not supposed to happen
+			return;
+		}
+		if ( modelFolder != null ) {
 			deleteModel(modelFolder);
 		}
 	}

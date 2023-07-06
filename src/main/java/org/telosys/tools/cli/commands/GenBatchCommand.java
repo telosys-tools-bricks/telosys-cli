@@ -16,11 +16,13 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.telosys.tools.api.TelosysModelException;
-import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.batch.generation.BatchGenResult;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
@@ -40,7 +42,9 @@ import jline.console.ConsoleReader;
  */
 public class GenBatchCommand extends Command {
 	
-	public static final String COMMAND = "genb";
+	public static final String COMMAND_NAME = "genb";
+	
+	private static final Set<String> COMMAND_OPTIONS = new HashSet<>(Arrays.asList(YES_OPTION, "-r")); // -y -r
 	
 	private static final String LINE = "+---------------------------+" ;
 	
@@ -55,7 +59,7 @@ public class GenBatchCommand extends Command {
 
 	@Override
 	public String getName() {
-		return COMMAND;
+		return COMMAND_NAME;
 	}
 
 	@Override
@@ -70,19 +74,23 @@ public class GenBatchCommand extends Command {
 	
 	@Override
 	public String getUsage() {
-		return COMMAND + " *|model-name-filter *|bundle-name-filter [-y]";
+		return COMMAND_NAME + " *|model-name-filter *|bundle-name-filter [-y]";
 	}
 
 	@Override
-	public String execute(String[] args) {
-			// Check arguments :
-			// 2 : gen * *    
-			// 3 : gen * * -y  
-			if ( checkArguments(args, 2, 3 ) && checkOptions(args, "-y") ) {
-				String[] newArgs = registerAndRemoveYesOption(args);
-				// newArgs = args without '-y' if any
-				generateBatch(newArgs);
-			}
+	public String execute(String[] argsArray) {
+		List<String> commandArguments = getArgumentsAsList(argsArray);
+		// Check arguments :
+		// 2 : gen * *    
+		// 3 : gen * * -y  | gen * * -r
+		// 4 : gen * * -y  -r
+		if ( checkArguments(commandArguments, 2, 3, 4 ) && checkOptions(commandArguments, COMMAND_OPTIONS) ) {
+			Set<String> activeOptions = getOptions(commandArguments);
+			registerYesOptionIfAny(activeOptions);			
+			List<String> argsWithoutOptions = removeOptions(commandArguments);
+			// newArgs = args without '-y' if any
+			generateBatch(argsWithoutOptions);
+		}
 		return null ;
 	}
 
@@ -90,11 +98,12 @@ public class GenBatchCommand extends Command {
 	 * Generation entry point
 	 * @param args all the arguments as provided by the command line (0 to N)
 	 */
-	private GenerationTaskResult generateBatch(String[] args)  {
-		int nbArgs = args.length - 1 ;
-		if ( nbArgs == 2 ) {
+	private GenerationTaskResult generateBatch(List<String> args)  {
+		if ( args.size() == 2 ) {
+			String modelNameFilter  = args.get(0);
+			String bundleNameFilter = args.get(1);
 			// gen * * 
-			generateBatch(args[1], args[2]);
+			generateBatch(modelNameFilter, bundleNameFilter);
 		}
 		else {
 			print("invalid arguments");

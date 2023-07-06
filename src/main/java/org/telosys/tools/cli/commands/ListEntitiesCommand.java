@@ -26,6 +26,8 @@ import jline.console.ConsoleReader;
 
 public class ListEntitiesCommand extends CommandWithModel {
 
+	public static final String COMMAND_NAME = "le";
+
 	/**
 	 * Constructor
 	 * @param out
@@ -36,7 +38,7 @@ public class ListEntitiesCommand extends CommandWithModel {
 	
 	@Override
 	public String getName() {
-		return "le";
+		return COMMAND_NAME ;
 	}
 
 	@Override
@@ -51,35 +53,51 @@ public class ListEntitiesCommand extends CommandWithModel {
 	
 	@Override
 	public String getUsage() {
-		return "le [*|pattern|pattern1,pattern2,...]";
+		return COMMAND_NAME + " [*|pattern|pattern1,pattern2,...]";
 	}
 	
 	@Override
-	public String execute(String[] args) {
+	public String execute(String[] argsArray) {
+		List<String> commandArguments = getArgumentsAsList(argsArray);
 		
-		if ( checkArguments(args, 0, 1) && checkHomeDirectoryDefined() && checkModelDefined() ) {
-			listEntities(args);
+		if ( checkArguments(commandArguments, 0, 1) && checkHomeDirectoryDefined() && checkModelDefined() ) {
+			//listEntities(args);
+			String patterns = commandArguments.isEmpty() ? null : commandArguments.get(0) ;
+			listEntities(patterns);
 		}
 		return null ;		
 	}
 	
-	private void listEntities(String[] args) {
+//	private void listEntities(String[] args) {
+//		// Get all entities for the current model
+//		List<String> entities = DslModelUtil.getEntityNames(getCurrentModelFolder());
+//		// Apply filter with criteria
+//		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(args.length > 1 ? args[1] : null) ;
+//		List<String> result = CriteriaUtil.selectAndSort(entities, criteria);
+//		if ( result.isEmpty() ) {
+//			print("No entity");
+//		}
+//		else {
+//			printList( CriteriaUtil.selectAndSort(entities, criteria), " . " );
+//		}
+//	}
+	private void listEntities(String patterns) {
 		// Get all entities for the current model
 		List<String> entities = DslModelUtil.getEntityNames(getCurrentModelFolder());
 		// Apply filter with criteria
-		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(args.length > 1 ? args[1] : null) ;
+		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(patterns) ;
 		List<String> result = CriteriaUtil.selectAndSort(entities, criteria);
 		if ( result.isEmpty() ) {
 			print("No entity");
 		}
 		else {
-			printList( CriteriaUtil.selectAndSort(entities, criteria), " . " );
+			printList(result);
 		}
 	}
 	
-	protected void printList(List<String> list, String prefix) {
-		for ( String s : list) {
-			print(prefix + s );
-		}
-	}
+//	protected void printList(List<String> list, String prefix) {
+//		for ( String s : list) {
+//			print(prefix + s );
+//		}
+//	}
 }

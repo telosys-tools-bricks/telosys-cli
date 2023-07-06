@@ -27,8 +27,11 @@ import org.telosys.tools.commons.dbcfg.yaml.DatabaseDefinitions;
 import jline.console.ConsoleReader;
 
 public class ListDatabasesCommand extends Command {
+
+	public static final String COMMAND_NAME = "ldb";
 	
 	private static final String SEPARATOR = "---------------------------------------------" ;
+	
 	/**
 	 * Constructor
 	 * @param out
@@ -39,7 +42,7 @@ public class ListDatabasesCommand extends Command {
 
 	@Override
 	public String getName() {
-		return "ldb";
+		return COMMAND_NAME;
 	}
 
 	@Override
@@ -54,19 +57,21 @@ public class ListDatabasesCommand extends Command {
 	
 	@Override
 	public String getUsage() {
-		return "ldb [database-id]";
+		return COMMAND_NAME + " [database-id]";
 	}
 
 	@Override
-	public String execute(String[] args) {
-		if ( checkHomeDirectoryDefined() && checkArguments(args, 0, 1 ) ) {
-			if ( args.length > 1 ) {
-				// database-id
-				listDatabases(args[1]);
-			}
-			else {
+	public String execute(String[] argsArray) {
+		List<String> commandArguments = getArgumentsAsList(argsArray);
+		
+		if ( checkHomeDirectoryDefined() && checkArguments(commandArguments, 0, 1 ) ) {
+			if ( commandArguments.isEmpty()) {
 				// no database-id
 				listDatabases(null);
+			}
+			else {
+				// database-id
+				listDatabases(commandArguments.get(0));
 			}
 		}
 		return null ;

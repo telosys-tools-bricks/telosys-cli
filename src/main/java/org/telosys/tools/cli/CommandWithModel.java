@@ -64,6 +64,17 @@ public abstract class CommandWithModel extends Command {
 	}
 	
 	/**
+	 * Try to find the current model folder 
+	 * @return
+	 */
+	protected File findModelFolder() {
+		if ( checkModelDefined() ) {
+			return getCurrentModelFolder();
+		}
+		return null ;
+	}
+	
+	/**
 	 * Try to found a unique model folder matching the given model name pattern
 	 * @param modelNamePattern
 	 * @return the model folder (or null if not found or not unique)

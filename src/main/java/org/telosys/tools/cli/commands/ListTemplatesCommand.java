@@ -34,6 +34,8 @@ import org.telosys.tools.commons.bundles.TargetsDefinitions;
  */
 public class ListTemplatesCommand extends Command {
 	
+	public static final String COMMAND_NAME = "lt";
+
 	/**
 	 * Constructor
 	 * @param consoleReader
@@ -45,7 +47,7 @@ public class ListTemplatesCommand extends Command {
 
 	@Override
 	public String getName() {
-		return "lt";
+		return COMMAND_NAME ;
 	}
 
 	@Override
@@ -60,20 +62,29 @@ public class ListTemplatesCommand extends Command {
 	
 	@Override
 	public String getUsage() {
-		return "lt [*|pattern|pattern1,pattern2,...]";
+		return COMMAND_NAME + " [*|pattern|pattern1,pattern2,...]";
 	}
 	
 	@Override
-	public String execute(String[] args) {
-		if ( checkArguments(args, 0, 1) && checkHomeDirectoryDefined() && checkBundleDefined() ) {
-			listTemplates(args);
+	public String execute(String[] argsArray) {
+		List<String> commandArguments = getArgumentsAsList(argsArray);
+		if ( checkArguments(commandArguments, 0, 1) && checkHomeDirectoryDefined() && checkBundleDefined() ) {
+			// listTemplates(args);
+			String patterns = commandArguments.isEmpty() ? null : commandArguments.get(0) ;
+			listTemplates(patterns);
 		}
 		return null ;
 	}
 	
-	private void listTemplates(String[] args) {
+//	private void listTemplates(String[] args) {
+//		TargetsDefinitions targetDefinitions = getCurrentTargetsDefinitions();
+//		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(args.length > 1 ? args[1] : null) ;
+//		List<TargetDefinition> selectedTargets = TargetUtil.filter(targetDefinitions.getTemplatesTargets(), criteria);
+//		print ( TargetUtil.buildListAsString(selectedTargets) );
+//	}
+	private void listTemplates(String patterns) {
 		TargetsDefinitions targetDefinitions = getCurrentTargetsDefinitions();
-		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(args.length > 1 ? args[1] : null) ;
+		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(patterns) ;
 		List<TargetDefinition> selectedTargets = TargetUtil.filter(targetDefinitions.getTemplatesTargets(), criteria);
 		print ( TargetUtil.buildListAsString(selectedTargets) );
 	}

@@ -15,6 +15,8 @@
  */
 package org.telosys.tools.cli.commands;
 
+import java.util.List;
+
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.LastError;
@@ -23,6 +25,8 @@ import org.telosys.tools.commons.TelosysToolsException;
 import jline.console.ConsoleReader;
 
 public class NewModelCommand extends Command {
+	
+	public static final String COMMAND_NAME = "nm";	
 	
 	/**
 	 * Constructor
@@ -34,7 +38,7 @@ public class NewModelCommand extends Command {
 	
 	@Override
 	public String getName() {
-		return "nm";
+		return COMMAND_NAME;
 	}
 
 	@Override
@@ -49,18 +53,19 @@ public class NewModelCommand extends Command {
 	
 	@Override
 	public String getUsage() {
-		return "nm model-name [database-id]";
+		return COMMAND_NAME + " model-name [database-id]";
 	}
 	
 	@Override
-	public String execute(String[] args) {
+	public String execute(String[] argsArray) {
+		List<String> commandArguments = getArgumentsAsList(argsArray);
 		
-		if ( checkHomeDirectoryDefined() && checkArguments(args, 1, 2) ) {
-			if ( args.length == 2 ) {
-				newModel(args[1]);
+		if ( checkHomeDirectoryDefined() && checkArguments(commandArguments, 1, 2) ) {
+			if ( commandArguments.size() == 1 ) {
+				newModel(commandArguments.get(0));
 			}
-			else if ( args.length == 3 ) {
-				newModelFromDatabase(args[1], args[2]);
+			else if ( commandArguments.size() == 2 ) {
+				newModelFromDatabase(commandArguments.get(0), commandArguments.get(1));
 			}
 		}
 		return null ;

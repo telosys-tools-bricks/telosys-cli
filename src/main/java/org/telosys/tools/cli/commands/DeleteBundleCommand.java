@@ -15,7 +15,10 @@
  */
 package org.telosys.tools.cli.commands;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandWithBundles;
@@ -25,6 +28,10 @@ import org.telosys.tools.commons.TelosysToolsException;
 import jline.console.ConsoleReader;
 
 public class DeleteBundleCommand extends CommandWithBundles {
+
+	public static final String COMMAND_NAME = "db";
+	
+	private static final Set<String> COMMAND_OPTIONS = new HashSet<>(Arrays.asList(YES_OPTION)); // -y 
 
 	/**
 	 * Constructor
@@ -36,7 +43,7 @@ public class DeleteBundleCommand extends CommandWithBundles {
 
 	@Override
 	public String getName() {
-		return "db";
+		return COMMAND_NAME;
 	}
 
 	@Override
@@ -51,27 +58,32 @@ public class DeleteBundleCommand extends CommandWithBundles {
 	
 	@Override
 	public String getUsage() {
-		return "db [bundle-part-name] [-y]";
+		return COMMAND_NAME + " [bundle-part-name] [-y]";
 	}
 	
 	@Override
-	public String execute(String[] args) {
+	public String execute(String[] argsArray) {
+		List<String> commandArguments = getArgumentsAsList(argsArray);
 		if ( checkHomeDirectoryDefined() ) {
 			// Check arguments :
 			// 0 : db 
 			// 1 : db -y | db bundle-name
 			// 2 : db bundle-name -y
-			if ( checkArguments(args, 0, 1, 2 ) && checkOptions(args, "-y") ) {
-				String[] newArgs = registerAndRemoveYesOption(args);
-				// newArgs = args without '-y' if any
-				execute2(newArgs);				
+			if ( checkArguments(commandArguments, 0, 1, 2 ) && checkOptions(commandArguments, COMMAND_OPTIONS) ) {
+//				List<String> newArgs = registerAndRemoveYesOption(commandArguments);
+//				// newArgs = args without '-y' if any
+//				executeDeleteBundle(newArgs);
+				Set<String> activeOptions = getOptions(commandArguments);
+				registerYesOptionIfAny(activeOptions);
+				List<String> argsWithoutOptions = removeOptions(commandArguments);
+				executeDeleteBundle(argsWithoutOptions);
 			}
 		}
 		return null ;
 	}
 
-	public void execute2(String[] args) {
-		if ( args.length > 1 ) {
+	public void executeDeleteBundle(List<String> args) {
+		if ( args.size() > 1 ) {
 			getAndDeleteBundles(args);
 		}
 		else {
@@ -87,10 +99,10 @@ public class DeleteBundleCommand extends CommandWithBundles {
 		}
 	}
 
-	private void getAndDeleteBundles(String[] commandArgs) {
+	private void getAndDeleteBundles(List<String> args) {
 		try {
 			// Get bundles matching the given name parts
-			List<String> bundleNames = getInstalledBundles(commandArgs);
+			List<String> bundleNames = getInstalledBundles(args);
 			if ( bundleNames.isEmpty() ) {
 				print("No bundle found.") ;
 			}

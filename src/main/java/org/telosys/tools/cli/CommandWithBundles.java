@@ -55,4 +55,17 @@ public abstract class CommandWithBundles extends Command {
 		return Filter.filter(allBundles, buildCriteriaFromArgs(args));
 	}
 
+	/**
+	 * Returns bundles installed in the current project and matching the given arguments
+	 * @param args
+	 * @return
+	 * @throws TelosysToolsException
+	 */
+	protected final List<String> getInstalledBundles(List<String> criteria) throws TelosysToolsException {
+		TelosysProject telosysProject = getTelosysProject();
+		// get all installed bundles
+		List<String> allBundles = telosysProject.getInstalledBundles();
+		// filter bundles according with criteria
+		return Filter.filter(allBundles, criteria);
+	}
 }

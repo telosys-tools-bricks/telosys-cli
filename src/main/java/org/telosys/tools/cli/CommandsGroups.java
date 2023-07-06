@@ -157,7 +157,7 @@ public class CommandsGroups {
 		
 		String name = "Generation commands" ;
 		commands.add("gen");
-		commands.add(GenBatchCommand.COMMAND);
+		commands.add(GenBatchCommand.COMMAND_NAME);
 		
 		return new CommandsGroup(name, commands);
 	}

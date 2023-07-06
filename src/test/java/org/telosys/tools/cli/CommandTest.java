@@ -2,6 +2,9 @@ package org.telosys.tools.cli;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,15 +32,6 @@ public class CommandTest {
 		command = createCommand();
 	}
 
-//	public boolean hasOption(String[] args, String option) {
-//		for ( String a : args ) {
-//			if ( option.equals(a) ) {
-//				return true ;
-//			}
-//		}
-//		return false ;
-//	}
-	
 	@Test
 	public void testCurrentHome() {
 		assertNull(command.getCurrentHome());
@@ -46,11 +40,26 @@ public class CommandTest {
 	}
 
 	@Test
-	public void testCheckArguments() {
+	public void testGetArgumentsAsList() {
 		String[] args0 = { "cmd" };
-		String[] args1 = { "cmd", "a" };
-		String[] args2 = { "cmd", "a", "b" };
-		String[] args3 = { "cmd", "a", "b", "c" };
+		List<String> list = command.getArgumentsAsList(args0);
+		assertTrue(list.isEmpty());
+
+		String[] args3 = { "cmd", "a", "b", "-y" };
+		List<String> list3 = command.getArgumentsAsList(args3);
+		assertEquals(3, list3.size() );
+	}
+
+	@Test
+	public void testCheckArguments() {
+//		String[] args0 = { "cmd" };
+//		String[] args1 = { "cmd", "a" };
+//		String[] args2 = { "cmd", "a", "b" };
+//		String[] args3 = { "cmd", "a", "b", "c" };
+		List<String> args0 = new LinkedList<>();
+		List<String> args1 = Arrays.asList("a"); 
+		List<String> args2 = Arrays.asList( "a", "b" );
+		List<String> args3 = Arrays.asList( "a", "b", "c" );
 		
 		assertTrue(command.checkArguments(args0, 0 ));
 		assertTrue(command.checkArguments(args0, 0, 1));
@@ -78,43 +87,57 @@ public class CommandTest {
 	@Test
 	public void testCheckOptions() {
 		
-		String[] args1 = { "cmd", "a", "-r" };		
-		assertTrue(command.checkOptions(args1 ));
-		assertTrue(command.checkOptions(args1, "-r", "-y" ));
-		assertTrue(command.checkOptions(args1, "-r" ));
+//		String[] args1 = { "cmd", "a", "-r" };		
+		List<String> args;
+		args = Arrays.asList("a", "-r"); 
+		assertTrue(command.checkOptions(args, Arrays.asList("-r")       ));
+		assertTrue(command.checkOptions(args, Arrays.asList("-r", "-y") ));
+//		assertTrue(command.checkOptions(args1, "-r" ));
 
-		String[] args2 = { "cmd", "a", "-y" };
-		assertTrue(command.checkOptions(args2, "-r", "-y" ));
-		assertTrue(command.checkOptions(args2, "-y" ));
+//		String[] args2 = { "cmd", "a", "-y" };
+		args = Arrays.asList("a", "-y"); 
+		assertTrue(command.checkOptions(args, Arrays.asList("-r", "-y") )); // "-r", "-y" ));
+		assertTrue(command.checkOptions(args, Arrays.asList("-y")       )); //"-y" ));
 
-		String[] args3 = { "cmd", "a", "-y", "-z" };
-		assertTrue(command.checkOptions(args3, "-y", "-z" ));
-		assertFalse(command.checkOptions(args3, "-r" )); // Invalid option '-y'
-		assertFalse(command.checkOptions(args3, "-y" )); // Invalid option '-z'
+//		String[] args3 = { "cmd", "a", "-y", "-z" };
+		args = Arrays.asList("a", "-y", "-z" ); 
+		assertTrue (command.checkOptions(args, Arrays.asList("-y", "-z") )); // "-y", "-z" ));
+		assertFalse(command.checkOptions(args, Arrays.asList("-r")       )); // Invalid option '-y'
+		assertFalse(command.checkOptions(args, Arrays.asList("-y")       )); // Invalid option '-z'
 	}
 
 	@Test
-	public void testRegisterAndRemoveYesOption() {
-		String[] newArgs ;
-		
-		String[] args1 = { "cmd", "a", "-r" };		
-		newArgs = command.registerAndRemoveYesOption(args1);
-		assertTrue(newArgs == args1); // Same array
-		
-		String[] args2 = { "cmd", "a", "-r", "-y" };
-		System.out.println("initial args  : " + Arrays.toString(args2) );
-		newArgs = command.registerAndRemoveYesOption(args2);
-		assertTrue(newArgs != args2); // New array
-		assertEquals(3, newArgs.length);
-		System.out.println("args returned : " + Arrays.toString(newArgs) );
-		
-		String[] args3 = { "cmd", "-y" };
-		System.out.println("initial args  : " + Arrays.toString(args3) );
-		newArgs = command.registerAndRemoveYesOption(args3);
-		assertTrue(newArgs != args3); // New array
-		assertEquals(1, newArgs.length);
-		System.out.println("args returned : " + Arrays.toString(newArgs) );
-		
+	public void testIsActiveOptions() {
+		assertTrue(  command.isOptionActive("-y", Arrays.asList("-y", "-z")) );
+		assertFalse( command.isOptionActive("-x", Arrays.asList("-y", "-z")) );
+		assertFalse( command.isOptionActive("-x", new LinkedList<String>()) );
 	}
-	
+
+	@Test
+	public void testGetOptions() {
+		Set<String> options;
+		options = command.getOptions(Arrays.asList("-y", "-z"));
+		assertEquals( 2, options.size());
+		assertTrue( options.contains("-y"));
+		assertTrue( options.contains("-z"));
+		
+		options = command.getOptions(Arrays.asList("aaa", "-y", "bb", "-z", "-x"));
+		assertEquals( 3, options.size());
+		assertTrue( options.contains("-x"));
+		assertTrue( options.contains("-y"));
+		assertTrue( options.contains("-z"));
+	}
+
+	@Test
+	public void testRemoveOptions() {
+		List<String> withoutOptions;
+		withoutOptions = command.removeOptions(Arrays.asList("-y", "-z"));
+		assertEquals(0, withoutOptions.size());
+		
+		withoutOptions = command.removeOptions(Arrays.asList("aaa", "-y", "bb", "-z", "-x"));
+		assertEquals(2, withoutOptions.size());
+		assertTrue( withoutOptions.contains("aaa"));
+		assertTrue( withoutOptions.contains("bb"));
+	}
+
 }

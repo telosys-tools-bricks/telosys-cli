@@ -18,8 +18,11 @@ package org.telosys.tools.cli;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.commons.FileUtil;
@@ -37,6 +40,8 @@ import jline.console.ConsoleReader;
  *
  */
 public abstract class Command {
+
+	protected static final String YES_OPTION = "-y" ;
 
 	private final ConsoleReader consoleReader ;
 	private final PrintWriter out ;
@@ -301,48 +306,141 @@ public abstract class Command {
 	
 	//-------------------------------------------------------------------------
 	/**
-	 * Check the number of arguments
-	 * @param args all the arguments retrieved from the command line
-	 * @param n list of acceptable number of arguments without the command itself (without args[0])
+	 * Builds a list containing the command arguments (index 1 to LAST)
+	 * @param args
 	 * @return
 	 */
-	protected boolean checkArguments(String[] args, int ... n) {
-		boolean ok = false ;
-		int argsCount = args.length - 1 ;
-		for ( int i : n ) {
-			if ( argsCount == i ) {
-				ok = true ;
+	protected List<String> getArgumentsAsList(String[] args) {
+		List<String> list = new LinkedList<>();
+		if ( args != null ) {
+			for ( int i = 1 ; i < args.length ; i++ ) {
+				list.add(args[i]);
 			}
 		}
-		if ( ! ok ) {
-			print("Invalid usage : unexpected number of arguments");
+		return list;
+	}
+	
+//	/**
+//	 * Check the number of arguments
+//	 * @param args all the arguments retrieved from the command line
+//	 * @param acceptableNumbers list of acceptable number of arguments without the command itself (without args[0])
+//	 * @return
+//	 */
+//	protected boolean checkArguments(String[] args, int ... acceptableNumbers) {
+////		boolean ok = false ;
+//		int argsCount = args.length - 1 ;
+//		for ( int i : acceptableNumbers ) {
+//			if ( argsCount == i ) { // args count is one of acceptable numbers
+////				ok = true ;
+//				return true;
+//			}
+//		}
+////		if ( ! ok ) {
+////			print("Invalid usage : unexpected number of arguments");
+////		}
+////		return ok ;
+//		print("Invalid usage : unexpected number of arguments");
+//		return false;
+//	}
+	/**
+	 * Check the number of arguments
+	 * @param commandArguments 
+	 * @param acceptableNumbers list of acceptable number of arguments without the command itself (without args[0])
+	 * @return
+	 */
+	protected boolean checkArguments(List<String> commandArguments, int ... acceptableNumbers) {
+		for ( int i : acceptableNumbers ) {
+			if ( commandArguments.size() == i ) { 
+				// args count is one of acceptable numbers
+				return true;
+			}
 		}
-		return ok ;
+		print("Invalid usage : unexpected number of arguments");
+		return false;
 	}
 
+//	/**
+//	 * Check options validity for all args starting with '-' 
+//	 * @param args all the arguments retrieved from the command line
+//	 * @param options list of acceptable options
+//	 * @return
+//	 */
+//	protected boolean checkOptions(String[] args, String ... options) {
+//		for ( String a : args ) {
+//			if ( a.startsWith("-") ) {
+//				// This argument is an option
+//				if ( ! isValidOption(a, options) ) {
+//					print("Invalid option '" + a + "'");
+//					return false ;
+//				}
+//			}
+//		}
+//		return true;
+//	}
+	
 	/**
-	 * Check options validity for all args starting with '-' 
-	 * @param args all the arguments retrieved from the command line
+	 * Check validity of options (for all args starting with '-') 
+	 * @param commandArguments 
 	 * @param options list of acceptable options
 	 * @return
 	 */
-	protected boolean checkOptions(String[] args, String ... options) {
-		for ( String a : args ) {
-			if ( a.startsWith("-") ) {
-				// This ar is an option
-				if ( ! isValidOption(a, options) ) {
-					print("Invalid option '" + a + "'");
-					return false ;
-				}
+	protected boolean checkOptions(List<String> commandArguments, Collection<String> options) {
+		boolean status = true ;
+		for ( String arg : commandArguments ) {
+			if ( arg.startsWith("-") && ( ! isValidOption(arg, options) ) ) {
+				print("Invalid option '" + arg + "'");
+				status = false ;
 			}
 		}
-		return true;
+		return status;
 	}
 	
-	private boolean isValidOption(String arg, String ... options) {
-		if ( options.length == 0 ) {
-			return true ;
+	protected boolean isOptionActive(String option, Collection<String> optionsList) {
+		for ( String s : optionsList ) {
+			if ( s.equals(option) ) {
+				return true;
+			}
 		}
+		return false;
+	}
+	
+	/**
+	 * Returns a Set containing all options in the given command arguments (each arg starting by "-")
+	 * @param commandArguments
+	 * @return
+	 */
+	protected Set<String> getOptions(Collection<String> commandArguments) {
+		Set<String> activeOptions = new HashSet<>() ;
+		for ( String arg : commandArguments ) {
+			if ( arg.startsWith("-") ) {
+				activeOptions.add(arg);
+			}
+		}
+		return activeOptions;
+	}
+	
+	protected List<String> removeOptions(Collection<String> commandArguments) {
+		List<String> argsWithoutOptions = new LinkedList<>() ;
+		for ( String arg : commandArguments ) {
+			if ( ! arg.startsWith("-") ) {
+				argsWithoutOptions.add(arg);
+			}
+		}
+		return argsWithoutOptions;
+	}
+	
+//	private boolean isValidOption(String arg, String ... options) {
+////		if ( options.length == 0 ) {
+////			return true ;
+////		}
+//		for ( String o : options ) {
+//			if ( arg.equals(o) ) {
+//				return true ;
+//			}
+//		}
+//		return false ;
+//	}
+	private boolean isValidOption(String arg, Collection<String> options) {
 		for ( String o : options ) {
 			if ( arg.equals(o) ) {
 				return true ;
@@ -351,40 +449,60 @@ public abstract class Command {
 		return false ;
 	}
 	
-	protected int countYesOption(String[] args) {
-		int n = 0 ;
-		for ( String a : args ) {
-			if ( a.equals("-y") ) {
-				n++ ;
-			}
-		}
-		return n ;
-	}
+//	protected int countYesOption(Collection<String> commandArguments) {
+//		int n = 0 ;
+//		for ( String a : commandArguments ) {
+//			if ( a.equals(YES_OPTION) ) {
+//				n++ ;
+//			}
+//		}
+//		return n ;
+//	}
 	
 	protected void sayYes(boolean value) {
 		sayYes = value ;
 	}
 	
-	protected String[] registerAndRemoveYesOption(String[] args) {
+//	private List<String> removeElement(Collection<String> initialList, String element) {
+//		List<String> newList = new LinkedList<>();
+//		for ( String s : initialList) {
+//			if ( ! s.equals(element) ) {
+//				newList.add(s);
+//			}
+//		}
+//		return newList;
+//	}
+
+	protected void registerYesOptionIfAny(Collection<String> arguments) {
 		sayYes(false); // Reset "yes" option 
-		int n = countYesOption(args) ;
-		if ( n > 0 ) {
-			// At least 1 "-y" option
-			sayYes(true); // Set "yes" option 
-			String[] newArgs = new String[args.length-n];
-			int i = 0 ;
-			for ( String a : args ) {
-				if ( ! a.equals("-y") ) {
-					newArgs[i++] = a ;
-				}
+		for ( String a : arguments ) {
+			if ( a.equals(YES_OPTION) ) {
+				sayYes(true); // Set "yes" option
 			}
-			return newArgs;
-		}
-		else {
-			// No "-y" option
-			return args ; // no change
 		}
 	}
+	
+//	protected List<String> registerAndRemoveYesOption(List<String> commandArguments) {
+//		sayYes(false); // Reset "yes" option 
+//		int n = countYesOption(commandArguments) ;
+//		if ( n > 0 ) {
+//			// At least 1 "-y" option
+//			sayYes(true); // Set "yes" option 
+////			String[] newArgs = new String[args.length-n];
+////			int i = 0 ;
+////			for ( String a : args ) {
+////				if ( ! a.equals("-y") ) {
+////					newArgs[i++] = a ;
+////				}
+////			}			
+////			return newArgs;
+//			return removeElement(commandArguments, YES_OPTION); 
+//		}
+//		else {
+//			// No "-y" option
+//			return commandArguments ; // no change
+//		}
+//	}
 	
 	//-------------------------------------------------------------------------
 	// Model
