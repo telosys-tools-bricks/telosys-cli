@@ -64,7 +64,7 @@ public class EditEntityCommand extends Command {
 
 	@Override
 	public String execute(String[] args) {
-		if ( checkDslModelDefined() ) {
+		if ( checkModelDefined() ) {
 			if ( args.length > 1 ) {
 				return editEntity(args[1]);
 			}

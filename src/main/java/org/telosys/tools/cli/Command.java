@@ -320,28 +320,6 @@ public abstract class Command {
 		return list;
 	}
 	
-//	/**
-//	 * Check the number of arguments
-//	 * @param args all the arguments retrieved from the command line
-//	 * @param acceptableNumbers list of acceptable number of arguments without the command itself (without args[0])
-//	 * @return
-//	 */
-//	protected boolean checkArguments(String[] args, int ... acceptableNumbers) {
-////		boolean ok = false ;
-//		int argsCount = args.length - 1 ;
-//		for ( int i : acceptableNumbers ) {
-//			if ( argsCount == i ) { // args count is one of acceptable numbers
-////				ok = true ;
-//				return true;
-//			}
-//		}
-////		if ( ! ok ) {
-////			print("Invalid usage : unexpected number of arguments");
-////		}
-////		return ok ;
-//		print("Invalid usage : unexpected number of arguments");
-//		return false;
-//	}
 	/**
 	 * Check the number of arguments
 	 * @param commandArguments 
@@ -359,25 +337,6 @@ public abstract class Command {
 		return false;
 	}
 
-//	/**
-//	 * Check options validity for all args starting with '-' 
-//	 * @param args all the arguments retrieved from the command line
-//	 * @param options list of acceptable options
-//	 * @return
-//	 */
-//	protected boolean checkOptions(String[] args, String ... options) {
-//		for ( String a : args ) {
-//			if ( a.startsWith("-") ) {
-//				// This argument is an option
-//				if ( ! isValidOption(a, options) ) {
-//					print("Invalid option '" + a + "'");
-//					return false ;
-//				}
-//			}
-//		}
-//		return true;
-//	}
-	
 	/**
 	 * Check validity of options (for all args starting with '-') 
 	 * @param commandArguments 
@@ -395,6 +354,12 @@ public abstract class Command {
 		return status;
 	}
 	
+	/**
+	 * Returns true if the given option is present in the given list of options
+	 * @param option
+	 * @param optionsList
+	 * @return
+	 */
 	protected boolean isOptionActive(String option, Collection<String> optionsList) {
 		for ( String s : optionsList ) {
 			if ( s.equals(option) ) {
@@ -419,6 +384,11 @@ public abstract class Command {
 		return activeOptions;
 	}
 	
+	/**
+	 * Returns a new list of arguments without all options 
+	 * @param commandArguments
+	 * @return
+	 */
 	protected List<String> removeOptions(Collection<String> commandArguments) {
 		List<String> argsWithoutOptions = new LinkedList<>() ;
 		for ( String arg : commandArguments ) {
@@ -429,17 +399,6 @@ public abstract class Command {
 		return argsWithoutOptions;
 	}
 	
-//	private boolean isValidOption(String arg, String ... options) {
-////		if ( options.length == 0 ) {
-////			return true ;
-////		}
-//		for ( String o : options ) {
-//			if ( arg.equals(o) ) {
-//				return true ;
-//			}
-//		}
-//		return false ;
-//	}
 	private boolean isValidOption(String arg, Collection<String> options) {
 		for ( String o : options ) {
 			if ( arg.equals(o) ) {
@@ -449,30 +408,10 @@ public abstract class Command {
 		return false ;
 	}
 	
-//	protected int countYesOption(Collection<String> commandArguments) {
-//		int n = 0 ;
-//		for ( String a : commandArguments ) {
-//			if ( a.equals(YES_OPTION) ) {
-//				n++ ;
-//			}
-//		}
-//		return n ;
-//	}
-	
 	protected void sayYes(boolean value) {
 		sayYes = value ;
 	}
 	
-//	private List<String> removeElement(Collection<String> initialList, String element) {
-//		List<String> newList = new LinkedList<>();
-//		for ( String s : initialList) {
-//			if ( ! s.equals(element) ) {
-//				newList.add(s);
-//			}
-//		}
-//		return newList;
-//	}
-
 	protected void registerYesOptionIfAny(Collection<String> arguments) {
 		sayYes(false); // Reset "yes" option 
 		for ( String a : arguments ) {
@@ -482,33 +421,11 @@ public abstract class Command {
 		}
 	}
 	
-//	protected List<String> registerAndRemoveYesOption(List<String> commandArguments) {
-//		sayYes(false); // Reset "yes" option 
-//		int n = countYesOption(commandArguments) ;
-//		if ( n > 0 ) {
-//			// At least 1 "-y" option
-//			sayYes(true); // Set "yes" option 
-////			String[] newArgs = new String[args.length-n];
-////			int i = 0 ;
-////			for ( String a : args ) {
-////				if ( ! a.equals("-y") ) {
-////					newArgs[i++] = a ;
-////				}
-////			}			
-////			return newArgs;
-//			return removeElement(commandArguments, YES_OPTION); 
-//		}
-//		else {
-//			// No "-y" option
-//			return commandArguments ; // no change
-//		}
-//	}
-	
 	//-------------------------------------------------------------------------
 	// Model
 	//-------------------------------------------------------------------------
 	/**
-	 * Checks if a model is defined
+	 * Checks if current model is defined
 	 * @return
 	 */
 	protected boolean checkModelDefined() {
@@ -519,17 +436,6 @@ public abstract class Command {
 			print( "No current model (can be set with 'm' command)" ) ;
 			return false ;
 		}
-	}	
-
-	/**
-	 * Checks if a model is defined and is a DSL model type
-	 * @return
-	 */
-	protected boolean checkDslModelDefined() {
-		if ( checkModelDefined() ) {
-			return true ;
-		}
-		return false ;
 	}	
 
 	protected void setCurrentModel(String modelName) {
