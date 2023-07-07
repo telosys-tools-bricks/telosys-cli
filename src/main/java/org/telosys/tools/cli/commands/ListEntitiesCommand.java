@@ -17,14 +17,14 @@ package org.telosys.tools.cli.commands;
 
 import java.util.List;
 
-import org.telosys.tools.cli.CommandWithModel;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commons.CriteriaUtil;
 import org.telosys.tools.dsl.DslModelUtil;
 
 import jline.console.ConsoleReader;
 
-public class ListEntitiesCommand extends CommandWithModel {
+public class ListEntitiesCommand extends CommandLevel2 {
 
 	public static final String COMMAND_NAME = "le";
 

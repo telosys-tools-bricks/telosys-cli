@@ -439,7 +439,7 @@ public abstract class Command {
 	}	
 
 	protected void setCurrentModel(String modelName) {
-		if ( getTelosysProject().dslModelFolderExists(modelName) ) {
+		if ( getTelosysProject().modelFolderExists(modelName) ) {
 			environment.setCurrentModel(modelName);
 			updatePrompt();
 		}

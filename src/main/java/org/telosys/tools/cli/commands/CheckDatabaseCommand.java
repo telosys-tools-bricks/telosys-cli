@@ -17,7 +17,7 @@ package org.telosys.tools.cli.commands;
 
 import org.telosys.tools.api.MetaDataOptions;
 import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.CommandWithModel;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commands.util.CheckDatabaseCommandOptions;
 import org.telosys.tools.cli.observer.DbMetadataObserver;
@@ -27,7 +27,7 @@ import org.telosys.tools.commons.dbcfg.yaml.DatabaseDefinition;
 
 import jline.console.ConsoleReader;
 
-public class CheckDatabaseCommand extends CommandWithModel {
+public class CheckDatabaseCommand extends CommandLevel2 {
 
 	/**
 	 * Constructor

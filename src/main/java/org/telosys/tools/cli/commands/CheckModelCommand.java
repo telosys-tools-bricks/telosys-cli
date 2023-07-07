@@ -16,10 +16,11 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
+import java.util.List;
 
 import jline.console.ConsoleReader;
 
-import org.telosys.tools.cli.CommandWithModel;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.generic.model.Model;
 
@@ -29,7 +30,9 @@ import org.telosys.tools.generic.model.Model;
  * @author Laurent GUERIN 
  *
  */
-public class CheckModelCommand extends CommandWithModel {
+public class CheckModelCommand extends CommandLevel2 {
+
+	public static final String COMMAND_NAME = "cm";
 
 	/**
 	 * Constructor
@@ -41,7 +44,7 @@ public class CheckModelCommand extends CommandWithModel {
 	
 	@Override
 	public String getName() {
-		return "cm";
+		return COMMAND_NAME ;
 	}
 
 	@Override
@@ -56,14 +59,24 @@ public class CheckModelCommand extends CommandWithModel {
 	
 	@Override
 	public String getUsage() {
-		return "cm [model-name]";
+		return COMMAND_NAME + " [model-name]";
 	}
 	
 	@Override
-	public String execute(String[] args) {
-		
-		if ( checkHomeDirectoryDefined() ) {
-			File modelFolder = findModelFolder(args);
+	public String execute(String[] argsArray) {
+		List<String> commandArguments = getArgumentsAsList(argsArray);
+		if ( checkHomeDirectoryDefined() && checkArguments(commandArguments, 0, 1 ) ) {
+			
+			File modelFolder = null;
+			if ( ! commandArguments.isEmpty() ) {
+				modelFolder = findModelFolder(commandArguments.get(0));
+			}
+			else {
+				if ( checkModelDefined() ) {
+					modelFolder = getCurrentModelFolder();
+				}
+			}			
+			// File modelFolder = findModelFolder(commandArguments);
 			if ( modelFolder != null ) {
 				checkModel(modelFolder);
 			}
@@ -75,6 +88,7 @@ public class CheckModelCommand extends CommandWithModel {
 		// Just try to load the model to check it 
 		Model model = loadModel(modelFolder);
 		if ( model != null ) {
+			// Loaded => model is OK 
 			int n = model.getEntities() != null ? model.getEntities().size() : 0 ; 
 			print( "Model OK ('" + modelFolder.getName() + "' loaded : " + n + " entities)" );
 		}

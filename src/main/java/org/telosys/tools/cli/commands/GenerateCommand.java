@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.CommandWithModel;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commons.CriteriaUtil;
 import org.telosys.tools.cli.commons.EntityUtil;
@@ -42,7 +42,7 @@ import jline.console.ConsoleReader;
  * @author Laurent GUERIN
  *
  */
-public class GenerateCommand extends CommandWithModel {
+public class GenerateCommand extends CommandLevel2 {
 
 	public static final String COMMAND_NAME = "gen";
 	

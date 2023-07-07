@@ -18,7 +18,7 @@ package org.telosys.tools.cli.commands;
 import java.util.List;
 
 import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.CommandWithGitHub;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.TelosysToolsException;
@@ -35,7 +35,7 @@ import jline.console.ConsoleReader;
  * @author Laurent GUERIN
  *
  */
-public class InstallBundlesCommand extends CommandWithGitHub {
+public class InstallBundlesCommand extends CommandLevel2 {
 	
 	/**
 	 * Constructor

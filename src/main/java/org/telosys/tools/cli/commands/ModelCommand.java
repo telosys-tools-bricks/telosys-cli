@@ -16,10 +16,14 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import jline.console.ConsoleReader;
 
-import org.telosys.tools.cli.CommandWithModel;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 
 /**
@@ -28,7 +32,13 @@ import org.telosys.tools.cli.Environment;
  * @author Laurent GUERIN
  *
  */
-public class ModelCommand extends CommandWithModel {
+public class ModelCommand extends CommandLevel2 {
+	
+	private static final String NO_CURRENT_MODEL = "No current model";
+
+	public static final String COMMAND_NAME = "m";
+	
+	private static final Set<String> COMMAND_OPTIONS = new HashSet<>(Arrays.asList("-none")); 
 
 	/**
 	 * Constructor
@@ -40,7 +50,7 @@ public class ModelCommand extends CommandWithModel {
 	
 	@Override
 	public String getName() {
-		return "m";
+		return COMMAND_NAME;
 	}
 
 	@Override
@@ -55,20 +65,29 @@ public class ModelCommand extends CommandWithModel {
 	
 	@Override
 	public String getUsage() {
-		return "m [model-name]";
+		return COMMAND_NAME + " [model-name] [-none]";
 	}
 	
 	@Override
-	public String execute(String[] args) {
+	public String execute(String[] argsArray) {
+		List<String> commandArguments = getArgumentsAsList(argsArray);
 		
-		if ( args.length > 1 ) {
-			if ( checkHomeDirectoryDefined() ) {
-				return tryToSetCurrentModel(args[1]);
+		if ( checkArguments(commandArguments, 0, 1 ) && checkOptions(commandArguments, COMMAND_OPTIONS) ) {
+			Set<String> activeOptions = getOptions(commandArguments);
+			List<String> argsWithoutOptions = removeOptions(commandArguments);
+			if ( ! argsWithoutOptions.isEmpty() ) {
+				if ( checkHomeDirectoryDefined() ) {
+					tryToSetCurrentModel(argsWithoutOptions.get(0));
+				}
 			}
-		}
-		else {
-			String modelName = getCurrentModel() ;
-			return modelName != null ? modelName : "Undefined (no model selected)" ;
+			else if ( isOptionActive("-none", activeOptions) ) {
+				unsetCurrentModel();
+				print( NO_CURRENT_MODEL );
+			}
+			else {
+				String modelName = getCurrentModel() ;
+				print( modelName != null ? modelName : NO_CURRENT_MODEL );
+			}
 		}
 		return null ;
 	}
@@ -78,7 +97,7 @@ public class ModelCommand extends CommandWithModel {
 		// if found 
 		if ( modelFolder != null ) {
 			setCurrentModel(modelFolder.getName());
-			return "Current model is now '" + getCurrentModel() + "'";
+			print( "Current model is now '" + getCurrentModel() + "'" );
 		}
 		return null ;
 	}

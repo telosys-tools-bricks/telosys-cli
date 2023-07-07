@@ -18,13 +18,15 @@ package org.telosys.tools.cli.commands;
 import java.io.File;
 import java.util.List;
 
-import org.telosys.tools.cli.CommandWithBundles;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.TelosysToolsException;
 
 import jline.console.ConsoleReader;
 
-public class EditBundleCommand extends CommandWithBundles {
+public class EditBundleCommand extends CommandLevel2 {
+
+	public static final String COMMAND_NAME = "eb";
 
 	/**
 	 * Constructor
@@ -36,7 +38,7 @@ public class EditBundleCommand extends CommandWithBundles {
 
 	@Override
 	public String getName() {
-		return "eb";
+		return COMMAND_NAME;
 	}
 
 	@Override
@@ -51,14 +53,15 @@ public class EditBundleCommand extends CommandWithBundles {
 	
 	@Override
 	public String getUsage() {
-		return "eb [bundle-name|bundle-partial-name]";
+		return COMMAND_NAME + " [bundle-name|bundle-partial-name]";
 	}
 
 	@Override
-	public String execute(String[] args) {
+	public String execute(String[] argsArray) {
+		List<String> commandArguments = getArgumentsAsList(argsArray);
 		if ( checkHomeDirectoryDefined() ) {
-			if ( args.length > 1 ) {
-				editBundle(args);
+			if ( ! commandArguments.isEmpty() ) {
+				editBundle(commandArguments);
 			}
 			else {
 				if ( checkBundleDefined() ) {
@@ -69,9 +72,9 @@ public class EditBundleCommand extends CommandWithBundles {
 		return null ;
 	}
 
-	private String editBundle(String[] commandArgs) {
+	private String editBundle(List<String> commandArguments) {
 		try {
-			List<String> bundleNames = getInstalledBundles(commandArgs);
+			List<String> bundleNames = getInstalledBundles(commandArguments);
 			if ( bundleNames.size() > 1 ) {
 				print( "Too much bundles found (" + bundleNames.size() + " bundles)") ;
 			}

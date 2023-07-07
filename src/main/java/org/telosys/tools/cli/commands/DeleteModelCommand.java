@@ -21,12 +21,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.telosys.tools.cli.CommandWithModel;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 
 import jline.console.ConsoleReader;
 
-public class DeleteModelCommand extends CommandWithModel {
+public class DeleteModelCommand extends CommandLevel2 {
 
 	public static final String COMMAND_NAME = "dm";
 	

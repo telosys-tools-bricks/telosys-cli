@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.CommandWithBundles;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.TelosysToolsException;
 
 import jline.console.ConsoleReader;
 
-public class DeleteBundleCommand extends CommandWithBundles {
+public class DeleteBundleCommand extends CommandLevel2 {
 
 	public static final String COMMAND_NAME = "db";
 	

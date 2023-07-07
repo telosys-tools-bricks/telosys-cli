@@ -15,7 +15,7 @@
  */
 package org.telosys.tools.cli.commands;
 
-import org.telosys.tools.cli.CommandWithBundles;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.cfg.TelosysToolsCfg;
 import org.telosys.tools.commons.variables.Variable;
@@ -28,7 +28,7 @@ import jline.console.ConsoleReader;
  * @author Laurent GUERIN
  *
  */
-public class CfgCommand extends CommandWithBundles {
+public class CfgCommand extends CommandLevel2 {
 	
 	/**
 	 * Constructor

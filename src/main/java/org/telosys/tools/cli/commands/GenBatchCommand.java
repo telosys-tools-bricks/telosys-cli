@@ -23,12 +23,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.telosys.tools.api.TelosysModelException;
+import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.batch.generation.BatchGenResult;
-import org.telosys.tools.cli.Command;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.TelosysToolsException;
-import org.telosys.tools.commons.exception.TelosysRuntimeException;
 import org.telosys.tools.generator.task.GenerationTaskResult;
 import org.telosys.tools.generic.model.Model;
 
@@ -40,7 +40,7 @@ import jline.console.ConsoleReader;
  * @author Laurent GUERIN
  *
  */
-public class GenBatchCommand extends Command {
+public class GenBatchCommand extends CommandLevel2 {
 	
 	public static final String COMMAND_NAME = "genb";
 	
@@ -89,21 +89,24 @@ public class GenBatchCommand extends Command {
 			registerYesOptionIfAny(activeOptions);			
 			List<String> argsWithoutOptions = removeOptions(commandArguments);
 			// newArgs = args without '-y' if any
-			generateBatch(argsWithoutOptions);
+			generateBatch(argsWithoutOptions, activeOptions);
 		}
 		return null ;
 	}
 
 	/**
-	 * Generation entry point
-	 * @param args all the arguments as provided by the command line (0 to N)
+	 * Batch generation for the given arguments and options
+	 * @param argsWithoutOptions
+	 * @param activeOptions
+	 * @return
 	 */
-	private GenerationTaskResult generateBatch(List<String> args)  {
-		if ( args.size() == 2 ) {
-			String modelNameFilter  = args.get(0);
-			String bundleNameFilter = args.get(1);
+	private GenerationTaskResult generateBatch(List<String> argsWithoutOptions, Set<String> activeOptions)  {
+		boolean flagResources = isOptionActive("-r", activeOptions);
+		if ( argsWithoutOptions.size() == 2 ) {
+			String modelNameFilter  = argsWithoutOptions.get(0);
+			String bundleNameFilter = argsWithoutOptions.get(1);
 			// gen * * 
-			generateBatch(modelNameFilter, bundleNameFilter);
+			generateBatch(modelNameFilter, bundleNameFilter, flagResources);
 		}
 		else {
 			print("invalid arguments");
@@ -111,41 +114,91 @@ public class GenBatchCommand extends Command {
 		return null;
 	}
 	
-	private boolean checkResourcesOption(String option) {
-		if ( "-r".equals(option) ) {
-			return true ;
-		}
-		else {
-			print("Invalid argument '" + option + "' ( '-r' expected ) ");
-			return false ;
-		}
-	}
-	
-	private void generateBatch(String modelNameFilter, String bundleNameFilter) {
+	/**
+	 * Batch generation for the given models and bundles filters 
+	 * @param modelNameFilter
+	 * @param bundleNameFilter
+	 * @param flagResources
+	 */
+	private void generateBatch(String modelNameFilter, String bundleNameFilter, boolean flagResources) {
+		// Get models
 		List<String> models = getModels(modelNameFilter); // in the future add filter like 'bundles'
-		List<String> bundles = getBundles(bundleNameFilter);
 		if ( models.isEmpty() ) {
-			print("No model.") ;
 			return;
 		}
+		// Get bundles
+		List<String> bundles = getBundles(bundleNameFilter);
 		if ( bundles.isEmpty() ) {
-			print("No bundle.") ;
 			return;
 		}
+		
 		print(LINE);
 		print("| Start of batch generation | ");
 		print(LINE);
 		
-		BatchGenResult batchResult = launchGeneration(models, bundles); 
-
-		print("");
-		print(LINE);
-		print("|  End of batch generation  | ");
-		print(LINE);		
-		
-		printBatchResult(modelNameFilter, bundleNameFilter, batchResult);
+		try {
+			// Launch code generation for selected models and bundles
+			BatchGenResult batchResult = launchGeneration(models, bundles, flagResources);
+			
+			// Print normal end with result 
+			print("");
+			print(LINE);
+			print("|  End of batch generation  | ");
+			print(LINE);
+			printBatchResult(modelNameFilter, bundleNameFilter, batchResult);
+			
+		} catch (TelosysModelException e) {
+			printError(e);
+		} catch (TelosysToolsException e) {
+			printError(e);
+		} catch (Exception e) {
+			printUnexpectedError(e);
+		} 
 	}
-	
+
+	private void printError(TelosysModelException e) {
+		print(LINE);
+		print("|       MODEL   ERROR       | ");
+		print(LINE);		
+		printModelError(e);
+	}
+
+	private void printError(TelosysToolsException e) {
+		print(LINE);
+		print("|     GENERATION  ERROR     | ");
+		print(LINE);		
+		print("Generation error: " + e.getMessage() );
+	}
+
+	private void printUnexpectedError(Exception e) {
+		print(LINE);
+		print("|     UNEXPECTED  ERROR     | ");
+		print(LINE);		
+		print("Unexpected exception: " + e.getMessage() );
+	}
+
+	/**
+	 * Launches a generation for all entities in all given models with all templates in all the given bundles
+	 * @param models
+	 * @param bundles
+	 * @param flagResources
+	 * @return
+	 * @throws TelosysModelException
+	 * @throws TelosysToolsException
+	 */
+	private BatchGenResult launchGeneration(List<String> models, List<String> bundles, boolean flagResources) throws TelosysModelException, TelosysToolsException {
+		BatchGenResult batchGenResult = new BatchGenResult();
+		for ( String model : models ) {
+			batchGenResult.updateCurrentModel(model);
+			for ( String bundle : bundles ) {
+				batchGenResult.updateCurrentBundle(bundle);
+				// Launch code generation for MODEL + BUNDLE
+				GenerationTaskResult generationTaskResult = launchGeneration(model, bundle, flagResources);
+				batchGenResult.update(model, bundle, generationTaskResult);
+			}
+		}
+		return batchGenResult;
+	}
 	
 	private void printBatchResult(String modelNameFilter, String bundleNameFilter, BatchGenResult r) {
 		print("Batch parameters : " );
@@ -163,25 +216,6 @@ public class GenBatchCommand extends Command {
 		}
 	}
 	
-	/**
-	 * Launches a generation for all entities in all given models with all templates in all the given bundles
-	 * @param models list of models
-	 * @param bundles list of bundles
-	 * @return
-	 */
-	private BatchGenResult launchGeneration(List<String> models, List<String> bundles) {
-		BatchGenResult batchGenResult = new BatchGenResult();
-		for ( String model : models ) {
-			batchGenResult.updateCurrentModel(model);
-			for ( String bundle : bundles ) {
-				batchGenResult.updateCurrentBundle(bundle);
-				GenerationTaskResult generationTaskResult = launchGeneration(model, bundle);
-				batchGenResult.update(model, bundle, generationTaskResult);
-			}
-		}
-		return batchGenResult;
-	}
-	
 	private List<String> getModelNames() { // TODO : move in API TelosysProject 
 		List<String> modelNames = new LinkedList<>();
 		// Convert files to file names (strings)
@@ -195,11 +229,10 @@ public class GenBatchCommand extends Command {
 	 * @return
 	 */
 	private List<String> getModels(String modelNameFilter) {
-		//List<File> allModels = getTelosysProject().getModels();
 		List<String> allModels = getModelNames();
 		List<String> models = Filter.filter(allModels, modelNameFilter);
 		if ( models.isEmpty() ) {
-			print("No model.") ;
+			print("No model for '" + modelNameFilter + "'") ;
 		}
 		return models;
 	}
@@ -213,7 +246,7 @@ public class GenBatchCommand extends Command {
 			List<String> allBundles = getTelosysProject().getInstalledBundles();
 			List<String> bundles = Filter.filter(allBundles, bundleNameFilter);
 			if ( bundles.isEmpty() ) {
-				print("No bundle.") ;
+				print("No bundle for '" + bundleNameFilter + "'") ;
 			}
 			return bundles;
 		} catch (TelosysToolsException e) {
@@ -226,38 +259,17 @@ public class GenBatchCommand extends Command {
 	 * Launches a generation for all entities in the given model name with all templates in the given bundle name
 	 * @param modelName
 	 * @param bundleName
+	 * @param flagResources
 	 * @return
+	 * @throws TelosysModelException
+	 * @throws TelosysToolsException
 	 */
-	private GenerationTaskResult launchGeneration(String modelName, String bundleName) {
-		Model model = loadModel(modelName);
-		return launchGeneration(model, bundleName);
+	private GenerationTaskResult launchGeneration(String modelName, String bundleName, boolean flagResources) throws TelosysModelException, TelosysToolsException {
+		TelosysProject telosysProject = getTelosysProject();
+		// Load given model 
+		Model model = telosysProject.loadModel(modelName);
+		// Launch generation with model and given bundle 
+		return telosysProject.launchGeneration(model, bundleName, flagResources);
 	}
 	
-	/**
-	 * @param modelName
-	 * @return
-	 */
-	private Model loadModel(String modelName) {
-		try {
-			return getTelosysProject().loadModel(modelName);
-		} catch (TelosysModelException e) {
-			String msg = "Model error: cannot load model '" + modelName + "'" ;
-			throw new TelosysRuntimeException(msg, e);
-		}
-	}
-
-	/**
-	 * Launches a generation for all entities in the given model with all templates in the given bundle
-	 * @param model
-	 * @param bundleName
-	 * @return
-	 */
-	private GenerationTaskResult launchGeneration(Model model, String bundleName) {
-		try {
-			return getTelosysProject().launchGeneration(model, bundleName);
-		} catch (TelosysToolsException e) {
-			String msg = "Generation error: model '" + model.getName() + "' - bundle '" + bundleName + "'" ;
-			throw new TelosysRuntimeException(msg, e);
-		}
-	}
 }

@@ -144,7 +144,7 @@ public class BatchGenLauncher {
 		
 		// Launch code generation 
 		try {
-			return telosysProject.launchGeneration(model, bundleName);
+			return telosysProject.launchGeneration(model, bundleName, true);
 		} catch (TelosysToolsException e) {
 			throw new RuntimeException("Generation error (TelosysToolsException): " + e.getMessage() );
 		}

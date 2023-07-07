@@ -16,8 +16,9 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
+import java.util.List;
 
-import org.telosys.tools.cli.CommandWithModel;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 
 import jline.console.ConsoleReader;
@@ -28,7 +29,9 @@ import jline.console.ConsoleReader;
  * @author Laurent GUERIN
  *
  */
-public class EditModelCommand extends CommandWithModel {
+public class EditModelCommand extends CommandLevel2 {
+
+	public static final String COMMAND_NAME = "em";
 
 	/**
 	 * Constructor
@@ -40,7 +43,7 @@ public class EditModelCommand extends CommandWithModel {
 
 	@Override
 	public String getName() {
-		return "em";
+		return COMMAND_NAME;
 	}
 
 	@Override
@@ -55,27 +58,38 @@ public class EditModelCommand extends CommandWithModel {
 	
 	@Override
 	public String getUsage() {
-		return "em [model-name]";
+		return COMMAND_NAME + " [model-name]";
 	}
 
 	@Override
-	public String execute(String[] args) {
-		if ( checkHomeDirectoryDefined() ) {
-			File modelFile = findModelFile(args);
+	public String execute(String[] argsArray) {
+		List<String> commandArguments = getArgumentsAsList(argsArray);
+
+		if ( checkHomeDirectoryDefined() && checkArguments(commandArguments, 0, 1 ) ) {
+			File modelInfoFile = null;
+			if ( commandArguments.isEmpty() ) {
+				modelInfoFile = getCurrentModelInfoFile();
+			}
+			else {
+				modelInfoFile = findModelInfoFile(commandArguments.get(0));
+			}
+			//File modelFile = findModelFile(commandArguments);
 			// if found => launch the editor
-			if ( modelFile != null ) {
-				return launchEditor(modelFile.getAbsolutePath());
+			if ( modelInfoFile != null ) {
+				return launchEditor(modelInfoFile.getAbsolutePath());
 			}
 		}
 		return null ;
 	}
 
-	private File findModelFile(String[] args) {
-		File modelFolder = findModelFolder(args);
+	private File findModelInfoFile(String modelNamePattern) {
+		// 1) Find model folder
+		File modelFolder = findModelFolder(modelNamePattern);
 		if (modelFolder != null) {
-			File modelFile = getTelosysProject().getModelInfoFile(modelFolder);
-			if ( modelFile.exists() ) {
-				return modelFile;
+			// 2) Search model info file in folder
+			File modelInfoFile = getTelosysProject().getModelInfoFile(modelFolder);
+			if ( modelInfoFile.exists() ) {
+				return modelInfoFile;
 			}
 			else {
 				print("No model file in model '" + modelFolder.getName() + "'") ;

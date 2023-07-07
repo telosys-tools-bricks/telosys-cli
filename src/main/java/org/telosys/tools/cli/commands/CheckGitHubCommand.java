@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.telosys.tools.cli.Color;
-import org.telosys.tools.cli.CommandWithGitHub;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.StrUtil;
 import org.telosys.tools.commons.TelosysToolsException;
@@ -27,7 +27,7 @@ import org.telosys.tools.commons.github.GitHubRateLimitResponse;
 
 import jline.console.ConsoleReader;
 
-public class CheckGitHubCommand extends CommandWithGitHub {
+public class CheckGitHubCommand extends CommandLevel2 {
 	
 	/**
 	 * Constructor

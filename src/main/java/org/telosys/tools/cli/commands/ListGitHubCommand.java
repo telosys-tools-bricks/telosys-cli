@@ -18,7 +18,7 @@ package org.telosys.tools.cli.commands;
 import java.util.List;
 
 import org.telosys.tools.cli.Color;
-import org.telosys.tools.cli.CommandWithGitHub;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.TelosysToolsException;
@@ -26,7 +26,7 @@ import org.telosys.tools.commons.bundles.BundlesFromGitHub;
 
 import jline.console.ConsoleReader;
 
-public class ListGitHubCommand extends CommandWithGitHub {
+public class ListGitHubCommand extends CommandLevel2 {
 	
 	/**
 	 * Constructor

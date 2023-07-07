@@ -21,6 +21,9 @@ import java.util.List;
 
 import org.telosys.tools.api.TelosysModelException;
 import org.telosys.tools.api.TelosysProject;
+import org.telosys.tools.commons.Filter;
+import org.telosys.tools.commons.TelosysToolsException;
+import org.telosys.tools.commons.bundles.BundlesFromGitHub;
 import org.telosys.tools.dsl.DslModelError;
 import org.telosys.tools.dsl.DslModelErrors;
 import org.telosys.tools.generic.model.Model;
@@ -28,32 +31,55 @@ import org.telosys.tools.generic.model.Model;
 import jline.console.ConsoleReader;
 
 /**
- * Specialization of 'Command' providing methods to work with models
+ * Specialization of 'Command' providing methods to work with models, bundles, etc
  * 
  * @author Laurent GUERIN 
  *
  */
-public abstract class CommandWithModel extends Command {
+public abstract class CommandLevel2 extends Command {
 
 	/**
 	 * Constructor
 	 * @param consoleReader
 	 * @param environment
 	 */
-	protected CommandWithModel(ConsoleReader consoleReader, Environment environment) {
+	protected CommandLevel2(ConsoleReader consoleReader, Environment environment) {
 		super(consoleReader, environment);
 	}
 
+	//-----------------------------------------------------------------------------------------------
+	// MODELS 
+	//-----------------------------------------------------------------------------------------------
+	
+//	/**
+//	 * Try to found a unique model folder according with the first argument 
+//	 * or with the current model if no arg provided
+//	 * @param args
+//	 * @return
+//	 */
+//	protected File findModelFolder(String[] args) {
+//		File modelFolder = null ;
+//		if ( args.length > 1 ) {
+//			modelFolder = findModelFolder(args[1]);
+//		}
+//		else {
+//			if ( checkModelDefined() ) {
+//				return getCurrentModelFolder();
+//			}
+//		}
+//		return modelFolder ;
+//	}
+	
 	/**
 	 * Try to found a unique model folder according with the first argument 
 	 * or with the current model if no arg provided
 	 * @param args
 	 * @return
 	 */
-	protected File findModelFolder(String[] args) {
+	protected File findModelFolder(List<String> args) {
 		File modelFolder = null ;
-		if ( args.length > 1 ) {
-			modelFolder = findModelFolder(args[1]);
+		if ( ! args.isEmpty() ) {
+			modelFolder = findModelFolder(args.get(0));
 		}
 		else {
 			if ( checkModelDefined() ) {
@@ -114,10 +140,10 @@ public abstract class CommandWithModel extends Command {
 	 * @param modelName the model name 
 	 * @return the model file (or null if not found) 
 	 */
-	protected File getModelFile(String modelName) {
+	private File getModelInfoFile(String modelName) {
 		TelosysProject telosysProject = getTelosysProject();		
-		if ( telosysProject.dslModelFolderExists(modelName) ) {
-			File modelFile = telosysProject.getDslModelFile(modelName);
+		if ( telosysProject.modelFolderExists(modelName) ) {
+			File modelFile = telosysProject.getModelInfoFile(modelName);
 			if ( modelFile.exists() ) {
 				return modelFile ;
 			}
@@ -131,10 +157,10 @@ public abstract class CommandWithModel extends Command {
 		return null;
 	}
 	
-	protected File getCurrentModelFile() {
+	protected File getCurrentModelInfoFile() {
 		String modelName = getCurrentModel();
 		if ( modelName != null ) {
-			return getModelFile(modelName);
+			return getModelInfoFile(modelName);
 		}
 		return null;
 	}
@@ -147,8 +173,8 @@ public abstract class CommandWithModel extends Command {
 		return null;
 	}
 	
-	protected File getModelFolder(String modelName) {
-		File modelFolder =  getTelosysProject().getModelFolder(modelName); // v 3.4.0
+	private File getModelFolder(String modelName) {
+		File modelFolder = getTelosysProject().getModelFolder(modelName); 
 		if ( modelFolder.exists() ) {
 			return modelFolder ;
 		}
@@ -159,30 +185,21 @@ public abstract class CommandWithModel extends Command {
 	}
 
 	/**
-	 * Loads the model located in the given folder (print errors if any)
-	 * @param modelFolder
-	 * @return the model loaded (or null if cannot be loaded)
+	 * Loads the current model (print model errors if any)
+	 * @return
 	 */
-	protected Model loadModel(File modelFolder) {
-		try {
-			return getTelosysProject().loadModel(modelFolder);
-		} catch (TelosysModelException tme) {
-			printError("Invalid model !");
-			// Print parsing errors
-			print(tme.getMessage());
-			DslModelErrors errors = tme.getDslModelErrors();
-			if ( errors != null ) {
-				for ( DslModelError e : errors.getErrors() ) {
-					print( " . " + e.getReportMessage() );
-				}
-			}
-		}
-		return null ; // Model cannot be loaded
+	protected Model loadCurrentModel() {
+		return loadModel(getCurrentModel());
 	}
 
+	/**
+	 * Loads the model identified by the given name (print model errors if any)
+	 * @param modelName
+	 * @return
+	 */
 	protected Model loadModel(String modelName) {
 		// 1) try to get the file 
-		File modelFile = getModelFolder(modelName); // v 3.4.0
+		File modelFile = getModelFolder(modelName);
 		if ( modelFile != null ) {
 			// 2) try to load the model 
 			return loadModel(modelFile);
@@ -190,8 +207,63 @@ public abstract class CommandWithModel extends Command {
 		return null ;
 	}
 
-	protected Model loadCurrentModel() {
-		return loadModel(getCurrentModel());
+	/**
+	 * Loads the model located in the given folder (print model errors if any)
+	 * @param modelFolder
+	 * @return the model loaded (or null if cannot be loaded)
+	 */
+	protected Model loadModel(File modelFolder) {
+		try {
+			return getTelosysProject().loadModel(modelFolder);
+		} catch (TelosysModelException tme) {
+			printModelError(tme);
+			return null ; // Model cannot be loaded
+		}
 	}
 
+	protected void printModelError(TelosysModelException tme) {
+		printError("Invalid model '" + tme.getModelName() + "'");
+		// Print parsing errors
+		print(tme.getMessage());
+		DslModelErrors errors = tme.getDslModelErrors();
+		if ( errors != null ) {
+			for ( DslModelError e : errors.getErrors() ) {
+				print( " . " + e.getReportMessage() );
+			}
+		}
+	}
+
+	//-----------------------------------------------------------------------------------------------
+	// BUNDLES 
+	//-----------------------------------------------------------------------------------------------
+
+	/**
+	 * Returns bundles installed in the current project and matching the given criteria
+	 * @param criteria
+	 * @return
+	 * @throws TelosysToolsException
+	 */
+	protected final List<String> getInstalledBundles(List<String> criteria) throws TelosysToolsException {
+		TelosysProject telosysProject = getTelosysProject();
+		// get all installed bundles
+		List<String> allBundles = telosysProject.getInstalledBundles();
+		// filter bundles according with criteria
+		return Filter.filter(allBundles, criteria);
+	}
+	
+	//-----------------------------------------------------------------------------------------------
+	// GITHUB 
+	//-----------------------------------------------------------------------------------------------
+
+	/**
+	 * @param githubStoreName
+	 * @return
+	 * @throws TelosysToolsException
+	 */
+	protected final BundlesFromGitHub getGitHubBundles(String githubStoreName) throws TelosysToolsException {
+		TelosysProject telosysProject = getTelosysProject();
+		return telosysProject.getGitHubBundlesList(githubStoreName);
+	}
+	
+	
 }

@@ -17,14 +17,16 @@ package org.telosys.tools.cli.commands;
 
 import java.util.List;
 
-import org.telosys.tools.cli.CommandWithBundles;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.TelosysToolsException;
 
 import jline.console.ConsoleReader;
 
-public class ListBundlesCommand extends CommandWithBundles {
+public class ListBundlesCommand extends CommandLevel2 {
 	
+	public static final String COMMAND_NAME = "lb";
+
 	/**
 	 * Constructor
 	 * @param out
@@ -35,7 +37,7 @@ public class ListBundlesCommand extends CommandWithBundles {
 
 	@Override
 	public String getName() {
-		return "lb";
+		return COMMAND_NAME;
 	}
 
 	@Override
@@ -50,21 +52,22 @@ public class ListBundlesCommand extends CommandWithBundles {
 	
 	@Override
 	public String getUsage() {
-		return "lb [name-part1 name-part2 ...]";
+		return COMMAND_NAME + " [name-part1 name-part2 ...]";
 	}
 	
 	@Override
-	public String execute(String[] args) {
+	public String execute(String[] argsArray) {
+		List<String> commandArguments = getArgumentsAsList(argsArray);
 		if ( checkHomeDirectoryDefined() ) {
-			listBundles(args);
+			listBundles(commandArguments);
 		}
 		return null ;
 	}
 
-	private void listBundles(String[] commandArgs) {
+	private void listBundles(List<String> commandArguments) {
 		
 		try {
-			List<String> bundleNames = getInstalledBundles(commandArgs);
+			List<String> bundleNames = getInstalledBundles(commandArguments);
 			if ( bundleNames.isEmpty() ) {
 				print("No bundle found.") ;
 			}
