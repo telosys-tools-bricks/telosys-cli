@@ -89,16 +89,16 @@ public abstract class CommandLevel2 extends Command {
 		return modelFolder ;
 	}
 	
-	/**
-	 * Try to find the current model folder 
-	 * @return
-	 */
-	protected File findModelFolder() {
-		if ( checkModelDefined() ) {
-			return getCurrentModelFolder();
-		}
-		return null ;
-	}
+//	/**
+//	 * Try to find the current model folder 
+//	 * @return
+//	 */
+//	protected File findModelFolder() {
+//		if ( checkModelDefined() ) {
+//			return getCurrentModelFolder();
+//		}
+//		return null ;
+//	}
 	
 	/**
 	 * Try to found a unique model folder matching the given model name pattern
@@ -106,35 +106,59 @@ public abstract class CommandLevel2 extends Command {
 	 * @return the model folder (or null if not found or not unique)
 	 */
 	protected File findModelFolder(String modelNamePattern) {
-		List<File> allModelsInProject = getTelosysProject().getModels();
-		// filter using pattern
-		List<File> modelsFound = new LinkedList<>();
-		for ( File f : allModelsInProject ) {
-			if ( f.getName().equals(modelNamePattern) ) {
-				// strict equality
-				return f;
-			}
-			else {
-				// check if contains a part of the given string
-				if ( f.getName().contains(modelNamePattern) ) {
-					modelsFound.add(f);
-				}
-			}
-		}
-		// filter result 
-		if ( modelsFound.isEmpty() ) {
-			print("No model for '" + modelNamePattern + "'") ;
-		}
-		else if ( modelsFound.size() > 1 ) {
-			print("Ambiguous : " + modelsFound.size() + " models found") ;
+//		List<File> allModelsInProject = getTelosysProject().getModels();
+//		// filter using pattern
+//		List<File> modelsFound = new LinkedList<>();
+//		for ( File f : allModelsInProject ) {
+//			if ( f.getName().equals(modelNamePattern) ) {
+//				// strict equality
+//				return f;
+//			}
+//			else {
+//				// check if contains a part of the given string
+//				if ( f.getName().contains(modelNamePattern) ) {
+//					modelsFound.add(f);
+//				}
+//			}
+//		}
+//		// filter result 
+//		if ( modelsFound.isEmpty() ) {
+//			print("No model for '" + modelNamePattern + "'") ;
+//		}
+//		else if ( modelsFound.size() > 1 ) {
+//			print("Ambiguous : " + modelsFound.size() + " models found") ;
+//		}
+//		else {
+//			// OK : only 1 model found
+//			return modelsFound.get(0);
+//		}
+//		return null ;
+		List<File> allModels = getTelosysProject().getModels();
+		return findFile(allModels, modelNamePattern, "model");		
+	}
+
+	/**
+	 * @param modelNamePatterns
+	 * @return
+	 */
+	protected List<File> findModelFolders(List<String> modelNamePatterns) {
+		List<File> allModels = getTelosysProject().getModels();
+		if ( modelNamePatterns.isEmpty() ) {
+			return allModels;
 		}
 		else {
-			// OK : only 1 model found
-			return modelsFound.get(0);
+			List<File> found = new LinkedList<>();
+			for ( File f : allModels ) {
+				for ( String pattern : modelNamePatterns ) {
+					if ( matching(f, pattern)) {
+						found.add(f);
+					}
+				}
+			}
+			return found;
 		}
-		return null ;
 	}
-	
+
 	/**
 	 * Try to find the model file for the given model name (print errors if any)
 	 * @param modelName the model name 
@@ -236,21 +260,102 @@ public abstract class CommandLevel2 extends Command {
 	//-----------------------------------------------------------------------------------------------
 	// BUNDLES 
 	//-----------------------------------------------------------------------------------------------
-
-	/**
-	 * Returns bundles installed in the current project and matching the given criteria
-	 * @param criteria
-	 * @return
-	 * @throws TelosysToolsException
-	 */
-	protected final List<String> getInstalledBundles(List<String> criteria) throws TelosysToolsException {
-		TelosysProject telosysProject = getTelosysProject();
-		// get all installed bundles
-		List<String> allBundles = telosysProject.getInstalledBundles();
-		// filter bundles according with criteria
-		return Filter.filter(allBundles, criteria);
+	protected File getCurrentBundleConfigFile() {
+		String bundleName = getCurrentBundle();
+		if ( bundleName != null ) {
+			return getBundleConfigFile(bundleName);
+		}
+		return null;
 	}
 	
+	/**
+	 * Try to find the bundle config file for the given bundle name (print errors if any)
+	 * @param bundleName the model name 
+	 * @return the file (or null if not found) 
+	 */
+	private File getBundleConfigFile(String bundleName) {
+		TelosysProject telosysProject = getTelosysProject();		
+		if ( telosysProject.bundleFolderExists(bundleName) ) {
+			File file = telosysProject.getBundleConfigFile(bundleName);
+			if ( file.exists() ) {
+				return file ;
+			}
+			else {
+				print("Bundle configuration file '" + file.getName() + "' not found.") ;
+			}
+		}
+		else {
+			print("Bundle '" + bundleName + "' doesn't exist.") ;
+		}
+		return null;
+	}
+
+	protected File getCurrentBundleFolder() {
+		String bundleName = getCurrentBundle();
+		if ( bundleName != null ) {
+			return getBundleFolder(bundleName);
+		}
+		return null;
+	}
+	
+	private File getBundleFolder(String bundleName) {
+		File bundleFolder = getTelosysProject().getBundleFolder(bundleName); 
+		if ( bundleFolder.exists() ) {
+			return bundleFolder ;
+		}
+		else {
+			print("Bundle folder '" + bundleFolder.getName() + "' not found.");
+			return null;
+		}
+	}
+
+	
+//	/**
+//	 * Returns bundles installed in the current project and matching the given criteria
+//	 * @param criteria
+//	 * @return
+//	 * @throws TelosysToolsException
+//	 */
+//	protected final List<String> getInstalledBundles(List<String> criteria) throws TelosysToolsException {
+//		TelosysProject telosysProject = getTelosysProject();
+//		// get all installed bundles
+//		List<String> allBundles = telosysProject.getInstalledBundles();
+//		// filter bundles according with criteria
+//		return Filter.filter(allBundles, criteria);
+//	}
+	
+	/**
+	 * Try to found a unique bundle folder matching the given bundle name pattern
+	 * @param bundleNamePattern
+	 * @return the bundle folder (or null if not found or not unique)
+	 */
+	protected File findBundleFolder(String bundleNamePattern) {
+		List<File> allBundles = getTelosysProject().getBundles();
+		return findFile(allBundles, bundleNamePattern, "bundle");
+	}
+	
+	/**
+	 * @param bundleNamePatterns
+	 * @return
+	 */
+	protected List<File> findBundleFolders(List<String> bundleNamePatterns) {
+		List<File> allBundles = getTelosysProject().getBundles();
+		if ( bundleNamePatterns.isEmpty() ) {
+			return allBundles;
+		}
+		else {
+			List<File> found = new LinkedList<>();
+			for ( File f : allBundles ) {
+				for ( String pattern : bundleNamePatterns ) {
+					if ( matching(f, pattern)) {
+						found.add(f);
+					}
+				}
+			}
+			return found;
+		}
+	}
+
 	//-----------------------------------------------------------------------------------------------
 	// GITHUB 
 	//-----------------------------------------------------------------------------------------------
@@ -265,5 +370,52 @@ public abstract class CommandLevel2 extends Command {
 		return telosysProject.getGitHubBundlesList(githubStoreName);
 	}
 	
+	//-----------------------------------------------------------------------------------------------
+	// COMMONS 
+	//-----------------------------------------------------------------------------------------------
+
+	private File findFile(List<File> allFiles, String namePattern, String objectName) {
+		// filter using pattern
+		List<File> found = new LinkedList<>();
+		for ( File f : allFiles ) {
+			if ( f.getName().equals(namePattern) ) {
+				// strict equality
+				return f;
+			}
+			else {
+				// check if contains a part of the given string
+				if ( f.getName().contains(namePattern) ) {
+					found.add(f);
+				}
+			}
+		}
+		// filter result 
+		if ( found.isEmpty() ) {
+			print("No " + objectName + " for '" + namePattern + "'") ;
+			return null ;
+		}
+		else if ( found.size() > 1 ) {
+			print("Ambiguous : " + found.size() + " " + objectName + "s found") ;
+			return null ;
+		}
+		else {
+			// OK : only 1 found => get it
+			return found.get(0);
+		}
+	}
 	
+	private boolean matching(File file, String namePattern) {
+		if ( file.getName().equals(namePattern) ) {
+			// strict equality
+			return true;
+		}
+		else {
+			// check if contains a part of the given string
+			if ( file.getName().contains(namePattern) ) {
+				return true;
+			}
+		}
+		return false;
+	}	
+
 }

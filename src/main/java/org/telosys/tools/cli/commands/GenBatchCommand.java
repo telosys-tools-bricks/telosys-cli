@@ -15,10 +15,8 @@
  */
 package org.telosys.tools.cli.commands;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -194,6 +192,7 @@ public class GenBatchCommand extends CommandLevel2 {
 				batchGenResult.updateCurrentBundle(bundle);
 				// Launch code generation for MODEL + BUNDLE
 				GenerationTaskResult generationTaskResult = launchGeneration(model, bundle, flagResources);
+				// Register generation task result
 				batchGenResult.update(model, bundle, generationTaskResult);
 			}
 		}
@@ -216,20 +215,12 @@ public class GenBatchCommand extends CommandLevel2 {
 		}
 	}
 	
-	private List<String> getModelNames() { // TODO : move in API TelosysProject 
-		List<String> modelNames = new LinkedList<>();
-		// Convert files to file names (strings)
-		for ( File f : getTelosysProject().getModels() ) {
-			modelNames.add(f.getName());
-		}
-		return modelNames;
-	}
-	
 	/**
+	 * @param modelNameFilter
 	 * @return
 	 */
 	private List<String> getModels(String modelNameFilter) {
-		List<String> allModels = getModelNames();
+		List<String> allModels = getTelosysProject().getModelNames();
 		List<String> models = Filter.filter(allModels, modelNameFilter);
 		if ( models.isEmpty() ) {
 			print("No model for '" + modelNameFilter + "'") ;
@@ -242,17 +233,12 @@ public class GenBatchCommand extends CommandLevel2 {
 	 * @return
 	 */
 	private List<String> getBundles(String bundleNameFilter) {
-		try {
-			List<String> allBundles = getTelosysProject().getInstalledBundles();
-			List<String> bundles = Filter.filter(allBundles, bundleNameFilter);
-			if ( bundles.isEmpty() ) {
-				print("No bundle for '" + bundleNameFilter + "'") ;
-			}
-			return bundles;
-		} catch (TelosysToolsException e) {
-			print("Error: cannot get bundles: " + e.getMessage()) ;
-			return new LinkedList<>();
+		List<String> allBundles = getTelosysProject().getBundleNames();
+		List<String> bundles = Filter.filter(allBundles, bundleNameFilter);
+		if ( bundles.isEmpty() ) {
+			print("No bundle for '" + bundleNameFilter + "'") ;
 		}
+		return bundles;
 	}
 
 	/**

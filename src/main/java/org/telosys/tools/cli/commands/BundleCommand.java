@@ -15,19 +15,26 @@
  */
 package org.telosys.tools.cli.commands;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.Command;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.Filter;
-import org.telosys.tools.commons.TelosysToolsException;
-import org.telosys.tools.commons.bundles.TargetsDefinitions;
 
 import jline.console.ConsoleReader;
 
-public class BundleCommand extends Command {
+public class BundleCommand extends CommandLevel2 {
+
+	private static final String NO_CURRENT_BUNDLE = "No current bundle";
+
+	public static final String COMMAND_NAME = "b";
 	
+	private static final Set<String> COMMAND_OPTIONS = new HashSet<>(Arrays.asList("-none")); 
+
+
 	/**
 	 * Constructor
 	 * @param out
@@ -38,7 +45,7 @@ public class BundleCommand extends Command {
 
 	@Override
 	public String getName() {
-		return "b";
+		return COMMAND_NAME;
 	}
 
 	@Override
@@ -53,29 +60,55 @@ public class BundleCommand extends Command {
 	
 	@Override
 	public String getUsage() {
-		return "b [name-part]";
+		return COMMAND_NAME + " [bundle-name-part] [-none]";
 	}
 	
+//	@Override
+//	public String execute(String[] args) {
+//		if ( args.length > 1 ) {
+//			if ( checkHomeDirectoryDefined() ) {
+//				return setBundle(args);
+//			}
+//		}
+//		else {
+//			String bundleName = getCurrentBundle() ;
+//			if ( bundleName != null ) {
+//				TargetsDefinitions targetsDefinitions = getCurrentTargetsDefinitions();
+//				int templatesCount = targetsDefinitions.getTemplatesTargets().size();
+//				String resources = "no resource" ;
+//				if ( ! targetsDefinitions.getResourcesTargets().isEmpty()) {
+//					resources = "contains resource(s)" ;
+//				}
+//				return bundleName + " : " + templatesCount + " template(s), " + resources ;
+//			}
+//			else {
+//				return "Undefined (no bundle selected)";
+//			}
+//		}
+//		return null ;
+//	}
 	@Override
-	public String execute(String[] args) {
-		if ( args.length > 1 ) {
-			if ( checkHomeDirectoryDefined() ) {
-				return setBundle(args);
-			}
-		}
-		else {
-			String bundleName = getCurrentBundle() ;
-			if ( bundleName != null ) {
-				TargetsDefinitions targetsDefinitions = getCurrentTargetsDefinitions();
-				int templatesCount = targetsDefinitions.getTemplatesTargets().size();
-				String resources = "no resource" ;
-				if ( ! targetsDefinitions.getResourcesTargets().isEmpty()) {
-					resources = "contains resource(s)" ;
+	public String execute(String[] argsArray) {
+		List<String> commandArguments = getArgumentsAsList(argsArray);
+		
+		if ( checkArguments(commandArguments, 0, 1 ) && checkOptions(commandArguments, COMMAND_OPTIONS) ) {
+			Set<String> activeOptions = getOptions(commandArguments);
+			List<String> argsWithoutOptions = removeOptions(commandArguments);
+			if ( ! argsWithoutOptions.isEmpty() ) {
+				// b bundle-name
+				if ( checkHomeDirectoryDefined() ) {
+					tryToSetCurrentBundle(argsWithoutOptions.get(0));
 				}
-				return bundleName + " : " + templatesCount + " template(s), " + resources ;
+			}
+			else if ( isOptionActive("-none", activeOptions) ) {
+				// b -none
+				unsetCurrentBundle();
+				print( NO_CURRENT_BUNDLE );
 			}
 			else {
-				return "Undefined (no bundle selected)";
+				// b  (without arg)
+				String currentBundle = getCurrentBundle() ;
+				print( currentBundle != null ? currentBundle : NO_CURRENT_BUNDLE );
 			}
 		}
 		return null ;
@@ -95,38 +128,48 @@ public class BundleCommand extends Command {
 		return "Current bundle is now '" + getCurrentBundle() + "'";
 	}
 	
-	private String setBundle(String[] args) {
-		TelosysProject telosysProject = getTelosysProject();
-		try {
-			// get all installed bundles
-			List<String> bundles  = telosysProject.getInstalledBundles();
-			List<String> criteria = buildCriteriaFromArgs(args);
-			// filter with criteria if any
-			List<String> filteredBundles = Filter.filter(bundles, criteria);
-			
-			if ( filteredBundles.isEmpty() ) {
-				return "No bundle found!" ;
-			}
-			else if ( filteredBundles.size() == 1 ) {
-				// Only 1 bundle matching arg
-				return selectBundle(filteredBundles.get(0));
-			}
-			else {
-				if ( args.length == 1 ) {
-					// Only 1 arg matching exactly one of the filtered bundles  
-					// e.g. : command 'b foo' with 3 filtered names : 'foo', 'foo1', 'foo2' => return 'foo'
-					String name = findExactMatching(args[0], filteredBundles ) ;
-					if ( name != null ) {
-						return selectBundle(name);
-					}
-				}
-				return "Ambiguous : " + filteredBundles.size() + " bundles found" ;
-			}
-			
-		} catch (TelosysToolsException e) {
-			printError(e);
+//	private String setBundle(String[] args) {
+//		TelosysProject telosysProject = getTelosysProject();
+//		try {
+//			// get all installed bundles
+////			List<String> bundles  = telosysProject.getInstalledBundles();
+//			List<String> bundles  = telosysProject.getBundleNames();
+//			List<String> criteria = buildCriteriaFromArgs(args);
+//			// filter with criteria if any
+//			List<String> filteredBundles = Filter.filter(bundles, criteria);
+//			
+//			if ( filteredBundles.isEmpty() ) {
+//				return "No bundle found!" ;
+//			}
+//			else if ( filteredBundles.size() == 1 ) {
+//				// Only 1 bundle matching arg
+//				return selectBundle(filteredBundles.get(0));
+//			}
+//			else {
+//				if ( args.length == 1 ) {
+//					// Only 1 arg matching exactly one of the filtered bundles  
+//					// e.g. : command 'b foo' with 3 filtered names : 'foo', 'foo1', 'foo2' => return 'foo'
+//					String name = findExactMatching(args[0], filteredBundles ) ;
+//					if ( name != null ) {
+//						return selectBundle(name);
+//					}
+//				}
+//				return "Ambiguous : " + filteredBundles.size() + " bundles found" ;
+//			}
+//			
+//		} catch (TelosysToolsException e) {
+//			printError(e);
+//		}
+//		return null ;
+//	}
+	
+	private String tryToSetCurrentBundle(String bundleNamePattern) {
+		File bundleFolder = findBundleFolder(bundleNamePattern) ;
+		// if found 
+		if ( bundleFolder != null ) {
+			setCurrentBundle(bundleFolder.getName());
+			print( "Current bundle is now '" + getCurrentBundle() + "'" );
 		}
 		return null ;
-	}
-	
+	}	
 }

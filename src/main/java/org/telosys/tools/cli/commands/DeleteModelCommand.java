@@ -92,8 +92,10 @@ public class DeleteModelCommand extends CommandLevel2 {
 	private void executeDeleteModel(List<String> args) {
 		File modelFolder = null;
 		if ( args.size() == 0 ) {
-			// dm  (no arg) => delete current model 
-			modelFolder = findModelFolder();
+			// dm  (no arg) => delete current model if any
+			if ( checkModelDefined() ) {
+				modelFolder = getCurrentModelFolder();
+			}
 		}
 		else if ( args.size() == 1 ) {
 			// dm model-name => find model

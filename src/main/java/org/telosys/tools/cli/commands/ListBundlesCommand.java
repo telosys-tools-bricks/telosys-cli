@@ -15,11 +15,11 @@
  */
 package org.telosys.tools.cli.commands;
 
+import java.io.File;
 import java.util.List;
 
 import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.TelosysToolsException;
 
 import jline.console.ConsoleReader;
 
@@ -47,7 +47,7 @@ public class ListBundlesCommand extends CommandLevel2 {
 
 	@Override
 	public String getDescription() {
-		return "List the installed bundles";
+		return "List the project bundles";
 	}
 	
 	@Override
@@ -66,17 +66,25 @@ public class ListBundlesCommand extends CommandLevel2 {
 
 	private void listBundles(List<String> commandArguments) {
 		
-		try {
-			List<String> bundleNames = getInstalledBundles(commandArguments);
-			if ( bundleNames.isEmpty() ) {
-				print("No bundle found.") ;
-			}
-			else {
-				print( bundleNames.size() + " bundle(s) :") ;
-				printList(bundleNames) ;
-			}
-		} catch (TelosysToolsException e) {
-			printError(e);
+//		try {
+//			List<String> bundleNames = getInstalledBundles(commandArguments);
+//			if ( bundleNames.isEmpty() ) {
+//				print("No bundle found.") ;
+//			}
+//			else {
+//				print( bundleNames.size() + " bundle(s) :") ;
+//				printList(bundleNames) ;
+//			}
+//		} catch (TelosysToolsException e) {
+//			printError(e);
+//		}
+		List<File> bundles = findBundleFolders(commandArguments);
+		if ( bundles.isEmpty() ) {
+			print("No bundle found.") ;
+		}
+		else {
+			print( bundles.size() + " bundle(s) :") ;
+			printListOfFiles(bundles) ;
 		}
 	}
 }

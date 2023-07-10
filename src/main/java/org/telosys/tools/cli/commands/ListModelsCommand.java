@@ -16,17 +16,17 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
-import java.util.LinkedList;
 import java.util.List;
 
-import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.Command;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 
 import jline.console.ConsoleReader;
 
-public class ListModelsCommand extends Command {
+public class ListModelsCommand extends CommandLevel2 {
 	
+	public static final String COMMAND_NAME = "lm";
+
 	/**
 	 * Constructor
 	 * @param out
@@ -37,7 +37,7 @@ public class ListModelsCommand extends Command {
 
 	@Override
 	public String getName() {
-		return "lm";
+		return COMMAND_NAME;
 	}
 
 	@Override
@@ -47,38 +47,50 @@ public class ListModelsCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "List the models";
+		return "List the project models";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "lm";
+		return COMMAND_NAME + " [name-part1 name-part2 ...]";
 	}
 
 	@Override
-	public String execute(String[] args) {
+	public String execute(String[] argsArray) {
+		List<String> commandArguments = getArgumentsAsList(argsArray);
 		if ( checkHomeDirectoryDefined() ) {
-			listModels();
+			listModels(commandArguments);
 		}
 		return null ;
 	}
-
-	private void listModels() {
-		TelosysProject telosysProject = getTelosysProject();
-		List<File> files = telosysProject.getModels();
-		if ( files.isEmpty() ) {
+	
+	private void listModels(List<String> commandArguments) {
+		List<File> models = findModelFolders(commandArguments);
+		if ( models.isEmpty() ) {
 			print("No model found.") ;
 		}
 		else {
-			// Convert files to file names (strings)
-			LinkedList<String> names = new LinkedList<>();
-			for ( File f : files ) {
-				names.add(f.getName());
-			}
-			// Print file names 
-			print( names.size() + " model(s) :") ;
-			printList(names) ;
+			print( models.size() + " model(s) :") ;
+			printListOfFiles(models) ;
 		}
 	}
 
+//	private void listModels() {
+//		TelosysProject telosysProject = getTelosysProject();
+//		List<File> files = telosysProject.getModels();
+//		if ( files.isEmpty() ) {
+//			print("No model found.") ;
+//		}
+//		else {
+//			// Convert files to file names (strings)
+//			LinkedList<String> names = new LinkedList<>();
+//			for ( File f : files ) {
+//				names.add(f.getName());
+//			}
+//			// Print file names 
+//			print( names.size() + " model(s) :") ;
+//			printList(names) ;
+//		}
+//	}
+//
 }

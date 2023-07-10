@@ -18,6 +18,7 @@ package org.telosys.tools.cli;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -230,6 +231,20 @@ public abstract class Command {
 		if ( strings != null ) {
 			for ( String s : strings ) {
 				out.println(" . " + s);
+			}
+		}
+		out.flush();
+	}	
+
+	/**
+	 * Prints the given list of files with a ' . ' at the beginning 
+	 * @param files
+	 * @return
+	 */
+	protected void printListOfFiles(List<File> files) {
+		if ( files != null ) {
+			for ( File f : files ) {
+				out.println(" . " + f.getName());
 			}
 		}
 		out.flush();
@@ -497,7 +512,19 @@ public abstract class Command {
 		environment.setCurrentBundle(bundleName);
 		updatePrompt();
 	}
-	
+
+	/**
+	 * Returns true if the given bundle name is the current bundle 
+	 * @param bundleName
+	 * @return
+	 */
+	protected boolean isCurrentBundle(String bundleName) {
+		if ( bundleName != null ) {
+			return bundleName.equals(environment.getCurrentBundle() ) ;
+		}
+		return false ;
+	}
+		
 	/**
 	 * Unset the current bundle name in the current environment
 	 */

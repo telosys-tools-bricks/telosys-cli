@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.TelosysToolsException;
 
 import jline.console.ConsoleReader;
 
@@ -56,49 +55,81 @@ public class EditBundleCommand extends CommandLevel2 {
 		return COMMAND_NAME + " [bundle-name|bundle-partial-name]";
 	}
 
+//	@Override
+//	public String execute(String[] argsArray) {
+//		List<String> commandArguments = getArgumentsAsList(argsArray);
+//		if ( checkHomeDirectoryDefined() && checkArguments(commandArguments, 0, 1 ) ) {
+//			if ( commandArguments.isEmpty() ) {
+//				if ( checkBundleDefined() ) {
+//					editBundle( getCurrentBundle() );
+//				}
+//			}
+//			else {
+//				editBundle(commandArguments);
+//			}
+//		}
+//		return null ;
+//	}
 	@Override
 	public String execute(String[] argsArray) {
 		List<String> commandArguments = getArgumentsAsList(argsArray);
-		if ( checkHomeDirectoryDefined() ) {
-			if ( ! commandArguments.isEmpty() ) {
-				editBundle(commandArguments);
+		if ( checkHomeDirectoryDefined() && checkArguments(commandArguments, 0, 1 ) ) {
+			File file = null;
+			if ( commandArguments.isEmpty() ) {
+				file = getCurrentBundleConfigFile();
 			}
 			else {
-				if ( checkBundleDefined() ) {
-					editBundle( getCurrentBundle() );
-				}
+				file = findBundleConfigFile(commandArguments.get(0));
+			}
+			if ( file != null ) {
+				return launchEditor(file.getAbsolutePath());
 			}
 		}
 		return null ;
 	}
 
-	private String editBundle(List<String> commandArguments) {
-		try {
-			List<String> bundleNames = getInstalledBundles(commandArguments);
-			if ( bundleNames.size() > 1 ) {
-				print( "Too much bundles found (" + bundleNames.size() + " bundles)") ;
-			}
-			else if ( bundleNames.size() == 1 ) {
-				editBundle(bundleNames.get(0));
+	private File findBundleConfigFile(String namePattern) {
+		File bundleFolder = findBundleFolder(namePattern);
+		if (bundleFolder != null) {
+			File file = getTelosysProject().getBundleConfigFile(bundleFolder);
+			if ( file.exists() ) {
+				return file;
 			}
 			else {
-				print("No bundle found.") ;
+				print("No configuration file in bundle '" + bundleFolder.getName() + "'") ;
+				return null;
 			}
-		} catch (TelosysToolsException e) {
-			printError(e);
 		}
-		return null ;
+		return null;
 	}
 	
-	private String editBundle(String bundleName) {
-		File file = getTelosysProject().getBundleConfigFile(bundleName);
-		if ( file.exists() ) {
-			return launchEditor(file.getAbsolutePath() );
-		}
-		else {
-			print("File '" + file.getAbsolutePath() + "' not found");
-		}
-		return null ;
-	}
-
+//	private String editBundle(List<String> commandArguments) {
+//		try {
+//			List<String> bundleNames = getInstalledBundles(commandArguments);
+//			if ( bundleNames.size() > 1 ) {
+//				print( "Too much bundles found (" + bundleNames.size() + " bundles)") ;
+//			}
+//			else if ( bundleNames.size() == 1 ) {
+//				editBundle(bundleNames.get(0));
+//			}
+//			else {
+//				print("No bundle found.") ;
+//			}
+//		} catch (TelosysToolsException e) {
+//			printError(e);
+//		}
+//		return null ;
+//	}
+//	
+//	private String editBundle(String bundleName) {
+//		File file = getTelosysProject().getBundleConfigFile(bundleName);
+//		if ( file.exists() ) {
+//			return launchEditor(file.getAbsolutePath() );
+//		}
+//		else {
+//			print("File '" + file.getAbsolutePath() + "' not found");
+//		}
+//		return null ;
+//	}
+//
 }

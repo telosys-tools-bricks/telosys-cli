@@ -97,11 +97,15 @@ public class BatchGenLauncher {
 	 */
 	public BatchGenResult launchGeneration(String bundlePattern) {
 		checkInit();
-		List<String> bundlesNames ;
-		try {
-			bundlesNames = telosysProject.getInstalledBundles();
-		} catch (TelosysToolsException e) {
-			throw new RuntimeException("Cannot get installed bundles : " + e.getMessage() );
+//		List<String> bundlesNames ;
+//		try {
+//			bundlesNames = telosysProject.getInstalledBundles();
+//		} catch (TelosysToolsException e) {
+//			throw new RuntimeException("Cannot get installed bundles : " + e.getMessage() );
+//		}
+		List<File> bundles  = telosysProject.getBundles();
+		if ( bundles.isEmpty() ) {
+			throw new RuntimeException("No bundle!" );
 		}
 		
 		// get bundles matching the given pattern
@@ -109,7 +113,9 @@ public class BatchGenLauncher {
 //		parts[0] = "" ;
 //		parts[1] = bundlePattern ;
 //		List<String> selectedBundleNames = bundlesNames.filter(parts);
-		List<String> selectedBundleNames = Filter.filter(bundlesNames, bundlePattern);
+//		List<String> selectedBundleNames = Filter.filter(bundlesNames, bundlePattern);
+		List<String> bundleNames = telosysProject.getBundleNames();
+		List<String> selectedBundleNames = Filter.filter(bundleNames, bundlePattern);
 
 		// Launch generation for each bundle
 		BatchGenResult batchResult = new BatchGenResult();
