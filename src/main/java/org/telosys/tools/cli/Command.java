@@ -18,7 +18,6 @@ package org.telosys.tools.cli;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -228,9 +227,18 @@ public abstract class Command {
 	 * @return
 	 */
 	protected void printList(List<String> strings) {
+		printList(strings, " . " );
+	}
+	
+	/**
+	 * Prints the given list of strings with a ' . ' at the beginning 
+	 * @param strings
+	 * @return
+	 */
+	protected void printList(List<String> strings, String startOfLine) {
 		if ( strings != null ) {
 			for ( String s : strings ) {
-				out.println(" . " + s);
+				out.println(startOfLine + s);
 			}
 		}
 		out.flush();

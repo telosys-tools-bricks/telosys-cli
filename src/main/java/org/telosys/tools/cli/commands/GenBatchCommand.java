@@ -129,29 +129,46 @@ public class GenBatchCommand extends CommandLevel2 {
 		if ( bundles.isEmpty() ) {
 			return;
 		}
-		
+
+		if ( confirmLaunch(models, bundles) ) {
+			try {
+				printStart();
+				// Launch code generation for selected models and bundles
+				BatchGenResult batchResult = launchGeneration(models, bundles, flagResources);
+				// Print normal end with result 
+				printEnd();
+				printBatchResult(modelNameFilter, bundleNameFilter, batchResult);
+			} catch (TelosysModelException e) {
+				printError(e);
+			} catch (TelosysToolsException e) {
+				printError(e);
+			} catch (Exception e) {
+				printUnexpectedError(e);
+			} 
+		}
+	}
+
+	private boolean confirmLaunch(List<String> models, List<String> bundles) {
+		String startOfLine = "  . ";
+		print("You're about to launch a bulk generation with ");
+		print(models.size() + " model(s) ");
+		printList(models, startOfLine);
+		print(bundles.size() + " bundles(s) of templates ");
+		printList(bundles, startOfLine);
+		return confirm("Do you want to launch the generation");
+	}
+	
+	private void printStart() {
 		print(LINE);
 		print("| Start of batch generation | ");
 		print(LINE);
-		
-		try {
-			// Launch code generation for selected models and bundles
-			BatchGenResult batchResult = launchGeneration(models, bundles, flagResources);
-			
-			// Print normal end with result 
-			print("");
-			print(LINE);
-			print("|  End of batch generation  | ");
-			print(LINE);
-			printBatchResult(modelNameFilter, bundleNameFilter, batchResult);
-			
-		} catch (TelosysModelException e) {
-			printError(e);
-		} catch (TelosysToolsException e) {
-			printError(e);
-		} catch (Exception e) {
-			printUnexpectedError(e);
-		} 
+	}
+
+	private void printEnd() {
+		print("");
+		print(LINE);
+		print("|  End of batch generation  | ");
+		print(LINE);
 	}
 
 	private void printError(TelosysModelException e) {
@@ -201,15 +218,15 @@ public class GenBatchCommand extends CommandLevel2 {
 	
 	private void printBatchResult(String modelNameFilter, String bundleNameFilter, BatchGenResult r) {
 		print("Batch parameters : " );
-		print(" . model names  : " + modelNameFilter );
-		print(" . bundle names : " + bundleNameFilter );
+		print(" . model names  : '" + modelNameFilter + "' ("+ r.getNumberOfModelsUsed() + " models used)");
+		print(" . bundle names : " + bundleNameFilter + "' ("+ r.getNumberOfBundlesUsed() + " bundles used)");
 		print("Batch generation result : " );
-		print(" . number of models used       : " + r.getNumberOfModelsUsed() );
-		print(" . number of bundles used      : " + r.getNumberOfBundlesUsed() );
+//		print(" . number of models used       : " + r.getNumberOfModelsUsed() );
+//		print(" . number of bundles used      : " + r.getNumberOfBundlesUsed() );
 		print(" . number of files generated   : " + r.getNumberOfFilesGenerated() );
 		print(" . number of generation errors : " + r.getNumberOfGenerationErrors() );
 		print(" . number of resources copied  : " + r.getNumberOfResourcesCopied() );
-		print("Results by bundle : " );
+		print("Results by model/bundle : " );
 		for ( String s : r.getBundlesStatus() ) {
 			print(s);
 		}
