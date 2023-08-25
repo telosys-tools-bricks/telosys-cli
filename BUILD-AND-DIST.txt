@@ -7,12 +7,11 @@
 - Maven clean 
 
 - Maven install 
-
   Result : target/telosys-cli-X.X.X-YYY.jar
 
-- build_dist.xml : check version
+- build_dist.xml --> Run as --> Ant Build 
+  ( current version is loaded from 'pom.xml' )
 
-- build_dist.xml --> Run as --> Ant Build
-
-  Result : dist/telosys-cli-X.X.X-YYY.zip 
+- refresh "dist" directory 
+  Check result : dist/telosys-cli-X.X.X-YYY.zip 
 
