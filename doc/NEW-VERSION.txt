@@ -1,11 +1,11 @@
 
 1) Change version in the following files :
 
-   - Version.java
- 
    - pom.xml
  
-   - build_dist.xml
+   // - Version.java (no longer required, as it is based on "telosys-cli-build.properties", updated with each build)
+
+   - build_dist.xml : only if there are changes other than version (version is set from "pom.xml")
 
 
 2) Build Telosys CLI 

@@ -10,7 +10,7 @@
    - mvn install 
  
  - Build the zip file for distribution :
-   - ant build_dist.xml
+   - ant build_dist.xml  ( "Run As" / "Ant build" )
    - F5 / "dist" folder
    
  
