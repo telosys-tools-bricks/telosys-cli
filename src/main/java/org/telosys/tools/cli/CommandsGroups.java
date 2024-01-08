@@ -58,6 +58,7 @@ public class CommandsGroups {
 		commands.add("fx");
 		commands.add("err");
 		commands.add("env");
+		commands.add("proxy");
 		commands.add("ver");
 		commands.add("q");
 		commands.add("exit");

@@ -60,6 +60,7 @@ import org.telosys.tools.cli.commands.MkdirCommand;
 import org.telosys.tools.cli.commands.ModelCommand;
 import org.telosys.tools.cli.commands.NewEntityCommand;
 import org.telosys.tools.cli.commands.NewModelCommand;
+import org.telosys.tools.cli.commands.ProxyCommand;
 import org.telosys.tools.cli.commands.PwdCommand;
 import org.telosys.tools.cli.commands.QuitCommand;
 import org.telosys.tools.cli.commands.TestCommand;
@@ -103,6 +104,7 @@ public class CommandProvider {
 		register(new ExitCommand(consoleReader, environment)); // exit  ( ver 4.1.0 )
 		register(new ErrorCommand(consoleReader, environment)); // err
 		register(new VerCommand(consoleReader, environment)); // ver
+		register(new ProxyCommand(consoleReader, environment)); // proxy ( ver 4.1.1 )
 
 		register(new TestCommand(consoleReader, environment)); // Special command (just for tests)
 		
