@@ -62,10 +62,10 @@ public class ProxyCommand extends Command {
 			HttpSystemConfig.init(new File(configFile));
 		}
 		// Get and print configuration
-		for ( String s : HttpSystemConfig.getCurrentHttpConfig() ) {
+		for ( String s : HttpSystemConfig.getCurrentProxyConfig() ) {
 			print(s);
 		}
-		for ( String s : HttpSystemConfig.getCurrentProxyConfig() ) {
+		for ( String s : HttpSystemConfig.getCurrentHttpConfig() ) {
 			print(s);
 		}
 		return null ;
