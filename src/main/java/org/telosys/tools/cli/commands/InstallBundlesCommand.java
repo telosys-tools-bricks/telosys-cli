@@ -103,8 +103,16 @@ public class InstallBundlesCommand extends CommandLevel2 {
 		if ( bundles != null && ! bundles.isEmpty() ) {
 			print( "Installing " + bundles.size() + " bundle(s) from repository... ");
 			for ( String bundleName : bundles ) {
-				telosysProject.downloadAndInstallBundle(githubStoreName, bundleName);
-				print( " . '" + bundleName + "' : installed. ");
+				try {
+					if ( telosysProject.downloadAndInstallBundle(githubStoreName, bundleName) ) {
+						print( " . '" + bundleName + "' : installed. ");
+					}
+					else {
+						print( " . '" + bundleName + "' : not installed (already exists). ");
+					}
+				} catch (TelosysToolsException e) {
+					print( " . '" + bundleName + "' : ERROR : " + e.getMessage() );
+				}
 			}
 		}
 		else {
