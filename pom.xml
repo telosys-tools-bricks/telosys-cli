@@ -4,13 +4,14 @@
 
 	<groupId>org.telosys</groupId>
 	<artifactId>telosys-cli</artifactId>
-	<version>4.1.1-001</version> <!-- "Version.java" is now based on "telosys-cli-build.properties" updated by each build -->
+	<version>4.2.0-001</version> <!-- "Version.java" is now based on "telosys-cli-build.properties" updated by each build -->
 	<packaging>jar</packaging>
 
 	<name>telosys-cli</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.7</java.version>
+		<!--  <java.version>1.7</java.version>  -->
+		<java.version>1.8</java.version>
 		<!-- <maven.build.timestamp.format>yyMMdd_HHmm</maven.build.timestamp.format> -->		
 		<!-- <maven.build.timestamp.format>yy.DDD.HHmm</maven.build.timestamp.format>  -->		
 		<maven.build.timestamp.format>yyMMdd.HHmm.S</maven.build.timestamp.format>	<!-- day in the year . min . milliseconds -->	
