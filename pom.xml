@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>org.telosys</groupId>
 			<artifactId>telosys-tools-all</artifactId> <!-- TELOSYS-ALL : the "UBER JAR" with everything -->
-			<version>4.1.1</version>
+			<version>4.2.0</version>
 		</dependency>
 		
         <!-- FOR TESTS -->
