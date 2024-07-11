@@ -49,9 +49,9 @@ import org.telosys.tools.cli.commands.HomeCommand;
 import org.telosys.tools.cli.commands.InitCommand;
 import org.telosys.tools.cli.commands.InstallBundlesCommand;
 import org.telosys.tools.cli.commands.ListBundlesCommand;
+import org.telosys.tools.cli.commands.ListBundlesInDepotCommand;
 import org.telosys.tools.cli.commands.ListDatabasesCommand;
 import org.telosys.tools.cli.commands.ListEntitiesCommand;
-import org.telosys.tools.cli.commands.ListGitHubCommand;
 import org.telosys.tools.cli.commands.ListModelsCommand;
 import org.telosys.tools.cli.commands.ListResourcesCommand;
 import org.telosys.tools.cli.commands.ListTemplatesCommand;
@@ -137,7 +137,7 @@ public class CommandProvider {
 		// GitHub store management
 		register(new GitHubCommand(consoleReader, environment)); // gh : gh [store-name] 
 		register(new GitHubUserCommand(consoleReader, environment)); // ghu : ghu user-name
-		register(new ListGitHubCommand(consoleReader, environment)); // lgh [filter-criteria] 
+//		register(new ListGitHubCommand(consoleReader, environment)); // lgh [filter-criteria]  // replaced by "lbd" command - v 4.2.0
 		register(new CheckGitHubCommand(consoleReader, environment)); // cgh 
 		
 /**
@@ -154,11 +154,13 @@ public class CommandProvider {
 //		 
 **/
 		// Bundles commands
-		register(new InstallBundlesCommand(consoleReader, environment)); // ib : install  bundle(s) from GitHub 				
 		register(new ListBundlesCommand(consoleReader, environment)); // lb (list installed bundles)
 		register(new BundleCommand(consoleReader, environment)); // b set/print current bundle
 		register(new EditBundleCommand(consoleReader, environment)); // eb : edit bundle
 		register(new DeleteBundleCommand(consoleReader, environment)); // db : delete bundle
+		// Bundles depot commands
+		register(new ListBundlesInDepotCommand(consoleReader, environment)); // lbd [filter-criteria] 
+		register(new InstallBundlesCommand(consoleReader, environment)); // ib : install  bundle(s) from depot (GitHub, ...) 				
 
 		// Templates commands
 		register(new ListTemplatesCommand(consoleReader, environment)); // lt : list templates				

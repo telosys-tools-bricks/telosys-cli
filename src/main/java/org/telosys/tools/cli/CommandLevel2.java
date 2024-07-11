@@ -21,9 +21,6 @@ import java.util.List;
 
 import org.telosys.tools.api.TelosysModelException;
 import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.commons.Filter;
-import org.telosys.tools.commons.TelosysToolsException;
-import org.telosys.tools.commons.bundles.BundlesFromGitHub;
 import org.telosys.tools.dsl.DslModelError;
 import org.telosys.tools.dsl.DslModelErrors;
 import org.telosys.tools.generic.model.Model;
@@ -360,15 +357,16 @@ public abstract class CommandLevel2 extends Command {
 	// GITHUB 
 	//-----------------------------------------------------------------------------------------------
 
-	/**
-	 * @param githubStoreName
-	 * @return
-	 * @throws TelosysToolsException
-	 */
-	protected final BundlesFromGitHub getGitHubBundles(String githubStoreName) throws TelosysToolsException {
-		TelosysProject telosysProject = getTelosysProject();
-		return telosysProject.getGitHubBundlesList(githubStoreName);
-	}
+//	/**
+//	 * @param githubStoreName
+//	 * @return
+//	 * @throws TelosysToolsException
+//	 */
+//	protected final BundlesFromGitHub getGitHubBundles(String githubStoreName) throws TelosysToolsException {
+//		TelosysProject telosysProject = getTelosysProject();
+////		return telosysProject.getGitHubBundlesList(githubStoreName);
+//		return getTelosysProject().getBundlesAvailableInDepot(githubStoreName);
+//	}
 	
 	//-----------------------------------------------------------------------------------------------
 	// COMMONS 

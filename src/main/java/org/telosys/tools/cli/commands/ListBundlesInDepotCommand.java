@@ -22,61 +22,60 @@ import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.TelosysToolsException;
-import org.telosys.tools.commons.bundles.BundlesFromGitHub;
+import org.telosys.tools.commons.bundles.BundlesFromDepot;
 
 import jline.console.ConsoleReader;
 
-public class ListGitHubCommand extends CommandLevel2 {
+public class ListBundlesInDepotCommand extends CommandLevel2 {
 	
 	/**
 	 * Constructor
 	 * @param consoleReader
 	 * @param environment
 	 */
-	public ListGitHubCommand(ConsoleReader consoleReader, Environment environment) {
+	public ListBundlesInDepotCommand(ConsoleReader consoleReader, Environment environment) {
 		super(consoleReader, environment);
 	}
 	
 	@Override
 	public String getName() {
-		return "lgh";
+		return "lbd";
 	}
 
 	@Override
 	public String getShortDescription() {
-		return "List GitHub" ;
+		return "List Bundles in Depot" ;
 	}
 	
 	@Override
 	public String getDescription() {
-		return "List the content of the GitHub store";
+		return "List bundles of templates available in the depot";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "lgh [name-part1 name-part2 ...]";
+		return "lbd [name-part1 name-part2 ...]";
 	}
 	
 	@Override
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() && checkGitHubStoreDefined() ) {
-			getAndPrintGitHubBundles(getCurrentGitHubStore(), args);
+			getAndPrintBundles(getCurrentGitHubStore(), args);
 		}
 		return null ;
 	}
 	
-	private void getAndPrintGitHubBundles(String githubStoreName, String[] args) {
+	private void getAndPrintBundles(String githubStoreName, String[] args) {
 		
 		try {
 			// Get all bundles from GitHub 
-			BundlesFromGitHub githubBundles = getGitHubBundles(githubStoreName);
+//			BundlesFromGitHub githubBundles = getGitHubBundles(githubStoreName);
+			BundlesFromDepot githubBundles = getTelosysProject().getBundlesAvailableInDepot(githubStoreName); // v 4.2.0
 			
 			if ( githubBundles.getHttpStatusCode() == 200 ) {
 				// Filter bundles with args if necessary
-//				List<String> bundlesNames = githubBundles.getBundlesNames().filter(args);
 				List<String> bundles = Filter.filter(githubBundles.getBundles(), buildCriteriaFromArgs(args));
 				// Print the result
-//				printBundles(githubStoreName, bundlesNames);
 				printBundles(githubStoreName, bundles);
 				// Print current API rate limit returned by GitHub 
 				print("GitHub API rate limit : "+ githubBundles.getRemaining() + "/" + githubBundles.getLimit() ) ; 

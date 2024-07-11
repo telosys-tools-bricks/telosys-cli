@@ -34,10 +34,10 @@ public class CommandsGroups {
 		all.add(getDatabaseCommands()) ;
 		all.add(getModelCommands()) ;
 		all.add(getEntityCommands()) ;
-		all.add(getGitHubCommands()) ;
 		all.add(getBundleCommands()) ;
 		all.add(getTemplateCommands()) ;
 		all.add(getGenerationCommands()) ;
+		all.add(getGitHubCommands()) ;
 	}
 
 	public final List<CommandsGroup> getAll() {
@@ -84,8 +84,6 @@ public class CommandsGroups {
 		String name = "Model commands" ;
 		commands.add("m");
 		commands.add("nm"); 
-		// commands.add("ndbm"); // removed in v 4.0.0
-		// commands.add("udbm"); // removed in v 4.0.0
 		commands.add("lm");
 		commands.add("em");
 		commands.add("cm");
@@ -123,7 +121,7 @@ public class CommandsGroups {
 		String name = "GitHub commands" ;
 		commands.add("gh");
 		commands.add("ghu");
-		commands.add("lgh");
+		// commands.add("lgh"); // replaced by "lbd" in v 4.2.0
 		commands.add("cgh");
 		
 		return new CommandsGroup(name, commands);
@@ -132,12 +130,13 @@ public class CommandsGroups {
 	private final CommandsGroup getBundleCommands() {
 		List<String> commands = new LinkedList<>() ;
 		
-		String name = "Bundle commands" ;
-		commands.add("ib");
+		String name = "Bundle of templates commands" ;
 		commands.add("b");
 		commands.add("lb");
 		commands.add("eb");
 		commands.add("db");
+		commands.add("lbd");
+		commands.add("ib");
 
 		return new CommandsGroup(name, commands);
 	}

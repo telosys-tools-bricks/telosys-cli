@@ -19,6 +19,7 @@ import org.telosys.tools.api.TelosysApiVersion;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.Version;
+import org.telosys.tools.commons.CommonsVersion;
 import org.telosys.tools.commons.github.GitHubClient;
 import org.telosys.tools.commons.http.HttpClient;
 import org.telosys.tools.dsl.model.DslModelVersion;
@@ -66,6 +67,7 @@ public class VerCommand extends Command {
 		print("Generator     : " + GeneratorVersion.GENERATOR_VERSION  );
 		print("Generic model : " + GenericModelVersion.VERSION  );
 		print("DSL model     : " + DslModelVersion.VERSION  );
+		print("Commons       : " + CommonsVersion.getVersionWithBuilId() ) ;
 		print("GitHub client : " + GitHubClient.VERSION ) ;
 		print("HTTP client   : " + HttpClient.VERSION ) ;
 		

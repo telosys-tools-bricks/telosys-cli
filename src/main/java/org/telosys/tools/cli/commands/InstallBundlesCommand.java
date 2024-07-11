@@ -22,7 +22,7 @@ import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.TelosysToolsException;
-import org.telosys.tools.commons.bundles.BundlesFromGitHub;
+import org.telosys.tools.commons.bundles.BundlesFromDepot;
 
 import jline.console.ConsoleReader;
 
@@ -88,9 +88,11 @@ public class InstallBundlesCommand extends CommandLevel2 {
 		String githubStoreName = getCurrentGitHubStore() ;
 		
 		// Get bundles from GitHub 
-		BundlesFromGitHub githubBundles;
+//		BundlesFromGitHub githubBundles;
+		BundlesFromDepot githubBundles;
 		try {
-			githubBundles = super.getGitHubBundles(githubStoreName);
+//			githubBundles = super.getGitHubBundles(githubStoreName);
+			githubBundles = getTelosysProject().getBundlesAvailableInDepot(githubStoreName); // v 4.2.0			
 		} catch (TelosysToolsException e) {
 			printError(e);
 			return ;
