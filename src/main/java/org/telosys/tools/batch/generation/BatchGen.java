@@ -27,7 +27,7 @@ public class BatchGen {
 	
 	private static void printVersions() {
 		print("Versions : " );
-		print(". Telosys API   : " + TelosysApiVersion.VERSION );
+		print(". Telosys API   : " + TelosysApiVersion.getVersionWithBuilId() );
 		print(". Generator     : " + GeneratorVersion.GENERATOR_VERSION );
 		print(". Generic Model : " + GenericModelVersion.VERSION);
 	}
