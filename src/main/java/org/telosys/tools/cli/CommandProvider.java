@@ -53,6 +53,7 @@ import org.telosys.tools.cli.commands.ListBundlesInDepotCommand;
 import org.telosys.tools.cli.commands.ListDatabasesCommand;
 import org.telosys.tools.cli.commands.ListEntitiesCommand;
 import org.telosys.tools.cli.commands.ListModelsCommand;
+import org.telosys.tools.cli.commands.ListModelsInDepotCommand;
 import org.telosys.tools.cli.commands.ListResourcesCommand;
 import org.telosys.tools.cli.commands.ListTemplatesCommand;
 import org.telosys.tools.cli.commands.LsCommand;
@@ -124,6 +125,7 @@ public class CommandProvider {
 		register(new ModelCommand(consoleReader, environment));       // m 
 		register(new NewModelCommand(consoleReader, environment));    // nm
 		register(new ListModelsCommand(consoleReader, environment));  // lm 
+		register(new ListModelsInDepotCommand(consoleReader, environment));  // lmd (v 4.2.0)
 		register(new DeleteModelCommand(consoleReader, environment)); // dm 
 		register(new CheckModelCommand(consoleReader, environment));  // cm
 		register(new EditModelCommand(consoleReader, environment));   // em
