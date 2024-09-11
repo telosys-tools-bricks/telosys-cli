@@ -22,7 +22,7 @@ import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.TelosysToolsException;
-import org.telosys.tools.commons.bundles.BundlesFromDepot;
+import org.telosys.tools.commons.depot.DepotResponse;
 
 import jline.console.ConsoleReader;
 
@@ -82,23 +82,21 @@ public class InstallBundlesCommand extends CommandLevel2 {
 	}
 		
 	private void installBundles(String[] args) {
-		//   TODO if already exists : prompt "overwrite ? [y/n] : "
+		// SUGGESTION: if already exists : prompt "overwrite ? [y/n] : "
 		TelosysProject telosysProject = getTelosysProject();
 		
 		String githubStoreName = getCurrentGitHubStore() ;
 		
 		// Get bundles from GitHub 
-//		BundlesFromGitHub githubBundles;
-		BundlesFromDepot githubBundles;
+		DepotResponse depotResponse;
 		try {
-//			githubBundles = super.getGitHubBundles(githubStoreName);
-			githubBundles = getTelosysProject().getBundlesAvailableInDepot(githubStoreName); // v 4.2.0			
+			depotResponse = getTelosysProject().getBundlesAvailableInDepot(githubStoreName); // v 4.2.0			
 		} catch (TelosysToolsException e) {
 			printError(e);
 			return ;
 		}
 		// Filter bundles names if args		
-		List<String> allBundles = githubBundles.getBundles();
+		List<String> allBundles = depotResponse.getElementNames();
 		List<String> bundles = Filter.filter(allBundles, buildCriteriaFromArgs(args));
 
 		// Install  bundles		

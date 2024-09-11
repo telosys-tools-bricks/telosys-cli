@@ -15,18 +15,15 @@
  */
 package org.telosys.tools.cli.commands;
 
-import java.util.List;
-
-import org.telosys.tools.cli.Color;
-import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.Filter;
+import org.telosys.tools.cli.commands.commons.ListInDepotAbstractCommand;
 import org.telosys.tools.commons.TelosysToolsException;
-import org.telosys.tools.commons.bundles.BundlesFromDepot;
+import org.telosys.tools.commons.cfg.TelosysToolsCfg;
+import org.telosys.tools.commons.depot.DepotResponse;
 
 import jline.console.ConsoleReader;
 
-public class ListBundlesInDepotCommand extends CommandLevel2 {
+public class ListBundlesInDepotCommand extends ListInDepotAbstractCommand {
 	
 	/**
 	 * Constructor
@@ -59,60 +56,19 @@ public class ListBundlesInDepotCommand extends CommandLevel2 {
 	
 	@Override
 	public String execute(String[] args) {
-		if ( checkHomeDirectoryDefined() && checkGitHubStoreDefined() ) {
-			getAndPrintBundles(getCurrentGitHubStore(), args);
+		if ( checkHomeDirectoryDefined() ) {
+			TelosysToolsCfg telosysToolsCfg = getTelosysProject().getTelosysToolsCfg();
+			String depotName = telosysToolsCfg.getDepotNameForBundles(); 
+			try {
+				// get all bundles using depot API (GitHub API)
+				DepotResponse depotResponse = getTelosysProject().getBundlesAvailableInDepot(depotName); 
+				// filter and print the models found in depot 
+				filterAndPrintSearchResult("Bundles", depotName, depotResponse, buildCriteriaFromArgs(args));
+			} catch (TelosysToolsException e) {
+				printError(e);
+			}
 		}
 		return null ;
 	}
-	
-	private void getAndPrintBundles(String githubStoreName, String[] args) {
-		
-		try {
-			// Get all bundles from GitHub 
-//			BundlesFromGitHub githubBundles = getGitHubBundles(githubStoreName);
-			BundlesFromDepot githubBundles = getTelosysProject().getBundlesAvailableInDepot(githubStoreName); // v 4.2.0
-			
-			if ( githubBundles.getHttpStatusCode() == 200 ) {
-				// Filter bundles with args if necessary
-				List<String> bundles = Filter.filter(githubBundles.getBundles(), buildCriteriaFromArgs(args));
-				// Print the result
-				printBundles(githubStoreName, bundles);
-				// Print current API rate limit returned by GitHub 
-				print("GitHub API rate limit : "+ githubBundles.getRemaining() + "/" + githubBundles.getLimit() ) ; 
-			}
-			else if ( githubBundles.getHttpStatusCode() == 403 ) {
-				String msg = "GitHub API request refused : http status '" + githubBundles.getHttpStatusCode() + "'" ;
-				print(Color.colorize(msg, Color.RED_BRIGHT));
-				print("GitHub API rate limit status : " ) ; 
-				print(" . remaining : " + githubBundles.getRemaining() ) ; 
-				print(" . limit     : " + githubBundles.getLimit() ) ; 
-				print(" . reset     : " + githubBundles.getReset() ) ; 
-			}
-			else {
-				String msg = "Unexpected http status '" + githubBundles.getHttpStatusCode() + "'" ;
-				print(Color.colorize(msg, Color.RED_BRIGHT));
-			}
-			
-		} catch (TelosysToolsException e) {
-			printError(e);
-		}
-	}
-	
-	/**
-	 * Prints the given bundles
-	 * @param githubStore
-	 * @param bundles
-	 * @return
-	 */
-	private void printBundles(String githubStore, List<String> bundles) {
-		if ( bundles != null && ! bundles.isEmpty() ) {
-			print("Bundles found in repository '" + githubStore + "' : ");
-			for ( String s : bundles ) {
-				print( " . " + s);
-			}
-		}
-		else {
-			print( "No bundle found in repository '" + githubStore + "'.");
-		}
-	}
+
 }
