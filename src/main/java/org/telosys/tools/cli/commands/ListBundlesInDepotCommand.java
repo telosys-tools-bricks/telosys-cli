@@ -16,14 +16,14 @@
 package org.telosys.tools.cli.commands;
 
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.cli.commands.commons.ListInDepotAbstractCommand;
+import org.telosys.tools.cli.commands.commons.DepotAbstractCommand;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.cfg.TelosysToolsCfg;
 import org.telosys.tools.commons.depot.DepotResponse;
 
 import jline.console.ConsoleReader;
 
-public class ListBundlesInDepotCommand extends ListInDepotAbstractCommand {
+public class ListBundlesInDepotCommand extends DepotAbstractCommand {
 	
 	/**
 	 * Constructor

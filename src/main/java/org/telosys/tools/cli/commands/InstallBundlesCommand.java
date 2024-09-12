@@ -17,11 +17,13 @@ package org.telosys.tools.cli.commands;
 
 import java.util.List;
 
+import org.telosys.tools.api.InstallationType;
 import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.cli.commands.commons.DepotAbstractCommand;
 import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.TelosysToolsException;
+import org.telosys.tools.commons.cfg.TelosysToolsCfg;
 import org.telosys.tools.commons.depot.DepotResponse;
 
 import jline.console.ConsoleReader;
@@ -35,7 +37,7 @@ import jline.console.ConsoleReader;
  * @author Laurent GUERIN
  *
  */
-public class InstallBundlesCommand extends CommandLevel2 {
+public class InstallBundlesCommand extends DepotAbstractCommand {
 	
 	/**
 	 * Constructor
@@ -52,12 +54,12 @@ public class InstallBundlesCommand extends CommandLevel2 {
 
 	@Override
 	public String getShortDescription() {
-		return "Install Bundle" ;
+		return "Install Bundle(s)" ;
 	}
 	
 	@Override
 	public String getDescription() {
-		return "Install templates bundles from GitHub ";
+		return "Install bundle(s) of templates available in the depot";
 	}
 	
 	@Override
@@ -82,42 +84,55 @@ public class InstallBundlesCommand extends CommandLevel2 {
 	}
 		
 	private void installBundles(String[] args) {
-		// SUGGESTION: if already exists : prompt "overwrite ? [y/n] : "
-		TelosysProject telosysProject = getTelosysProject();
-		
-		String githubStoreName = getCurrentGitHubStore() ;
-		
-		// Get bundles from GitHub 
-		DepotResponse depotResponse;
+		String depotName = getTelosysProject().getTelosysToolsCfg().getDepotNameForBundles(); 
 		try {
-			depotResponse = getTelosysProject().getBundlesAvailableInDepot(githubStoreName); // v 4.2.0			
+			DepotResponse depotResponse = getTelosysProject().getBundlesAvailableInDepot(depotName); 
+			if (isDepotResponseOK(depotResponse)) {
+				List<String> criteria = buildCriteriaFromArgs(args);
+				filterAndInstallSearchResult("bundle", depotName, depotResponse, criteria, InstallationType.BUNDLE);
+			}
 		} catch (TelosysToolsException e) {
 			printError(e);
-			return ;
-		}
-		// Filter bundles names if args		
-		List<String> allBundles = depotResponse.getElementNames();
-		List<String> bundles = Filter.filter(allBundles, buildCriteriaFromArgs(args));
-
-		// Install  bundles		
-		if ( bundles != null && ! bundles.isEmpty() ) {
-			print( "Installing " + bundles.size() + " bundle(s) from repository... ");
-			for ( String bundleName : bundles ) {
-				try {
-					if ( telosysProject.downloadAndInstallBundle(githubStoreName, bundleName) ) {
-						print( " . '" + bundleName + "' : installed. ");
-					}
-					else {
-						print( " . '" + bundleName + "' : not installed (already exists). ");
-					}
-				} catch (TelosysToolsException e) {
-					print( " . '" + bundleName + "' : ERROR : " + e.getMessage() );
-				}
-			}
-		}
-		else {
-			print("No bundle found in repository.") ;
-		}
+		}		
 	}
+	
+//	private void installBundles(String[] args) {
+//		// SUGGESTION: if already exists : prompt "overwrite ? [y/n] : "
+//		TelosysProject telosysProject = getTelosysProject();
+//		
+//		String githubStoreName = getCurrentGitHubStore() ;
+//		
+//		// Get bundles from GitHub 
+//		DepotResponse depotResponse;
+//		try {
+//			depotResponse = getTelosysProject().getBundlesAvailableInDepot(githubStoreName); // v 4.2.0			
+//		} catch (TelosysToolsException e) {
+//			printError(e);
+//			return ;
+//		}
+//		// Filter bundles names if args		
+//		List<String> allBundles = depotResponse.getElementNames();
+//		List<String> bundles = Filter.filter(allBundles, buildCriteriaFromArgs(args));
+//
+//		// Install  bundles		
+//		if ( bundles != null && ! bundles.isEmpty() ) {
+//			print( "Installing " + bundles.size() + " bundle(s) from repository... ");
+//			for ( String bundleName : bundles ) {
+//				try {
+//					if ( telosysProject.downloadAndInstallBundle(githubStoreName, bundleName) ) {
+//						print( " . '" + bundleName + "' : installed. ");
+//					}
+//					else {
+//						print( " . '" + bundleName + "' : not installed (already exists). ");
+//					}
+//				} catch (TelosysToolsException e) {
+//					print( " . '" + bundleName + "' : ERROR : " + e.getMessage() );
+//				}
+//			}
+//		}
+//		else {
+//			print("No bundle found in repository.") ;
+//		}
+//	}
 	
 }
