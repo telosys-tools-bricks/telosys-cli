@@ -74,7 +74,6 @@ public class Environment {
 		this.osType = findOSType(this.osName); 
 		
 		// configuration from "telosys-cli.cfg"
-		//this.editorCommand = findEditorCommand();
 		Properties properties = loadTelosysCliConfiguration();
 		this.editorCommand = properties.getProperty(EDITOR_COMMAND);
 		this.fileExplorerCommand = properties.getProperty(FILE_EXPLORER_COMMAND);
@@ -86,24 +85,6 @@ public class Environment {
 		this.currentBundle      = null ;
 		this.currentGitHubStore = DEFAULT_GITHUB_STORE ;
 	}
-	
-//	/**
-//	 * Returns the editor command to be used (specific command defined in the '.cfg' file) <br>
-//	 * or null if no specific editor<br>
-//	 * @return
-//	 */
-//	private String findEditorCommand() {
-//		// Try to find a specific command (defined by the user)
-//		String specificEditorCommand = findSpecificEditorCommand();
-//		if ( specificEditorCommand != null ) {
-//			// A specific editor command is defined in ".cfg" file => use it
-//			return specificEditorCommand ;
-//		}
-//		else {
-//			// No specific editor command => undefined
-//			return null;
-//		}
-//	}
 	
 	/**
 	 * Returns the '.jar' file location (full path) 
@@ -153,21 +134,6 @@ public class Environment {
 			return new Properties();
 		}
 	}
-
-//	/**
-//	 * Tries to find a specific editor command defined in the configuration file
-//	 * @return the specific command or null if nout found
-//	 */
-//	private String findSpecificEditorCommand() {
-//		String cmd = null ;
-//		File configFile = getTelosysCliConfigFile();
-//		if ( configFile != null ) {
-//			PropertiesManager pm = new PropertiesManager(configFile);
-//			Properties p = pm.load();
-//			cmd = p.getProperty(EDITOR_COMMAND);
-//		}
-//		return cmd ;
-//	}
 
 	/**
 	 * Tries to find the 'telosys-cli.cfg' configuration file <br>
@@ -303,33 +269,33 @@ public class Environment {
 		// else unchanged
 	}
 
-	//---------------------------------------------------------------------------------
-	// Current GITHUB STORE
-	//---------------------------------------------------------------------------------
-	/**
-	 * Returns the default GitHub store name ( eg "telosys-templates" )
-	 * @return
-	 */
-	public String getDefaultGitHubStore() {
-		return DEFAULT_GITHUB_STORE ;
-	}
-
-	/**
-	 * Returns the current GitHub store name
-	 * @return
-	 */
-	public String getCurrentGitHubStore() {
-		return currentGitHubStore;
-	}
-
-	/**
-	 * Set the current GitHub store name
-	 * @param github
-	 */
-	public void setCurrentGitHubStore(String github) {
-		this.currentGitHubStore = github;
-		saveCurrentEnvironment();
-	}
+//	//---------------------------------------------------------------------------------
+//	// Current GITHUB STORE  (removed in v 4.2.0)
+//	//---------------------------------------------------------------------------------
+//	/**
+//	 * Returns the default GitHub store name ( eg "telosys-templates" )
+//	 * @return
+//	 */
+//	public String getDefaultGitHubStore() {
+//		return DEFAULT_GITHUB_STORE ;
+//	}
+//
+//	/**
+//	 * Returns the current GitHub store name
+//	 * @return
+//	 */
+//	public String getCurrentGitHubStore() {
+//		return currentGitHubStore;
+//	}
+//
+//	/**
+//	 * Set the current GitHub store name
+//	 * @param github
+//	 */
+//	public void setCurrentGitHubStore(String github) {
+//		this.currentGitHubStore = github;
+//		saveCurrentEnvironment();
+//	}
 
 	//---------------------------------------------------------------------------------
 	// Current MODEL

@@ -42,12 +42,12 @@ import org.telosys.tools.cli.commands.ExitCommand;
 import org.telosys.tools.cli.commands.FileExplorerCommand;
 import org.telosys.tools.cli.commands.GenBatchCommand;
 import org.telosys.tools.cli.commands.GenerateCommand;
-import org.telosys.tools.cli.commands.GitHubCommand;
 import org.telosys.tools.cli.commands.GitHubUserCommand;
 import org.telosys.tools.cli.commands.HelpCommand;
 import org.telosys.tools.cli.commands.HomeCommand;
 import org.telosys.tools.cli.commands.InitCommand;
 import org.telosys.tools.cli.commands.InstallBundlesCommand;
+import org.telosys.tools.cli.commands.InstallModelsCommand;
 import org.telosys.tools.cli.commands.ListBundlesCommand;
 import org.telosys.tools.cli.commands.ListBundlesInDepotCommand;
 import org.telosys.tools.cli.commands.ListDatabasesCommand;
@@ -126,6 +126,7 @@ public class CommandProvider {
 		register(new NewModelCommand(consoleReader, environment));    // nm
 		register(new ListModelsCommand(consoleReader, environment));  // lm 
 		register(new ListModelsInDepotCommand(consoleReader, environment));  // lmd (v 4.2.0)
+		register(new InstallModelsCommand(consoleReader, environment));      // im (v 4.2.0) 
 		register(new DeleteModelCommand(consoleReader, environment)); // dm 
 		register(new CheckModelCommand(consoleReader, environment));  // cm
 		register(new EditModelCommand(consoleReader, environment));   // em
@@ -137,7 +138,7 @@ public class CommandProvider {
 		register(new DeleteEntityCommand(consoleReader, environment)); // de : delete entity
 		
 		// GitHub store management
-		register(new GitHubCommand(consoleReader, environment)); // gh : gh [store-name] 
+//		register(new GitHubCommand(consoleReader, environment)); // gh : gh [store-name] // removed in ver 4.2.0
 		register(new GitHubUserCommand(consoleReader, environment)); // ghu : ghu user-name
 //		register(new ListGitHubCommand(consoleReader, environment)); // lgh [filter-criteria]  // replaced by "lbd" command - v 4.2.0
 		register(new CheckGitHubCommand(consoleReader, environment)); // cgh 

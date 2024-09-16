@@ -53,7 +53,6 @@ public class CommandsGroups {
 		commands.add("ls");
 		commands.add("mkdir");
 		commands.add("pwd");
-		
 		commands.add("e");
 		commands.add("fx");
 		commands.add("err");
@@ -68,98 +67,83 @@ public class CommandsGroups {
 
 	private final CommandsGroup getProjectCommands() {
 		List<String> commands = new LinkedList<>() ;
-		
 		String name = "Project commands" ;
 		commands.add("h");
 		commands.add("init");
 		commands.add("cfg");
 		commands.add("ecfg");
-		
-		return new CommandsGroup(name, commands);
-	}
-
-	private final CommandsGroup getModelCommands() {
-		List<String> commands = new LinkedList<>() ;
-		
-		String name = "Model commands" ;
-		commands.add("m");
-		commands.add("nm"); 
-		commands.add("lm");
-		commands.add("lmd");
-		commands.add("em");
-		commands.add("cm");
-		commands.add("dm");
-		
-		return new CommandsGroup(name, commands);
-	}
-
-	private final CommandsGroup getDatabaseCommands() {
-		List<String> commands = new LinkedList<>() ;
-		
-		String name = "Database commands" ;
-		commands.add("ldb");
-		commands.add("edb");
-		commands.add("cdb");
-		
-		return new CommandsGroup(name, commands);
-	}
-
-	private final CommandsGroup getEntityCommands() {
-		List<String> commands = new LinkedList<>() ;
-		
-		String name = "Entity commands" ;
-		commands.add("ne");
-		commands.add("le");
-		commands.add("ee");
-		commands.add("de");
-		
 		return new CommandsGroup(name, commands);
 	}
 
 	private final CommandsGroup getGitHubCommands() {
 		List<String> commands = new LinkedList<>() ;
-		
 		String name = "GitHub commands" ;
-		commands.add("gh");
-		commands.add("ghu");
+		// commands.add("gh"); // removed in v 4.2.0
+		// commands.add("ghu"); // removed in v 4.2.0
 		// commands.add("lgh"); // replaced by "lbd" in v 4.2.0
 		commands.add("cgh");
-		
 		return new CommandsGroup(name, commands);
 	}
 	
+	private final CommandsGroup getDatabaseCommands() {
+		List<String> commands = new LinkedList<>() ;
+		String name = "Database commands" ;
+		commands.add("ldb");
+		commands.add("edb");
+		commands.add("cdb");
+		return new CommandsGroup(name, commands);
+	}
+
+	private final CommandsGroup getModelCommands() {
+		List<String> commands = new LinkedList<>() ;
+		String name = "Model commands" ;
+		commands.add("m");
+		commands.add("lm");
+		commands.add("lmd");
+		commands.add("im"); // v 4.2.0
+		commands.add("nm");
+		commands.add("em");
+		commands.add("cm");
+		commands.add("dm");
+		return new CommandsGroup(name, commands);
+	}
+
+	private final CommandsGroup getEntityCommands() {
+		List<String> commands = new LinkedList<>() ;
+		String name = "Entity commands" ;
+		commands.add("le");
+		commands.add("ee");
+		commands.add("ne");
+		commands.add("de");
+		return new CommandsGroup(name, commands);
+	}
+
 	private final CommandsGroup getBundleCommands() {
 		List<String> commands = new LinkedList<>() ;
-		
 		String name = "Bundle of templates commands" ;
 		commands.add("b");
 		commands.add("lb");
-		commands.add("eb");
-		commands.add("db");
 		commands.add("lbd");
 		commands.add("ib");
-
+		commands.add("eb");
+		commands.add("db");
 		return new CommandsGroup(name, commands);
 	}
 	
 	private final CommandsGroup getTemplateCommands() {
 		List<String> commands = new LinkedList<>() ;
-		
 		String name = "Template commands" ;
 		commands.add("lt");
 		commands.add("et");
 		// Command "dt" for "Delete Template" ???
-		
 		return new CommandsGroup(name, commands);
 	}
 	
 	private final CommandsGroup getGenerationCommands() {
 		List<String> commands = new LinkedList<>() ;
-		
 		String name = "Generation commands" ;
 		commands.add("gen");
 		commands.add(GenBatchCommand.COMMAND_NAME);
-		
 		return new CommandsGroup(name, commands);
 	}
 	

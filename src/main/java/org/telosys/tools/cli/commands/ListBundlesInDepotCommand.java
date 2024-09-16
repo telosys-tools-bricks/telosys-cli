@@ -62,7 +62,7 @@ public class ListBundlesInDepotCommand extends DepotAbstractCommand {
 			try {
 				// get all bundles using depot API (GitHub API)
 				DepotResponse depotResponse = getTelosysProject().getBundlesAvailableInDepot(depotName); 
-				// filter and print the models found in depot 
+				// filter and print the bundles found in depot 
 				filterAndPrintSearchResult("Bundles", depotName, depotResponse, buildCriteriaFromArgs(args));
 			} catch (TelosysToolsException e) {
 				printError(e);

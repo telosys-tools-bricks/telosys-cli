@@ -18,12 +18,9 @@ package org.telosys.tools.cli.commands;
 import java.util.List;
 
 import org.telosys.tools.api.InstallationType;
-import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commands.commons.DepotAbstractCommand;
-import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.TelosysToolsException;
-import org.telosys.tools.commons.cfg.TelosysToolsCfg;
 import org.telosys.tools.commons.depot.DepotResponse;
 
 import jline.console.ConsoleReader;
@@ -31,7 +28,7 @@ import jline.console.ConsoleReader;
 /**
  * Install Bundle(s) 
  * Examples :
- *    ib * 				--> install all bundles from GitHub
+ *    ib * 				--> install all bundles from the depot
  *    ib java rest 		--> install all the bundles containing "java" or "rest"
  *    
  * @author Laurent GUERIN
@@ -41,7 +38,8 @@ public class InstallBundlesCommand extends DepotAbstractCommand {
 	
 	/**
 	 * Constructor
-	 * @param out
+	 * @param consoleReader
+	 * @param environment
 	 */
 	public InstallBundlesCommand(ConsoleReader consoleReader, Environment environment) {
 		super(consoleReader, environment);
@@ -72,13 +70,13 @@ public class InstallBundlesCommand extends DepotAbstractCommand {
 		
 		if ( args.length > 1 ) {
 			// ib aaa bbb  
-			if ( checkHomeDirectoryDefined() && checkGitHubStoreDefined() ) {
+			if ( checkHomeDirectoryDefined() ) {
 				installBundles(args);
 			}
 			return null ;
-		}
+		} 
 		else {
-			// ib 
+			// no argument 
 			return "Invalid usage";
 		}
 	}

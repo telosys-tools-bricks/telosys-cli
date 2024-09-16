@@ -18,30 +18,28 @@ package org.telosys.tools.cli.commands;
 import java.util.List;
 
 import org.telosys.tools.api.InstallationType;
-import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.Color;
-import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.Filter;
+import org.telosys.tools.cli.commands.commons.DepotAbstractCommand;
 import org.telosys.tools.commons.TelosysToolsException;
-import org.telosys.tools.commons.depot.DepotRateLimit;
 import org.telosys.tools.commons.depot.DepotResponse;
 
 import jline.console.ConsoleReader;
 
 /**
- * Install Model(s) Examples : im * -> install all bundles from GitHub im car
- * --> install all the bundles containing "java" or "rest"
+ * Install Model(s) 
+ * Examples : 
+ *   im *    --> install all models from the depot 
+ *   im car  --> install all the models containing "car"
  * 
  * @author Laurent GUERIN
  *
  */
-public class InstallModelsCommand extends CommandLevel2 {
+public class InstallModelsCommand extends DepotAbstractCommand {
 
 	/**
 	 * Constructor
-	 * 
-	 * @param out
+	 * @param consoleReader
+	 * @param environment
 	 */
 	public InstallModelsCommand(ConsoleReader consoleReader, Environment environment) {
 		super(consoleReader, environment);
@@ -54,12 +52,12 @@ public class InstallModelsCommand extends CommandLevel2 {
 
 	@Override
 	public String getShortDescription() {
-		return "Install Models";
+		return "Install Model(s)";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Install models from the depot ";
+		return "Install model(s) from the depot ";
 	}
 
 	@Override
@@ -71,96 +69,30 @@ public class InstallModelsCommand extends CommandLevel2 {
 	public String execute(String[] args) {
 
 		if (args.length > 1) {
-			// ib aaa bbb
-			if (checkHomeDirectoryDefined() && checkGitHubStoreDefined()) {
+			// im aaa bbb
+			if ( checkHomeDirectoryDefined() ) {
 				install(args);
 			}
 			return null;
-		} else {
-			// ib
+		}
+		else {
+			// no argument 
 			return "Invalid usage";
 		}
 	}
 
 	private void install(String[] args) {
 		// SUGGESTION: if already exists : prompt "overwrite ? [y/n] : "
-//		TelosysProject telosysProject = getTelosysProject();
-
-		String depotName = getCurrentGitHubStore();
-
-//		DepotResponse depotResponse;
+		String depotName = getTelosysProject().getTelosysToolsCfg().getDepotNameForModels(); 
 		try {
 			DepotResponse depotResponse = getTelosysProject().getModelsAvailableInDepot(depotName); 
 			if (isDepotResponseOK(depotResponse)) {
 				List<String> criteria = buildCriteriaFromArgs(args);
-				filterAndInstallSearchResult("model", depotName, depotResponse, criteria);
+				filterAndInstallSearchResult("model", depotName, depotResponse, criteria, InstallationType.MODEL);
 			}
 		} catch (TelosysToolsException e) {
 			printError(e);
-		}
-//		// Filter bundles names if args
-//		List<String> allBundles = depotResponse.getElementNames();
-//		List<String> bundles = Filter.filter(allBundles, buildCriteriaFromArgs(args));
-//
-//		// Install bundles
-//		if (bundles != null && !bundles.isEmpty()) {
-//			print("Installing " + bundles.size() + " bundle(s) from repository... ");
-//			for (String bundleName : bundles) {
-//				try {
-//					if (telosysProject.downloadAndInstallBundle(githubStoreName, bundleName)) {
-//						print(" . '" + bundleName + "' : installed. ");
-//					} else {
-//						print(" . '" + bundleName + "' : not installed (already exists). ");
-//					}
-//				} catch (TelosysToolsException e) {
-//					print(" . '" + bundleName + "' : ERROR : " + e.getMessage());
-//				}
-//			}
-//		} else {
-//			print("No bundle found in repository.");
-//		}
+		}		
 	}
 
-	protected void filterAndInstallSearchResult(String elementTypeName, String depotName, DepotResponse depotResponse, List<String> criteria) {
-		// Filter elements (models or bundles) with criteria if any
-		List<String> elements = Filter.filter(depotResponse.getElementNames(), criteria);
-		if ( ! elements.isEmpty()) {
-			print("Installing " + elements.size() + " " + elementTypeName + "(s) from depot... ");
-			for (String element : elements) {
-				try {
-					if ( getTelosysProject().downloadAndInstall(depotName, element, InstallationType.MODEL) ) {
-						print(" . '" + element + "' : installed. ");
-					} else {
-						print(" . '" + element + "' : not installed (already exists). ");
-					}
-				} catch (TelosysToolsException e) {
-					print(" . '" + element + "' : ERROR : " + e.getMessage());
-				}
-			}
-		} else {
-			print("No " + elementTypeName + " found in depot.");
-		}
-	}
-
-	protected boolean isDepotResponseOK(DepotResponse depotResponse) {
-		if (depotResponse.getHttpStatusCode() == 200) {
-			return true; // OK
-		} else {
-			if (depotResponse.getHttpStatusCode() == 403) {
-				String msg = "API request refused : http status '" + depotResponse.getHttpStatusCode() + "'";
-				print(Color.colorize(msg, Color.RED_BRIGHT));
-				DepotRateLimit rateLimit = depotResponse.getRateLimit();
-				print("API rate limit status : ");
-				print(" . remaining : " + rateLimit.getRemaining());
-				print(" . limit     : " + rateLimit.getLimit());
-				print(" . reset     : " + rateLimit.getReset());
-			} else {
-				String msg = "Unexpected http status '" + depotResponse.getHttpStatusCode() + "'";
-				print(Color.colorize(msg, Color.RED_BRIGHT));
-				print("Depot: " + depotResponse.getDepotName());
-				print("URL: " + depotResponse.getDepotURL());
-			}
-			return false; // NOT OK
-		}
-	}
 }

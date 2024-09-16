@@ -562,30 +562,30 @@ public abstract class Command {
 		}
 	}
 	
-	//-------------------------------------------------------------------------
-	// GitHub store
-	//-------------------------------------------------------------------------
-	protected boolean checkGitHubStoreDefined() {
-		if ( environment.getCurrentGitHubStore() != null ) {
-			return true ;
-		}
-		else {
-			print( "GitHub store undefined (can be set with 'gh' command)" ) ;
-			return false ;
-		}
-	}	
-	
-	protected void setCurrentGitHubStore(String storeName) {
-		environment.setCurrentGitHubStore(storeName);
-	}
-
-	protected String getCurrentGitHubStore() {
-		return environment.getCurrentGitHubStore();
-	}
-	
-	protected String getDefaultGitHubStore() {
-		return environment.getDefaultGitHubStore();
-	}
+//	//-------------------------------------------------------------------------
+//	// GitHub store
+//	//-------------------------------------------------------------------------
+//	protected boolean checkGitHubStoreDefined() {
+//		if ( environment.getCurrentGitHubStore() != null ) {
+//			return true ;
+//		}
+//		else {
+//			print( "GitHub store undefined (can be set with 'gh' command)" ) ;
+//			return false ;
+//		}
+//	}	
+//	
+//	protected void setCurrentGitHubStore(String storeName) {
+//		environment.setCurrentGitHubStore(storeName);
+//	}
+//
+//	protected String getCurrentGitHubStore() {
+//		return environment.getCurrentGitHubStore();
+//	}
+//	
+//	protected String getDefaultGitHubStore() {
+//		return environment.getDefaultGitHubStore();
+//	}
 	
 	//-------------------------------------------------------------------------
 	//-------------------------------------------------------------------------

@@ -101,7 +101,7 @@ public class EnvCommand extends Command {
 		appendLine(sb, ". Current directory     : " + environment.getCurrentDirectory() );
 		appendLine(sb, ". Current model         : " + undefinedIfNull(environment.getCurrentModel()) );
 		appendLine(sb, ". Current bundle        : " + undefinedIfNull(environment.getCurrentBundle()) );
-		appendLine(sb, ". Current GitHub store  : " + undefinedIfNull(environment.getCurrentGitHubStore()) );
+		// appendLine(sb, ". Current GitHub store  : " + undefinedIfNull(environment.getCurrentGitHubStore()) ); // removed in v 4.2.0
 		
 		appendLine(sb, ". CLI config file       : " + telosysCliCfgAbsolutePath );
 		appendLine(sb, ". Editor command        : " + undefinedIfNull(environment.getEditorCommand()) );
