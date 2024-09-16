@@ -42,7 +42,6 @@ import org.telosys.tools.cli.commands.ExitCommand;
 import org.telosys.tools.cli.commands.FileExplorerCommand;
 import org.telosys.tools.cli.commands.GenBatchCommand;
 import org.telosys.tools.cli.commands.GenerateCommand;
-import org.telosys.tools.cli.commands.GitHubUserCommand;
 import org.telosys.tools.cli.commands.HelpCommand;
 import org.telosys.tools.cli.commands.HomeCommand;
 import org.telosys.tools.cli.commands.InitCommand;
@@ -138,8 +137,8 @@ public class CommandProvider {
 		register(new DeleteEntityCommand(consoleReader, environment)); // de : delete entity
 		
 		// GitHub store management
-//		register(new GitHubCommand(consoleReader, environment)); // gh : gh [store-name] // removed in ver 4.2.0
-		register(new GitHubUserCommand(consoleReader, environment)); // ghu : ghu user-name
+//		register(new GitHubCommand(consoleReader, environment));     // gh  : gh [store-name]  // removed in ver 4.2.0
+//		register(new GitHubUserCommand(consoleReader, environment)); // ghu : ghu user-name    // removed in ver 4.2.0
 //		register(new ListGitHubCommand(consoleReader, environment)); // lgh [filter-criteria]  // replaced by "lbd" command - v 4.2.0
 		register(new CheckGitHubCommand(consoleReader, environment)); // cgh 
 		

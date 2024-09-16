@@ -94,43 +94,4 @@ public class InstallBundlesCommand extends DepotAbstractCommand {
 		}		
 	}
 	
-//	private void installBundles(String[] args) {
-//		// SUGGESTION: if already exists : prompt "overwrite ? [y/n] : "
-//		TelosysProject telosysProject = getTelosysProject();
-//		
-//		String githubStoreName = getCurrentGitHubStore() ;
-//		
-//		// Get bundles from GitHub 
-//		DepotResponse depotResponse;
-//		try {
-//			depotResponse = getTelosysProject().getBundlesAvailableInDepot(githubStoreName); // v 4.2.0			
-//		} catch (TelosysToolsException e) {
-//			printError(e);
-//			return ;
-//		}
-//		// Filter bundles names if args		
-//		List<String> allBundles = depotResponse.getElementNames();
-//		List<String> bundles = Filter.filter(allBundles, buildCriteriaFromArgs(args));
-//
-//		// Install  bundles		
-//		if ( bundles != null && ! bundles.isEmpty() ) {
-//			print( "Installing " + bundles.size() + " bundle(s) from repository... ");
-//			for ( String bundleName : bundles ) {
-//				try {
-//					if ( telosysProject.downloadAndInstallBundle(githubStoreName, bundleName) ) {
-//						print( " . '" + bundleName + "' : installed. ");
-//					}
-//					else {
-//						print( " . '" + bundleName + "' : not installed (already exists). ");
-//					}
-//				} catch (TelosysToolsException e) {
-//					print( " . '" + bundleName + "' : ERROR : " + e.getMessage() );
-//				}
-//			}
-//		}
-//		else {
-//			print("No bundle found in repository.") ;
-//		}
-//	}
-	
 }
