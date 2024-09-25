@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.commons.TelosysToolsException;
 
 import jline.console.ConsoleReader;
 
@@ -70,51 +71,46 @@ public class DeleteModelCommand extends CommandLevel2 {
 			// 1 : dm -y | dm model-name
 			// 2 : dm model-name -y
 			if ( checkArguments(commandArguments, 0, 1, 2 ) && checkOptions(commandArguments, COMMAND_OPTIONS) ) {
-//				String[] newArgs = registerAndRemoveYesOption(args);
-//				// newArgs = args without '-y' if any
-//				execute2(newArgs);
 				Set<String> activeOptions = getOptions(commandArguments);
 				registerYesOptionIfAny(activeOptions);
 				List<String> argsWithoutOptions = removeOptions(commandArguments);
 				executeDeleteModel(argsWithoutOptions);
-				
 			}
 		}
 		return null ;
 	}
 
-//	private void execute2(String[] args) {
-//		File modelFolder = findModelFolder(args);
-//		if ( modelFolder != null) {
-//			deleteModel(modelFolder);
-//		}
-//	}
-	private void executeDeleteModel(List<String> args) {
+	private void executeDeleteModel(List<String> argsWithoutOptions) {
 		File modelFolder = null;
-		if ( args.size() == 0 ) {
+		if ( argsWithoutOptions.isEmpty() ) {
 			// dm  (no arg) => delete current model if any
 			if ( checkModelDefined() ) {
 				modelFolder = getCurrentModelFolder();
 			}
 		}
-		else if ( args.size() == 1 ) {
+		else if ( argsWithoutOptions.size() == 1 ) {
 			// dm model-name => find model
-			modelFolder = findModelFolder(args.get(0));
+			modelFolder = findModelFolder(argsWithoutOptions.get(0));
 		}
 		else {
 			print("invalid arguments"); // not supposed to happen
 			return;
 		}
 		if ( modelFolder != null ) {
-			deleteModel(modelFolder);
+			try {
+				deleteModel(modelFolder);
+			} catch (TelosysToolsException e) {
+				print("ERROR: Cannot delete model '" + modelFolder.getName() + "'" ); 
+				print("Cause: " + e.getMessage());
+			}
 		}
 	}
 
-	private void deleteModel(File modelFolder) {
+	private void deleteModel(File modelFolder) throws TelosysToolsException {
 		String modelName = modelFolder.getName();
 		if ( confirm("Do you really want to delete model '" + modelName + "'") ) {
 			// delete model
-			getTelosysProject().deleteDslModel(modelFolder);
+			getTelosysProject().deleteModel(modelFolder);
 			// If the current model has been deleted => update env & prompt
 			if ( isCurrentModel(modelName) ) {
 				unsetCurrentModel();

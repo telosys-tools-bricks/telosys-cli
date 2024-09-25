@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.commons.TelosysToolsException;
 
 import jline.console.ConsoleReader;
 
@@ -69,9 +70,6 @@ public class DeleteBundleCommand extends CommandLevel2 {
 			// 1 : db -y | db bundle-name
 			// 2 : db bundle-name -y
 			if ( checkArguments(commandArguments, 0, 1, 2 ) && checkOptions(commandArguments, COMMAND_OPTIONS) ) {
-//				List<String> newArgs = registerAndRemoveYesOption(commandArguments);
-//				// newArgs = args without '-y' if any
-//				executeDeleteBundle(newArgs);
 				Set<String> activeOptions = getOptions(commandArguments);
 				registerYesOptionIfAny(activeOptions);
 				List<String> argsWithoutOptions = removeOptions(commandArguments);
@@ -81,87 +79,34 @@ public class DeleteBundleCommand extends CommandLevel2 {
 		return null ;
 	}
 
-//	public void executeDeleteBundle(List<String> args) {
-//		if ( args.size() > 1 ) {
-//			getAndDeleteBundles(args);
-//		}
-//		else {
-//			if ( checkBundleDefined() ) {
-//				// Current bundle is defined => delete the current bundle
-//				String currentBundle = getCurrentBundle();
-//				print("You are about to delete the current bundle :") ;
-//				print(" . " + currentBundle) ;
-//				if ( confirm("Do you really want to delete this bundle ?") ) {
-//					deleteBundle(currentBundle);
-//				}
-//			}
-//		}
-//	}
-
 	private void executeDeleteBundle(List<String> argsWithoutOptions) {
-		File folder = null;
+		File bundleFolder = null;
 		if ( argsWithoutOptions.isEmpty() ) {
 			// db  (no arg) => delete current bundle if any
 			if ( checkBundleDefined() ) {
-				folder = getCurrentBundleFolder();
+				bundleFolder = getCurrentBundleFolder();
 			}
 		}
 		else if ( argsWithoutOptions.size() == 1 ) {
 			// db bundle-name => find bundle
-			folder = findBundleFolder(argsWithoutOptions.get(0));
+			bundleFolder = findBundleFolder(argsWithoutOptions.get(0));
 		}
 		else {
 			print("invalid arguments"); // not supposed to happen
 			return;
 		}
-		if ( folder != null ) {
-			deleteBundle(folder);
+		if ( bundleFolder != null ) {
+			try {
+				deleteBundle(bundleFolder);
+			} catch (TelosysToolsException e) {
+				print("ERROR: Cannot delete bundle '" + bundleFolder.getName() + "'" ); 
+				print("Cause: " + e.getMessage());
+				
+			}
 		}
 	}
 
-	
-//	private void getAndDeleteBundles(List<String> args) {
-//		try {
-//			// Get bundles matching the given name parts
-////			List<String> bundleNames = getInstalledBundles(args);
-//			List<String> bundleNames = getBundleNames(args);
-//			getBundle
-//			if ( bundleNames.isEmpty() ) {
-//				print("No bundle found.") ;
-//			}
-//			else {
-//				print("You are about to delete the following bundles :") ;
-//				printList(bundleNames) ;
-//				if ( confirm("Do you really want to delete these bundles ?") ) {
-//					for ( String bundleName : bundleNames ) {
-//						deleteBundle(bundleName);
-//					}
-//				}
-//			}
-//		} catch (TelosysToolsException e) {
-//			printError(e);
-//		}
-//	}
-
-//	private void deleteBundle(String bundleName) {
-//
-//		TelosysProject telosysProject = getTelosysProject();
-//		try {
-//			if ( telosysProject.deleteBundle(bundleName) ) {
-//				print("Bundle '"+ bundleName + "' deleted.");
-//				if ( bundleName.equals(getCurrentBundle()) ) {
-//					// If current bundle deleted => unset current bundle
-//					unsetCurrentBundle();
-//				}
-//			}
-//			else {
-//				print("Bundle '"+ bundleName + "' not found.");
-//			}
-//		} catch (TelosysToolsException e) {
-//			printError(e);
-//		}
-//	}
-	private void deleteBundle(File bundleFolder) {
+	private void deleteBundle(File bundleFolder) throws TelosysToolsException {
 		String bundleName = bundleFolder.getName();
 		if ( confirm("Do you really want to delete bundle '" + bundleName + "'") ) {
 			// delete 
