@@ -82,7 +82,7 @@ public abstract class DepotAbstractCommand extends CommandLevel2 {
 			printElements(elementsTypeName, depotName, elements);
 			// Print current API rate limit returned by GitHub 
 			DepotRateLimit rateLimit = depotResponse.getRateLimit();
-			print("API rate limit : "+ rateLimit.getRemaining() + "/" + rateLimit.getLimit() ) ; 
+			print("API rate limit : "+ rateLimit.getRemaining() + "/" + rateLimit.getLimit() + " (http status : " + depotResponse.getHttpStatusCode()+ ")") ; 
 		}
 	}
 	
