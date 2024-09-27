@@ -70,7 +70,7 @@ public class CfgCommand extends CommandLevel2 {
 
 		print("Current project configuration (from file 'telosys-tools.cfg')");
 		
-		print("FOLDERS (standard variables) : ");
+		print("STANDARD PROJECT VARIABLES : ");
 		print(". Sources         ${SRC}      : " + cfg.getSRC() );
 		print(". Resources       ${RES}      : " + cfg.getRES() );
 		print(". Web content     ${WEB}      : " + cfg.getWEB());
@@ -78,8 +78,6 @@ public class CfgCommand extends CommandLevel2 {
 		print(". Tests resources ${TEST_RES} : " + cfg.getTEST_RES());
 		print(". Documentation   ${DOC}      : " + cfg.getDOC());
 		print(". Temporary files ${TMP}      : " + cfg.getTMP());
-		
-		print("PACKAGES (standard variables) : ");
 		print(". Root package     ${ROOT_PKG}   : " + cfg.getRootPackage());
 		print(". Entities package ${ENTITY_PKG} : " + cfg.getEntityPackage());
 		
@@ -90,9 +88,13 @@ public class CfgCommand extends CommandLevel2 {
 		}
 		
 		// Advanced configuration
-		print("SPECIFIC LOCATIONS : ");
-		print(". Templates folder              : " + cfg.getSpecificTemplatesFolderAbsolutePath() );
-		print(". Generation destination folder : " + cfg.getSpecificDestinationFolder() );
+		print("SPECIFIC CONFIGURATION : ");
+//		print(". Templates directory    : " + cfg.getSpecificTemplatesFolderAbsolutePath() );
+//		print(". Generation destination : " + cfg.getSpecificDestinationFolder() );
+		print(". Templates directory    : " + cfg.getTemplatesFolderAbsolutePath() );
+		print(". Generation destination : " + cfg.getDestinationFolderAbsolutePath() );
+		print(". Depot name for models  : " + cfg.getDepotNameForModels() );
+		print(". Depot name for bundles : " + cfg.getDepotNameForBundles() );
 		
 	}
 }
