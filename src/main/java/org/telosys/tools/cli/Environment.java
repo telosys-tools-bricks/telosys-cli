@@ -34,8 +34,6 @@ public class Environment {
 	private static final String EDITOR_COMMAND        = "EditorCommand" ;
 	private static final String FILE_EXPLORER_COMMAND = "FileExplorerCommand" ; // v 4.1.0
 			
-	private static final String DEFAULT_GITHUB_STORE = "telosys-templates" ; // "telosys-templates-v3" replaced by "telosys-templates" in v 4.1.0
-	
 	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
 	// unchangeable attributes
@@ -53,7 +51,6 @@ public class Environment {
 	// alterable attributes
 	private       String homeDirectory ;
 	private       String currentDirectory ;
-	private       String currentGitHubStore = DEFAULT_GITHUB_STORE ;
 	private       String currentModel ;
 	private       String currentBundle ;
 	
@@ -83,7 +80,6 @@ public class Environment {
 		this.homeDirectory      = null ;
 		this.currentModel       = null ;
 		this.currentBundle      = null ;
-		this.currentGitHubStore = DEFAULT_GITHUB_STORE ;
 	}
 	
 	/**
@@ -269,34 +265,6 @@ public class Environment {
 		// else unchanged
 	}
 
-//	//---------------------------------------------------------------------------------
-//	// Current GITHUB STORE  (removed in v 4.2.0)
-//	//---------------------------------------------------------------------------------
-//	/**
-//	 * Returns the default GitHub store name ( eg "telosys-templates" )
-//	 * @return
-//	 */
-//	public String getDefaultGitHubStore() {
-//		return DEFAULT_GITHUB_STORE ;
-//	}
-//
-//	/**
-//	 * Returns the current GitHub store name
-//	 * @return
-//	 */
-//	public String getCurrentGitHubStore() {
-//		return currentGitHubStore;
-//	}
-//
-//	/**
-//	 * Set the current GitHub store name
-//	 * @param github
-//	 */
-//	public void setCurrentGitHubStore(String github) {
-//		this.currentGitHubStore = github;
-//		saveCurrentEnvironment();
-//	}
-
 	//---------------------------------------------------------------------------------
 	// Current MODEL
 	//---------------------------------------------------------------------------------
@@ -343,7 +311,6 @@ public class Environment {
 	private static final String ENV_FILE_NAME  = "telosys.env" ;
 	private static final String MODEL  = "model" ;
 	private static final String BUNDLE = "bundle" ;
-	private static final String GITHUBSTORE = "githubstore" ;
 	
 	/**
 	 * Returns the current environment properties file <br>
@@ -374,7 +341,6 @@ public class Environment {
 			Properties properties = new Properties();
 			putIfNotNull(properties, MODEL, this.currentModel);
 			putIfNotNull(properties, BUNDLE, this.currentBundle);
-			putIfNotNull(properties, GITHUBSTORE, this.currentGitHubStore);
 			
 			PropertiesManager pm = new PropertiesManager(file);
 			pm.save(properties);
@@ -391,7 +357,6 @@ public class Environment {
 		// Reset all the default values 
 		this.currentModel = null ;
 		this.currentBundle = null ;
-		this.currentGitHubStore = DEFAULT_GITHUB_STORE ;
 		// Try to restore if possible 
 		restoreCurrentEnvironment();
 	}
@@ -408,7 +373,6 @@ public class Environment {
 			
 			this.currentModel = properties.getProperty(MODEL); // null if not found
 			this.currentBundle = properties.getProperty(BUNDLE); // null if not found
-			this.currentGitHubStore = properties.getProperty(GITHUBSTORE); // null if not found
 		}
 	}
 }
