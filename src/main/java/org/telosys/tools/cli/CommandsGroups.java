@@ -81,6 +81,7 @@ public class CommandsGroups {
 		// commands.add("gh"); // removed in v 4.2.0
 		// commands.add("ghu"); // removed in v 4.2.0
 		// commands.add("lgh"); // replaced by "lbd" in v 4.2.0
+		commands.add("ght"); // added in ver 4.2.0
 		commands.add("cgh");
 		return new CommandsGroup(name, commands);
 	}

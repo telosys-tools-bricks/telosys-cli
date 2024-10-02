@@ -17,6 +17,7 @@ package org.telosys.tools.cli.commands;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.telosys.tools.cli.Color;
 import org.telosys.tools.cli.CommandLevel2;
@@ -55,15 +56,17 @@ public class CheckGitHubCommand extends CommandLevel2 {
 	
 	@Override
 	public String getUsage() {
-		return "cgh";
+		return "cgh [-v]";
 	}
 	
 	@Override
 	public String execute(String[] args) {
-		if ( checkHomeDirectoryDefined() ) {
+		List<String> commandArguments = getArgumentsAsList(args);
+		if ( checkHomeDirectoryDefined() && checkArguments(commandArguments, 0, 1) ) {
 			try {
 				GitHubRateLimitResponse response = getTelosysProject().getGitHubRateLimit();
-				printResponse(response);
+				boolean verbose =  !commandArguments.isEmpty() && "-v".equals(commandArguments.get(0)) ;
+				printResponse(response, verbose);
 			} catch (TelosysToolsException e) {
 				printError(e);
 			}
@@ -75,7 +78,7 @@ public class CheckGitHubCommand extends CommandLevel2 {
 	/**
 	 * @param response
 	 */
-	private void printResponse(GitHubRateLimitResponse response) {
+	private void printResponse(GitHubRateLimitResponse response, boolean verbose) {
 		String remaining = response.getRemaining();
 		int remainingValue = StrUtil.getInt(response.getRemaining(), 9999);
 		if ( remainingValue > 0 && remainingValue < 10 ) {
@@ -87,6 +90,7 @@ public class CheckGitHubCommand extends CommandLevel2 {
 		SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss");
 		String hhmmss = fmt.format(new Date());
 		print( "GitHub is responding." ); 
+		print( httpStatusWithColor(response) ); 
 		print( "Current API rate limit (at " + hhmmss + ") : " ); 
 		print( " . remaining  : " + remaining ); 
 		print( " . limit      : " + response.getLimit() ); 
@@ -95,5 +99,16 @@ public class CheckGitHubCommand extends CommandLevel2 {
 		if ( remainingValue == 0 ) {
 			print( Color.colorize("API rate limit has been reached!", Color.RED_BRIGHT ) );
 		}
+		if ( verbose ) {
+			print( "Response body:" ); 
+			print( response.getResponseBody() ); 
+		}
+	}
+	private String httpStatusWithColor(GitHubRateLimitResponse response) {
+		String s = "HTTP status : " + response.getHttpStatusCode();
+		if ( response.getHttpStatusCode() != 200 ) {
+			return Color.colorize(s, Color.RED_BRIGHT );
+		}
+		return s ;
 	}
 }

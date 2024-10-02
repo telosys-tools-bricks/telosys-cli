@@ -42,6 +42,7 @@ import org.telosys.tools.cli.commands.ExitCommand;
 import org.telosys.tools.cli.commands.FileExplorerCommand;
 import org.telosys.tools.cli.commands.GenBatchCommand;
 import org.telosys.tools.cli.commands.GenerateCommand;
+import org.telosys.tools.cli.commands.GitHubTokenCommand;
 import org.telosys.tools.cli.commands.HelpCommand;
 import org.telosys.tools.cli.commands.HomeCommand;
 import org.telosys.tools.cli.commands.InitCommand;
@@ -140,6 +141,7 @@ public class CommandProvider {
 //		register(new GitHubCommand(consoleReader, environment));     // gh  : gh [store-name]  // removed in ver 4.2.0
 //		register(new GitHubUserCommand(consoleReader, environment)); // ghu : ghu user-name    // removed in ver 4.2.0
 //		register(new ListGitHubCommand(consoleReader, environment)); // lgh [filter-criteria]  // replaced by "lbd" command - v 4.2.0
+		register(new GitHubTokenCommand(consoleReader, environment)); // ght(added in ver 4.2.0)
 		register(new CheckGitHubCommand(consoleReader, environment)); // cgh 
 		
 /**
