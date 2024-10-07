@@ -109,11 +109,9 @@ public class GitHubTokenCommand extends Command {
 
 	private void removeGitHubToken() throws TelosysToolsException {
 		if ( TelosysGlobal.isGitHubTokenSet() ) {
-			if ( confirm("Do you want to remove the current GitHub token") ) {
-				// Remove token
-				TelosysGlobal.removeGitHubToken();
-				print("The token has been removed");
-			}
+			// Remove token
+			TelosysGlobal.removeGitHubToken();
+			print("The token has been removed");
 		}
 		else {
 			print("No GitHub token");
