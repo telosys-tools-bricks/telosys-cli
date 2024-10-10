@@ -83,12 +83,12 @@ public class InstallModelsCommand extends DepotAbstractCommand {
 
 	private void install(String[] args) {
 		// SUGGESTION: if already exists : prompt "overwrite ? [y/n] : "
-		String depotName = getTelosysProject().getTelosysToolsCfg().getDepotNameForModels(); 
+		String depot = getTelosysProject().getTelosysToolsCfg().getDepotForModels(); 
 		try {
-			DepotResponse depotResponse = getTelosysProject().getModelsAvailableInDepot(depotName); 
+			DepotResponse depotResponse = getTelosysProject().getModelsAvailableInDepot(depot); 
 			if (isDepotResponseOK(depotResponse)) {
 				List<String> criteria = buildCriteriaFromArgs(args);
-				filterAndInstallSearchResult("model", depotName, depotResponse, criteria, InstallationType.MODEL);
+				filterAndInstallSearchResult("model", depot, depotResponse, criteria, InstallationType.MODEL);
 			}
 		} catch (TelosysToolsException e) {
 			printError(e);

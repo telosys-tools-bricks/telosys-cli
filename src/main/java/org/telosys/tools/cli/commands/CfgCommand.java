@@ -89,12 +89,9 @@ public class CfgCommand extends CommandLevel2 {
 		
 		// Advanced configuration
 		print("SPECIFIC CONFIGURATION : ");
-//		print(". Templates directory    : " + cfg.getSpecificTemplatesFolderAbsolutePath() );
-//		print(". Generation destination : " + cfg.getSpecificDestinationFolder() );
 		print(". Templates directory    : " + cfg.getTemplatesFolderAbsolutePath() );
 		print(". Generation destination : " + cfg.getDestinationFolderAbsolutePath() );
-		print(". Depot name for models  : " + cfg.getDepotNameForModels() );
-		print(". Depot name for bundles : " + cfg.getDepotNameForBundles() );
-		
+		print(". Depot for models       : " + cfg.getDepotForModels() );
+		print(". Depot for bundles      : " + cfg.getDepotForBundles() );
 	}
 }

@@ -82,12 +82,12 @@ public class InstallBundlesCommand extends DepotAbstractCommand {
 	}
 		
 	private void installBundles(String[] args) {
-		String depotName = getTelosysProject().getTelosysToolsCfg().getDepotNameForBundles(); 
+		String depot = getTelosysProject().getTelosysToolsCfg().getDepotForBundles(); 
 		try {
-			DepotResponse depotResponse = getTelosysProject().getBundlesAvailableInDepot(depotName); 
+			DepotResponse depotResponse = getTelosysProject().getBundlesAvailableInDepot(depot); 
 			if (isDepotResponseOK(depotResponse)) {
 				List<String> criteria = buildCriteriaFromArgs(args);
-				filterAndInstallSearchResult("bundle", depotName, depotResponse, criteria, InstallationType.BUNDLE);
+				filterAndInstallSearchResult("bundle", depot, depotResponse, criteria, InstallationType.BUNDLE);
 			}
 		} catch (TelosysToolsException e) {
 			printError(e);

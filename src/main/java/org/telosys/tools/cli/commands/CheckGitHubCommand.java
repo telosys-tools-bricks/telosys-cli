@@ -69,7 +69,7 @@ public class CheckGitHubCommand extends CommandLevel2 {
 		if ( checkHomeDirectoryDefined() && checkArguments(commandArguments, 0, 1) ) {
 			boolean verbose =  !commandArguments.isEmpty() && "-v".equals(commandArguments.get(0)) ;
 			TelosysToolsCfg telosysToolsCfg = getTelosysProject().getTelosysToolsCfg();
-			checkGitHub(telosysToolsCfg.getDepotNameForBundles(), telosysToolsCfg.getDepotNameForModels(), verbose);
+			checkGitHub(telosysToolsCfg.getDepotForBundles(), telosysToolsCfg.getDepotForModels(), verbose);
 		}
 		return null ;
 	}

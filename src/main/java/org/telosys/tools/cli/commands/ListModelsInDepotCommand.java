@@ -58,12 +58,12 @@ public class ListModelsInDepotCommand extends DepotAbstractCommand {
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
 			TelosysToolsCfg telosysToolsCfg = getTelosysProject().getTelosysToolsCfg();
-			String depotName = telosysToolsCfg.getDepotNameForModels();
+			String depot = telosysToolsCfg.getDepotForModels();
 			try {
 				// get all models using depot API (GitHub API)
-				DepotResponse depotResponse = getTelosysProject().getModelsAvailableInDepot(depotName); 
+				DepotResponse depotResponse = getTelosysProject().getModelsAvailableInDepot(depot); 
 				// filter and print the models found in depot 
-				filterAndPrintSearchResult("Models", depotName, depotResponse, buildCriteriaFromArgs(args));
+				filterAndPrintSearchResult("Models", depot, depotResponse, buildCriteriaFromArgs(args));
 			} catch (TelosysToolsException e) {
 				printError(e);
 			}

@@ -58,12 +58,12 @@ public class ListBundlesInDepotCommand extends DepotAbstractCommand {
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
 			TelosysToolsCfg telosysToolsCfg = getTelosysProject().getTelosysToolsCfg();
-			String depotName = telosysToolsCfg.getDepotNameForBundles(); 
+			String depot = telosysToolsCfg.getDepotForBundles(); 
 			try {
 				// get all bundles using depot API (GitHub API)
-				DepotResponse depotResponse = getTelosysProject().getBundlesAvailableInDepot(depotName); 
+				DepotResponse depotResponse = getTelosysProject().getBundlesAvailableInDepot(depot); 
 				// filter and print the bundles found in depot 
-				filterAndPrintSearchResult("Bundles", depotName, depotResponse, buildCriteriaFromArgs(args));
+				filterAndPrintSearchResult("Bundles", depot, depotResponse, buildCriteriaFromArgs(args));
 			} catch (TelosysToolsException e) {
 				printError(e);
 			}
