@@ -17,13 +17,17 @@ package org.telosys.tools.cli.commands;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.telosys.tools.cli.Color;
 import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.StrUtil;
 import org.telosys.tools.commons.TelosysToolsException;
+import org.telosys.tools.commons.cfg.TelosysToolsCfg;
+import org.telosys.tools.commons.depot.Depot;
 import org.telosys.tools.commons.github.GitHubRateLimitResponse;
 
 import jline.console.ConsoleReader;
@@ -63,17 +67,48 @@ public class CheckGitHubCommand extends CommandLevel2 {
 	public String execute(String[] args) {
 		List<String> commandArguments = getArgumentsAsList(args);
 		if ( checkHomeDirectoryDefined() && checkArguments(commandArguments, 0, 1) ) {
-			try {
-				GitHubRateLimitResponse response = getTelosysProject().getGitHubRateLimit();
-				boolean verbose =  !commandArguments.isEmpty() && "-v".equals(commandArguments.get(0)) ;
-				printResponse(response, verbose);
-			} catch (TelosysToolsException e) {
-				printError(e);
-			}
+			boolean verbose =  !commandArguments.isEmpty() && "-v".equals(commandArguments.get(0)) ;
+			TelosysToolsCfg telosysToolsCfg = getTelosysProject().getTelosysToolsCfg();
+			checkGitHub(telosysToolsCfg.getDepotNameForBundles(), telosysToolsCfg.getDepotNameForModels(), verbose);
 		}
 		return null ;
 	}
 	
+	private void checkGitHub(String depotForBundles, String depotForModels, boolean verbose) {
+		try {
+			Map<String,Depot> map = new HashMap<>(); // Unicity based on API Rate Limit URL
+			Depot depot1 = new Depot(depotForBundles);
+			if ( depot1.isGitHubDepot() ) {
+				map.put(depot1.getApiRateLimitUrl(), depot1);
+			}
+			Depot depot2 = new Depot(depotForModels);
+			if ( depot2.isGitHubDepot() ) {
+				map.put(depot2.getApiRateLimitUrl(), depot2);
+			}
+			if ( map.isEmpty() ) {
+				print("No GitHub depot, nothing to check.");
+			}
+			else {
+				int n = 0 ;
+				for (Depot d : map.values()) {
+					n++;
+					if ( n > 1 ) print("");
+					checkGitHubDepot(d, verbose);
+				}
+			}
+		} catch (TelosysToolsException e) {
+			printError(e);
+		}
+	}
+	private void checkGitHubDepot(Depot depot, boolean verbose) {
+		try {
+			print("Calling " + depot.getApiRateLimitUrl() ); 
+			GitHubRateLimitResponse response = getTelosysProject().checkGitHub(depot.getDefinition());
+			printResponse(response, verbose);
+		} catch (TelosysToolsException e) {
+			printError(e);
+		}
+	}
 	
 	/**
 	 * @param response
@@ -89,7 +124,7 @@ public class CheckGitHubCommand extends CommandLevel2 {
 		}
 		SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss");
 		String hhmmss = fmt.format(new Date());
-		print( "GitHub is responding." ); 
+		print( "Response from " + response.getUrl() ); 
 		print( httpStatusWithColor(response) ); 
 		print( "Current API rate limit (at " + hhmmss + ") : " ); 
 		print( " . remaining  : " + remaining ); 
