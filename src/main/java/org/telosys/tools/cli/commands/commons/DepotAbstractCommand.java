@@ -21,8 +21,8 @@ import org.telosys.tools.api.InstallationType;
 import org.telosys.tools.cli.Color;
 import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
-import org.telosys.tools.commons.Filter;
 import org.telosys.tools.commons.TelosysToolsException;
+import org.telosys.tools.commons.depot.DepotElement;
 import org.telosys.tools.commons.depot.DepotRateLimit;
 import org.telosys.tools.commons.depot.DepotResponse;
 
@@ -77,7 +77,7 @@ public abstract class DepotAbstractCommand extends CommandLevel2 {
 	protected void filterAndPrintSearchResult(String elementsTypeName, String depotName, DepotResponse depotResponse, List<String> criteria) {
 		if ( isDepotResponseOK(depotResponse) ) {
 			// Filter elements (models or bundles) with criteria if any
-			List<String> elements = Filter.filter(depotResponse.getElementNames(), criteria);
+			List<DepotElement> elements = depotResponse.filterElementsByName(criteria);
 			// Print the result
 			printElements(elementsTypeName, depotName, elements);
 			// Print current API rate limit returned by GitHub 
@@ -86,17 +86,11 @@ public abstract class DepotAbstractCommand extends CommandLevel2 {
 		}
 	}
 	
-	/**
-	 * Prints elements found in the depot
-	 * @param elementsTypeName
-	 * @param depotName
-	 * @param elements
-	 */
-	private void printElements(String elementsTypeName, String depotName, List<String> elements ) {
-		if ( elements != null && ! elements.isEmpty() ) {
+	private void printElements(String elementsTypeName, String depotName, List<DepotElement> elements) {
+		if ( ! elements.isEmpty() ) {
 			print( elementsTypeName + " found in depot '" + depotName + "' : ");
-			for ( String s : elements ) {
-				print( " . " + s);
+			for ( DepotElement e : elements ) {
+				print( " . " + e.getName() + "  ("+e.getVisibility()+") (default branch '" + e.getDefaultBranch() + "')");
 			}
 		}
 		else {
@@ -114,18 +108,18 @@ public abstract class DepotAbstractCommand extends CommandLevel2 {
 	 */
 	protected void filterAndInstallSearchResult(String elementTypeName, String depotName, DepotResponse depotResponse, List<String> criteria, InstallationType installationType) {
 		// Filter elements (models or bundles) with criteria if any
-		List<String> elements = Filter.filter(depotResponse.getElementNames(), criteria);
+		List<DepotElement> elements = depotResponse.filterElementsByName(criteria);
 		if ( ! elements.isEmpty()) {
 			print("Installing " + elements.size() + " " + elementTypeName + "(s) from depot... ");
-			for (String element : elements) {
+			for (DepotElement e : elements) {
 				try {
-					if ( getTelosysProject().downloadAndInstall(depotName, element, installationType) ) {
-						print(" . '" + element + "' : installed. ");
+					if ( getTelosysProject().downloadAndInstallBranch(depotName, e.getName(), e.getDefaultBranch(), installationType) ) {
+						print(" . '" + e.getName() + "' : installed. ");
 					} else {
-						print(" . '" + element + "' : not installed (already exists). ");
+						print(" . '" + e.getName() + "' : not installed (already exists). ");
 					}
-				} catch (TelosysToolsException e) {
-					print(" . '" + element + "' : ERROR : " + e.getMessage());
+				} catch (TelosysToolsException ex) {
+					print(" . '" + e.getName() + "' : ERROR : " + ex.getMessage());
 				}
 			}
 		} else {
