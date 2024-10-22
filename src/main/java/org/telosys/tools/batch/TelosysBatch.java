@@ -97,7 +97,7 @@ public class TelosysBatch {
 		String destDir1 = getProperty(p, "gen.destDir", false);
 		String destDir2 = destDir1 ;
 		if ( destDir1 != null ) {
-			destDir2 = StrUtil.replaceVar(destDir1, "${VER}", GeneratorVersion.GENERATOR_VERSION );
+			destDir2 = StrUtil.replaceVar(destDir1, "${VER}", GeneratorVersion.getVersion() );
 		}
 		if ( configErrors > 0 ) {
 			return ;
