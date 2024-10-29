@@ -63,7 +63,7 @@ public class ListModelsInDepotCommand extends DepotAbstractCommand {
 				// get all models using depot API (GitHub API)
 				DepotResponse depotResponse = getTelosysProject().getModelsAvailableInDepot(depot); 
 				// filter and print the models found in depot 
-				filterAndPrintSearchResult("Models", depot, depotResponse, buildCriteriaFromArgs(args));
+				filterAndPrintSearchResult("model", depot, depotResponse, buildCriteriaFromArgs(args));
 			} catch (TelosysToolsException e) {
 				printError(e);
 			}

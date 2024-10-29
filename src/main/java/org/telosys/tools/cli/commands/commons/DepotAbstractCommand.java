@@ -82,13 +82,18 @@ public abstract class DepotAbstractCommand extends CommandLevel2 {
 			printElements(elementsTypeName, depotName, elements);
 			// Print current API rate limit returned by GitHub 
 			DepotRateLimit rateLimit = depotResponse.getRateLimit();
-			print("API rate limit : "+ rateLimit.getRemaining() + "/" + rateLimit.getLimit() + " (http status : " + depotResponse.getHttpStatusCode()+ ")") ; 
+			print("API rate limit : "+ rateLimit.getRemaining() + "/" + rateLimit.getLimit() 
+				+ " (" + depotResponse.getNumberOfRequests() + " req, http status : " + depotResponse.getHttpStatusCode()+ ")") ; 
 		}
 	}
 	
 	private void printElements(String elementsTypeName, String depotName, List<DepotElement> elements) {
 		if ( ! elements.isEmpty() ) {
-			print( elementsTypeName + " found in depot '" + depotName + "' : ");
+			String elementName = elementsTypeName; // "bundle" or "model"
+			if ( elements.size() > 1 ) {
+				elementName = elementsTypeName + "s"; // plural : "bundles" or "models"
+			}
+			print( elements.size() + " " + elementName + " found in depot '" + depotName + "' : ");
 			for ( DepotElement e : elements ) {
 				print( " . " + e.getName() + "  ("+e.getVisibility()+") (default branch '" + e.getDefaultBranch() + "')");
 			}
