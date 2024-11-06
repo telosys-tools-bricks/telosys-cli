@@ -47,89 +47,61 @@ public abstract class CommandLevel2 extends Command {
 	//-----------------------------------------------------------------------------------------------
 	// MODELS 
 	//-----------------------------------------------------------------------------------------------
-	
-//	/**
-//	 * Try to found a unique model folder according with the first argument 
-//	 * or with the current model if no arg provided
-//	 * @param args
-//	 * @return
-//	 */
-//	protected File findModelFolder(String[] args) {
-//		File modelFolder = null ;
-//		if ( args.length > 1 ) {
-//			modelFolder = findModelFolder(args[1]);
-//		}
-//		else {
-//			if ( checkModelDefined() ) {
-//				return getCurrentModelFolder();
-//			}
-//		}
-//		return modelFolder ;
-//	}
-	
-	/**
-	 * Try to found a unique model folder according with the first argument 
-	 * or with the current model if no arg provided
-	 * @param args
-	 * @return
-	 */
-	protected File findModelFolder(List<String> args) {
-		File modelFolder = null ;
-		if ( ! args.isEmpty() ) {
-			modelFolder = findModelFolder(args.get(0));
+	private void printModelDoesntExists(String modelName) {
+		print("Model '" + modelName + "' doesn't exist!");
+		File f = getTelosysProject().getModelsFolder();
+		if ( f != null ) {
+			print("(models dir : " + f.getAbsolutePath() + ")");
 		}
 		else {
-			if ( checkModelDefined() ) {
-				return getCurrentModelFolder();
-			}
+			print("(models dir : undefined)");
 		}
-		return modelFolder ;
+		
 	}
 	
-//	/**
-//	 * Try to find the current model folder 
-//	 * @return
-//	 */
-//	protected File findModelFolder() {
-//		if ( checkModelDefined() ) {
-//			return getCurrentModelFolder();
-//		}
-//		return null ;
-//	}
-	
+	/**
+	 * Check model existence
+	 * @param modelName
+	 * @return
+	 * @since 4.2.0
+	 */
+	protected boolean checkModelExists(String modelName) {
+		if ( modelName != null ) {
+			if ( getTelosysProject().modelFolderExists(modelName) ) {
+				return true;
+			}
+			else {
+				printModelDoesntExists(modelName);
+				return false;
+			}
+		}
+		else {
+			// Not supposed to happen 
+			print("Model is undefined!"); 
+			return false;
+		}
+	}
+
+	/**
+	 * Check current model is defined and exists in the filesystem
+	 * @return
+	 * @since 4.2.0
+	 */
+	protected boolean checkCurrentModelDefinedAndExists() {
+		if ( checkModelDefined() ) {
+			return checkModelExists(getCurrentModel()); 
+		}
+		else {
+			return false;
+		}
+	}
+
 	/**
 	 * Try to found a unique model folder matching the given model name pattern
 	 * @param modelNamePattern
 	 * @return the model folder (or null if not found or not unique)
 	 */
 	protected File findModelFolder(String modelNamePattern) {
-//		List<File> allModelsInProject = getTelosysProject().getModels();
-//		// filter using pattern
-//		List<File> modelsFound = new LinkedList<>();
-//		for ( File f : allModelsInProject ) {
-//			if ( f.getName().equals(modelNamePattern) ) {
-//				// strict equality
-//				return f;
-//			}
-//			else {
-//				// check if contains a part of the given string
-//				if ( f.getName().contains(modelNamePattern) ) {
-//					modelsFound.add(f);
-//				}
-//			}
-//		}
-//		// filter result 
-//		if ( modelsFound.isEmpty() ) {
-//			print("No model for '" + modelNamePattern + "'") ;
-//		}
-//		else if ( modelsFound.size() > 1 ) {
-//			print("Ambiguous : " + modelsFound.size() + " models found") ;
-//		}
-//		else {
-//			// OK : only 1 model found
-//			return modelsFound.get(0);
-//		}
-//		return null ;
 		List<File> allModels = getTelosysProject().getModels();
 		return findFile(allModels, modelNamePattern, "model");		
 	}
@@ -173,7 +145,7 @@ public abstract class CommandLevel2 extends Command {
 			}
 		}
 		else {
-			print("Model '" + modelName + "' doesn't exist.") ;
+			printModelDoesntExists(modelName);
 		}
 		return null;
 	}
@@ -200,7 +172,8 @@ public abstract class CommandLevel2 extends Command {
 			return modelFolder ;
 		}
 		else {
-			print("Model folder '" + modelFolder.getName() + "' not found.");
+			// No model folder => doesn't exist
+			printModelDoesntExists(modelName);
 			return null;
 		}
 	}
@@ -257,6 +230,54 @@ public abstract class CommandLevel2 extends Command {
 	//-----------------------------------------------------------------------------------------------
 	// BUNDLES 
 	//-----------------------------------------------------------------------------------------------
+	private void printBundleDoesntExists(String bundleName) {
+		print("Bundle '" + bundleName + "' doesn't exist!");
+		File f = getTelosysProject().getBundlesFolder();
+		if ( f != null ) {
+			print("(bundles dir : " + f.getAbsolutePath() + ")");
+		}
+		else {
+			print("(bundles dir : undefined)");
+		}
+	}
+	
+	/**
+	 * Check bundle existence
+	 * @param bundleName
+	 * @return
+	 * @since 4.2.0
+	 */
+	protected boolean checkBundleExists(String bundleName) {
+		if ( bundleName != null ) {
+			if ( getTelosysProject().bundleFolderExists(bundleName) ) {
+				return true;
+			}
+			else {
+				printBundleDoesntExists(bundleName);
+				return false;
+			}
+		}
+		else {
+			// Not supposed to happen 
+			print("Bundle is undefined!"); 
+			return false;
+		}
+	}
+	
+	/**
+	 * Check current bundle is defined and exists in the filesystem
+	 * @return
+	 * @since 4.2.0
+	 */
+	protected boolean checkCurrentBundleDefinedAndExists() {
+		if ( checkBundleDefined() ) {
+			return checkBundleExists(getCurrentBundle()); 
+		}
+		else {
+			return false;
+		}
+	}
+	
 	protected File getCurrentBundleConfigFile() {
 		String bundleName = getCurrentBundle();
 		if ( bundleName != null ) {
@@ -267,7 +288,7 @@ public abstract class CommandLevel2 extends Command {
 	
 	/**
 	 * Try to find the bundle config file for the given bundle name (print errors if any)
-	 * @param bundleName the model name 
+	 * @param bundleName the bundle name 
 	 * @return the file (or null if not found) 
 	 */
 	private File getBundleConfigFile(String bundleName) {
@@ -282,7 +303,7 @@ public abstract class CommandLevel2 extends Command {
 			}
 		}
 		else {
-			print("Bundle '" + bundleName + "' doesn't exist.") ;
+			printBundleDoesntExists(bundleName);
 		}
 		return null;
 	}
@@ -301,26 +322,11 @@ public abstract class CommandLevel2 extends Command {
 			return bundleFolder ;
 		}
 		else {
-			print("Bundle folder '" + bundleFolder.getName() + "' not found.");
+			printBundleDoesntExists(bundleName);
 			return null;
 		}
 	}
 
-	
-//	/**
-//	 * Returns bundles installed in the current project and matching the given criteria
-//	 * @param criteria
-//	 * @return
-//	 * @throws TelosysToolsException
-//	 */
-//	protected final List<String> getInstalledBundles(List<String> criteria) throws TelosysToolsException {
-//		TelosysProject telosysProject = getTelosysProject();
-//		// get all installed bundles
-//		List<String> allBundles = telosysProject.getInstalledBundles();
-//		// filter bundles according with criteria
-//		return Filter.filter(allBundles, criteria);
-//	}
-	
 	/**
 	 * Try to found a unique bundle folder matching the given bundle name pattern
 	 * @param bundleNamePattern
@@ -353,21 +359,6 @@ public abstract class CommandLevel2 extends Command {
 		}
 	}
 
-	//-----------------------------------------------------------------------------------------------
-	// GITHUB 
-	//-----------------------------------------------------------------------------------------------
-
-//	/**
-//	 * @param githubStoreName
-//	 * @return
-//	 * @throws TelosysToolsException
-//	 */
-//	protected final BundlesFromGitHub getGitHubBundles(String githubStoreName) throws TelosysToolsException {
-//		TelosysProject telosysProject = getTelosysProject();
-////		return telosysProject.getGitHubBundlesList(githubStoreName);
-//		return getTelosysProject().getBundlesAvailableInDepot(githubStoreName);
-//	}
-	
 	//-----------------------------------------------------------------------------------------------
 	// COMMONS 
 	//-----------------------------------------------------------------------------------------------

@@ -17,14 +17,14 @@ package org.telosys.tools.cli.commands;
 
 import java.util.List;
 
-import jline.console.ConsoleReader;
-
-import org.telosys.tools.cli.Command;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commons.CriteriaUtil;
 import org.telosys.tools.cli.commons.TargetUtil;
 import org.telosys.tools.commons.bundles.TargetDefinition;
 import org.telosys.tools.commons.bundles.TargetsDefinitions;
+
+import jline.console.ConsoleReader;
 
 /**
  * Lists the templates for the current bundle
@@ -32,7 +32,7 @@ import org.telosys.tools.commons.bundles.TargetsDefinitions;
  * @author Laurent GUERIN
  *
  */
-public class ListTemplatesCommand extends Command {
+public class ListTemplatesCommand extends CommandLevel2 {
 	
 	public static final String COMMAND_NAME = "lt";
 
@@ -67,23 +67,20 @@ public class ListTemplatesCommand extends Command {
 	
 	@Override
 	public String execute(String[] argsArray) {
-		List<String> commandArguments = getArgumentsAsList(argsArray);
-		if ( checkArguments(commandArguments, 0, 1) && checkHomeDirectoryDefined() && checkBundleDefined() ) {
-			// listTemplates(args);
-			String patterns = commandArguments.isEmpty() ? null : commandArguments.get(0) ;
-			listTemplates(patterns);
+		if ( checkHomeDirectoryDefined() && checkCurrentBundleDefinedAndExists() ) {
+			List<String> commandArguments = getArgumentsAsList(argsArray);
+			if ( checkArguments(commandArguments, 0, 1) && checkHomeDirectoryDefined() && checkBundleDefined() ) {
+				String patterns = commandArguments.isEmpty() ? null : commandArguments.get(0) ;
+				listTemplates(patterns);
+			}
 		}
 		return null ;
 	}
 	
-//	private void listTemplates(String[] args) {
-//		TargetsDefinitions targetDefinitions = getCurrentTargetsDefinitions();
-//		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(args.length > 1 ? args[1] : null) ;
-//		List<TargetDefinition> selectedTargets = TargetUtil.filter(targetDefinitions.getTemplatesTargets(), criteria);
-//		print ( TargetUtil.buildListAsString(selectedTargets) );
-//	}
 	private void listTemplates(String patterns) {
+		// Get all templates for the current bundle
 		TargetsDefinitions targetDefinitions = getCurrentTargetsDefinitions();
+		// Apply filter with criteria
 		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(patterns) ;
 		List<TargetDefinition> selectedTargets = TargetUtil.filter(targetDefinitions.getTemplatesTargets(), criteria);
 		print ( TargetUtil.buildListAsString(selectedTargets) );

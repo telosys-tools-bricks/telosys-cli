@@ -71,19 +71,31 @@ public class NewModelCommand extends Command {
 		return null ;
 	}
 
+	private boolean modelAlreadyExists(String modelName) {
+		if ( getTelosysProject().modelFolderExists(modelName) ) {
+			print("Model '" + modelName + "' already exists");
+			return true;
+		}
+		return false;
+	}
+	
 	private void newModel(String modelName) {
-		getTelosysProject().createNewDslModel(modelName);
-		afterCreationOK(modelName);
+		if ( ! modelAlreadyExists(modelName) ) {
+			getTelosysProject().createNewDslModel(modelName);
+			afterCreationOK(modelName);
+		}
 	}
 
 	private void newModelFromDatabase(String modelName, String databaseId) {
-		try {
-			getTelosysProject().createNewDslModelFromDatabase(modelName, databaseId);
-			afterCreationOK(modelName);
-		} catch (TelosysToolsException e) {
-			LastError.setError(e);
-			print("Cannot create model '" + modelName + "'" );
-			print(e.getMessage());
+		if ( ! modelAlreadyExists(modelName) ) {
+			try {
+				getTelosysProject().createNewDslModelFromDatabase(modelName, databaseId);
+				afterCreationOK(modelName);
+			} catch (TelosysToolsException e) {
+				LastError.setError(e);
+				print("Cannot create model '" + modelName + "' from database '" + databaseId + "'");
+				print(e.getMessage());
+			}
 		}
 	}
 	

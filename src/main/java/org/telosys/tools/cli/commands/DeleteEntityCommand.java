@@ -16,12 +16,12 @@
 package org.telosys.tools.cli.commands;
 
 import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.Command;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 
 import jline.console.ConsoleReader;
 
-public class DeleteEntityCommand extends Command {
+public class DeleteEntityCommand extends CommandLevel2 {
 
 	/**
 	 * Constructor
@@ -53,7 +53,7 @@ public class DeleteEntityCommand extends Command {
 	
 	@Override
 	public String execute(String[] args) {
-		if ( checkModelDefined() ) {
+		if ( checkHomeDirectoryDefined() && checkCurrentModelDefinedAndExists() ) {
 			if ( args.length > 1 ) {
 				return deleteEntity(args[1]);
 			}

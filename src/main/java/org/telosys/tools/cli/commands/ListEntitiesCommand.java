@@ -58,29 +58,16 @@ public class ListEntitiesCommand extends CommandLevel2 {
 	
 	@Override
 	public String execute(String[] argsArray) {
-		List<String> commandArguments = getArgumentsAsList(argsArray);
-		
-		if ( checkArguments(commandArguments, 0, 1) && checkHomeDirectoryDefined() && checkModelDefined() ) {
-			//listEntities(args);
-			String patterns = commandArguments.isEmpty() ? null : commandArguments.get(0) ;
-			listEntities(patterns);
+		if ( checkHomeDirectoryDefined() && checkCurrentModelDefinedAndExists() ) {
+			List<String> commandArguments = getArgumentsAsList(argsArray);
+			if ( checkArguments(commandArguments, 0, 1) ) {
+				String patterns = commandArguments.isEmpty() ? null : commandArguments.get(0) ;
+				listEntities(patterns);
+			}
 		}
 		return null ;		
 	}
 	
-//	private void listEntities(String[] args) {
-//		// Get all entities for the current model
-//		List<String> entities = DslModelUtil.getEntityNames(getCurrentModelFolder());
-//		// Apply filter with criteria
-//		List<String> criteria = CriteriaUtil.buildCriteriaFromArg(args.length > 1 ? args[1] : null) ;
-//		List<String> result = CriteriaUtil.selectAndSort(entities, criteria);
-//		if ( result.isEmpty() ) {
-//			print("No entity");
-//		}
-//		else {
-//			printList( CriteriaUtil.selectAndSort(entities, criteria), " . " );
-//		}
-//	}
 	private void listEntities(String patterns) {
 		// Get all entities for the current model
 		List<String> entities = DslModelUtil.getEntityNames(getCurrentModelFolder());
@@ -95,9 +82,4 @@ public class ListEntitiesCommand extends CommandLevel2 {
 		}
 	}
 	
-//	protected void printList(List<String> list, String prefix) {
-//		for ( String s : list) {
-//			print(prefix + s );
-//		}
-//	}
 }

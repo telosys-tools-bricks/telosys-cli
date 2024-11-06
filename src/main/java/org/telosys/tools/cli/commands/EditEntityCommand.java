@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.List;
 
 import org.telosys.tools.api.TelosysProject;
-import org.telosys.tools.cli.Command;
+import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Const;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commons.FileFinder;
@@ -32,7 +32,7 @@ import jline.console.ConsoleReader;
  * @author Laurent GUERIN
  *
  */
-public class EditEntityCommand extends Command {
+public class EditEntityCommand extends CommandLevel2 {
 
 	/**
 	 * Constructor
@@ -64,7 +64,7 @@ public class EditEntityCommand extends Command {
 
 	@Override
 	public String execute(String[] args) {
-		if ( checkModelDefined() ) {
+		if ( checkHomeDirectoryDefined() && checkCurrentModelDefinedAndExists() ) {
 			if ( args.length > 1 ) {
 				return editEntity(args[1]);
 			}
