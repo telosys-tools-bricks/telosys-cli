@@ -8,19 +8,23 @@ Hey, developers!   Stop writing repetitive code, let Telosys do it for you!
 [![Twitter](https://img.shields.io/twitter/follow/telosys?label=Follow&style=social)](https://twitter.com/telosys)
 
 Telosys CLI allows to use all the features of the Telosys Core generator with a simple command line tool.
+It can be used with any editor or IDE.
+
 
 ## Links
 
-- [Telosys homepage](http://www.telosys.org)
-- [Telosys-CLI homepage](http://www.telosys.org/cli.html)
-- [Forum](https://muut.com/telosystools)
-- [Blog](http://telosys.blogspot.com/)
+- [Telosys web site](https://www.telosys.org)
+- [Telosys documentation](https://doc.telosys.org/)
 
 
 ## Features
-- Telosys project initialization
-- Models and templates management 
-- Code generation
+- Project initialization and configuration
+- Models creation (from scratch or from database)
+- Installing models from GitHub
+- Customizing models
+- Installing templates from GitHub
+- Customizing templates
+- Code generation for any language
 - Batch mode ( with "-i commands-file.txt" ) 
 
 
@@ -35,8 +39,6 @@ Please see [GNU LGPL v3](https://www.gnu.org/licenses/lgpl-3.0.en.html) for more
 
 :blue_heart: Like Telosys? Please consider supporting the project : 
 - :star: Add GitHub star on this page
-- :coffee: Buy a coffe with "Ko-fi" : [ko-fi.com/telosys](https://ko-fi.com/telosys)
-- :coffee: Buy a coffe with "Buy me a coffee" : [buymeacoffee.com/telosys](https://www.buymeacoffee.com/telosys)
-- :euro: Donate with PayPal : [paypal.me/telosys](https://www.paypal.me/telosys)
+- Follow Telosys on [LinkedIn](https://www.linkedin.com/company/telosys) 
 
 
