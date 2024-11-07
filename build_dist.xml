@@ -28,11 +28,13 @@
 		<echo message="Copy and prepare BAT file" />
 		<copy file="./tt.bat.txt" tofile="./tt.bat"  overwrite="true" />
 		<replace file="tt.bat" token="${VER}" value="${version}" summary="true" />
-		<copy file="./tt.bat" todir="./target"/>
+		<copy file="./tt.bat" tofile="./telosys.bat"  overwrite="true" />
+		<!-- <copy file="./tt.bat" todir="./target"/> -->
 		
 		<echo message="Copy and prepare SHELL file" />
 		<copy file="./tt.sh.txt" tofile="./tt"  overwrite="true" />
 		<replace file="tt"  token="${VER}" value="${version}" summary="true" />
+		<copy file="./tt" tofile="./telosys"  overwrite="true" />
 		
 		<echo message="Copy telosys-cli JAR file" />
 		<copy file="./target/telosys-cli-${version}.jar" tofile="./telosys-cli-${version}.jar" overwrite="true" />
@@ -47,12 +49,16 @@
 			<fileset dir="." includes="README.TXT"/>
 			<fileset dir="." includes="tt.bat"/>
 			<fileset dir="." includes="tt"/>
+			<fileset dir="." includes="telosys.bat"/>
+			<fileset dir="." includes="telosys"/>
 		</zip>
 
 		<echo message="Clean temp files" />
 		<delete file="./telosys-cli-${version}.jar"/>
 		<delete file="./tt.bat"/>
 		<delete file="./tt"/>
+		<delete file="./telosys.bat"/>
+		<delete file="./telosys"/>
 		
 	</target>
 
