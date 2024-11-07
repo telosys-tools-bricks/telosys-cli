@@ -1,4 +1,4 @@
-[![Logo](https://raw.githubusercontent.com/telosys-tools-doc/img/master/telosys-cli-banner-50.png)](http://www.telosys.org/cli.html)
+[![Logo](https://raw.githubusercontent.com/telosys-tools-doc/img/master/telosys-cli-banner-50.png)](https://www.telosys.org/cli.html)
 
 Hey, developers!   Stop writing repetitive code, let Telosys do it for you!
 
@@ -7,7 +7,7 @@ Hey, developers!   Stop writing repetitive code, let Telosys do it for you!
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 [![Twitter](https://img.shields.io/twitter/follow/telosys?label=Follow&style=social)](https://twitter.com/telosys)
 
-Telosys CLI allows to use all the features of the Telosys Core generator with a simple command line tool.
+Telosys CLI allows to use all the features of the Telosys Core generator with a simple command line tool.  
 It can be used with any editor or IDE.
 
 
@@ -40,5 +40,6 @@ Please see [GNU LGPL v3](https://www.gnu.org/licenses/lgpl-3.0.en.html) for more
 :blue_heart: Like Telosys? Please consider supporting the project : 
 - :star: Add GitHub star on this page
 - Follow Telosys on [LinkedIn](https://www.linkedin.com/company/telosys) 
+- Follow Telosys on [Twitter/X](https://twitter.com/telosys)
 
 
