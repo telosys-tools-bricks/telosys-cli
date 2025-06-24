@@ -66,7 +66,7 @@ public class VerCommand extends Command {
 		print("Telosys API   : " + TelosysApiVersion.getVersionWithBuilId()  );
 		print("Generator     : " + GeneratorVersion.getVersionWithBuilId()  );
 		print("Generic model : " + GenericModelVersion.VERSION  );
-		print("DSL model     : " + DslModelVersion.VERSION  );
+		print("DSL model     : " + DslModelVersion.getVersionWithBuilId()  );
 		print("Commons       : " + CommonsVersion.getVersionWithBuilId() ) ;
 		print("GitHub client : " + GitHubClient.VERSION ) ;
 		print("HTTP client   : " + HttpClient.VERSION ) ;
