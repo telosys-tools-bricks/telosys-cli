@@ -22,6 +22,7 @@ import org.telosys.tools.cli.Version;
 import org.telosys.tools.commons.CommonsVersion;
 import org.telosys.tools.commons.github.GitHubClient;
 import org.telosys.tools.commons.http.HttpClient;
+import org.telosys.tools.db.DbMetadataVersion;
 import org.telosys.tools.dsl.model.DslModelVersion;
 import org.telosys.tools.generator.GeneratorVersion;
 import org.telosys.tools.generic.model.GenericModelVersion;
@@ -62,14 +63,15 @@ public class VerCommand extends Command {
 	public String execute(String[] args) {
 		
 		print("Components versions : "  );
-		print("Telosys CLI   : " + Version.getVersionWithBuilId()  );
-		print("Telosys API   : " + TelosysApiVersion.getVersionWithBuilId()  );
-		print("Generator     : " + GeneratorVersion.getVersionWithBuilId()  );
-		print("Generic model : " + GenericModelVersion.getVersionWithBuilId()  );
-		print("DSL model     : " + DslModelVersion.getVersionWithBuilId()  );
-		print("Commons       : " + CommonsVersion.getVersionWithBuilId() ) ;
-		print("GitHub client : " + GitHubClient.VERSION ) ;
-		print("HTTP client   : " + HttpClient.VERSION ) ;
+		print("Telosys CLI    : " + Version.getVersionWithBuilId()  );
+		print("Telosys API    : " + TelosysApiVersion.getVersionWithBuilId()  );
+		print(" Generator     : " + GeneratorVersion.getVersionWithBuilId()  );
+		print(" Generic model : " + GenericModelVersion.getVersionWithBuilId()  );
+		print(" DSL model     : " + DslModelVersion.getVersionWithBuilId()  );
+		print(" DB meta-data  : " + DbMetadataVersion.getVersionWithBuilId()  );
+		print(" Commons       : " + CommonsVersion.getVersionWithBuilId() ) ;
+		print(" GitHub client : " + GitHubClient.VERSION ) ;
+		print(" HTTP client   : " + HttpClient.VERSION ) ;
 		
 		return null;
 	}
