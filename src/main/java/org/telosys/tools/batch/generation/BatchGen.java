@@ -29,7 +29,7 @@ public class BatchGen {
 		print("Versions : " );
 		print(". Telosys API   : " + TelosysApiVersion.getVersionWithBuilId() );
 		print(". Generator     : " + GeneratorVersion.getVersionWithBuilId() );
-		print(". Generic Model : " + GenericModelVersion.VERSION);
+		print(". Generic Model : " + GenericModelVersion.getVersionWithBuilId());
 	}
 	
 	private static void printContext(String projectFullPath, String modelFileName, String bundlePattern, String destFolder) {
