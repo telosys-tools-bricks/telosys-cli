@@ -24,6 +24,7 @@ import org.telosys.tools.commons.github.GitHubClient;
 import org.telosys.tools.commons.http.HttpClient;
 import org.telosys.tools.db.DbMetadataVersion;
 import org.telosys.tools.dsl.model.DslModelVersion;
+import org.telosys.tools.editor.components.TextEditorVersion;
 import org.telosys.tools.generator.GeneratorVersion;
 import org.telosys.tools.generic.model.GenericModelVersion;
 
@@ -72,6 +73,7 @@ public class VerCommand extends Command {
 		print(" Commons       : " + CommonsVersion.getVersionWithBuilId() ) ;
 		print(" GitHub client : " + GitHubClient.VERSION ) ;
 		print(" HTTP client   : " + HttpClient.VERSION ) ;
+		print("Text editor    : " + TextEditorVersion.VERSION );
 		
 		return null;
 	}
