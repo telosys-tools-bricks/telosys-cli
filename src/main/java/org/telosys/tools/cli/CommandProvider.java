@@ -48,6 +48,7 @@ import org.telosys.tools.cli.commands.HomeCommand;
 import org.telosys.tools.cli.commands.InitCommand;
 import org.telosys.tools.cli.commands.InstallBundlesCommand;
 import org.telosys.tools.cli.commands.InstallModelsCommand;
+import org.telosys.tools.cli.commands.JvmCommand;
 import org.telosys.tools.cli.commands.ListBundlesCommand;
 import org.telosys.tools.cli.commands.ListBundlesInDepotCommand;
 import org.telosys.tools.cli.commands.ListDatabasesCommand;
@@ -105,6 +106,7 @@ public class CommandProvider {
 		register(new ExitCommand(consoleReader, environment)); // exit  ( ver 4.1.0 )
 		register(new ErrorCommand(consoleReader, environment)); // err
 		register(new VerCommand(consoleReader, environment)); // ver
+		register(new JvmCommand(consoleReader, environment)); // jvm ( ver 4.3.0 )
 		register(new ProxyCommand(consoleReader, environment)); // proxy ( ver 4.1.1 )
 
 		register(new TestCommand(consoleReader, environment)); // Special command (just for tests)
