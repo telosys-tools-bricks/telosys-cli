@@ -65,6 +65,7 @@ import org.telosys.tools.cli.commands.NewModelCommand;
 import org.telosys.tools.cli.commands.ProxyCommand;
 import org.telosys.tools.cli.commands.PwdCommand;
 import org.telosys.tools.cli.commands.QuitCommand;
+import org.telosys.tools.cli.commands.SqlCommand;
 import org.telosys.tools.cli.commands.TestCommand;
 import org.telosys.tools.cli.commands.ThrowExceptionCommand;
 import org.telosys.tools.cli.commands.VerCommand;
@@ -122,6 +123,7 @@ public class CommandProvider {
 		register(new CheckDatabaseCommand(consoleReader, environment)); // cdb
 		// register(new NewDbModelCommand(consoleReader, environment));    // ndbm // removed in v 4.0.0
 		// register(new UpdateDbModelCommand(consoleReader, environment)); // udbm // removed in v 4.0.0
+		register(new SqlCommand(consoleReader, environment)); // sql
 		
 		// Model commands
 		register(new ModelCommand(consoleReader, environment));       // m 

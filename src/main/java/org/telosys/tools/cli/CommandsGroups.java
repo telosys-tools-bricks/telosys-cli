@@ -92,6 +92,7 @@ public class CommandsGroups {
 		commands.add("ldb");
 		commands.add("edb");
 		commands.add("cdb");
+		commands.add("sql");
 		return new CommandsGroup(name, commands);
 	}
 
