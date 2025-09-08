@@ -42,6 +42,7 @@ import org.telosys.tools.cli.commands.ExitCommand;
 import org.telosys.tools.cli.commands.FileExplorerCommand;
 import org.telosys.tools.cli.commands.GenBatchCommand;
 import org.telosys.tools.cli.commands.GenerateCommand;
+import org.telosys.tools.cli.commands.GitCommand;
 import org.telosys.tools.cli.commands.GitHubTokenCommand;
 import org.telosys.tools.cli.commands.HelpCommand;
 import org.telosys.tools.cli.commands.HomeCommand;
@@ -180,6 +181,9 @@ public class CommandProvider {
 		// Generation management
 		register(new GenerateCommand(consoleReader, environment)); // gen : generates entities with templates				
 		register(new GenBatchCommand(consoleReader, environment)); // genbatch : generation in batch mode				
+		
+		// Git commands (not official, keep hidden)
+		register(new GitCommand(consoleReader, environment));    // git (v 4.3.0)
 		
 		
 		// Launcher management

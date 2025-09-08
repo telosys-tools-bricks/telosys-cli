@@ -110,7 +110,7 @@ public class DeleteModelCommand extends CommandLevel2 {
 		String modelName = modelFolder.getName();
 		if ( confirm("Do you really want to delete model '" + modelName + "'") ) {
 			// delete model
-			getTelosysProject().deleteModel(modelFolder);
+			getTelosysProject().deleteModel(modelName);
 			// If the current model has been deleted => update env & prompt
 			if ( isCurrentModel(modelName) ) {
 				unsetCurrentModel();

@@ -19,11 +19,24 @@
 	</properties>
 
 	<dependencies>
+		<!-- JLine  -->
 		<dependency>
 			<groupId>jline</groupId>
 			<artifactId>jline</artifactId>
 			<version>2.12</version>
 		</dependency>
+		<!-- JGit  -->
+		<dependency>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+			<!-- <version>7.3.0.202506031305-r</version> -->
+			<version>5.13.3.202401111512-r</version> <!-- latest version for Java 8 (before JGit 6.x)-->
+		</dependency>
+		<dependency> <!-- "no-op" binding to avoid SLF4J logger warning (SLF4J is used by JGit) -->
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-nop</artifactId>
+			<version>1.7.30</version> <!-- must be the same version as SLF4J used by JGit -->
+		</dependency>		
 		<!-- TELOSYS DEPENDENCIES -->
 		<dependency>
 			<groupId>org.telosys</groupId>
@@ -103,7 +116,8 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId> <!-- Uber/fat JAR creation -->
-				<version>2.4.3</version>
+				<!-- <version>2.4.3</version>  -->
+				<version>3.5.0</version>
 				<executions>
 					<!-- Run shade goal on package phase -->
 					<execution>
@@ -116,8 +130,23 @@
 								<!-- add Main-Class to manifest file -->
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>org.telosys.tools.cli.TelosysMain</mainClass>
+									<manifestEntries>
+										<Built-By>Telosys project</Built-By>
+										<Implementation-Title>Telosys-CLI</Implementation-Title>
+										<Implementation-Version>${project.version}</Implementation-Version>
+									</manifestEntries>
 								</transformer>
 							</transformers>
+							<filters> <!-- removes all signature files from all dependencies -->
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>							
 						</configuration>
 					</execution>
 				</executions>
