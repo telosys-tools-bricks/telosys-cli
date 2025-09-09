@@ -205,7 +205,7 @@ public abstract class Command {
 		out.flush();
 	}
 	protected void printError(String message) {
-		out.println("[ERROR] : " + message );
+		out.println("[ERROR] " + message );
 		out.flush();
 	}
 	protected void printError(Exception ex) {

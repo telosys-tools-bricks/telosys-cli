@@ -17,6 +17,7 @@ package org.telosys.tools.cli.commands;
 
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commands.commons.DepotAbstractCommand;
+import org.telosys.tools.cli.commands.commons.DepotContent;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.cfg.TelosysToolsCfg;
 import org.telosys.tools.commons.depot.DepotResponse;
@@ -57,8 +58,9 @@ public class ListModelsInDepotCommand extends DepotAbstractCommand {
 	@Override
 	public String execute(String[] args) {
 		if ( checkHomeDirectoryDefined() ) {
-			TelosysToolsCfg telosysToolsCfg = getTelosysProject().getTelosysToolsCfg();
-			String depot = telosysToolsCfg.getDepotForModels();
+//			TelosysToolsCfg telosysToolsCfg = getTelosysProject().getTelosysToolsCfg();
+//			String depot = telosysToolsCfg.getDepotForModels();
+			String depot = getDepotDefinition(DepotContent.MODELS); // v 4.3.0
 			try {
 				// get all models using depot API (GitHub API)
 				DepotResponse depotResponse = getTelosysProject().getModelsAvailableInDepot(depot); 

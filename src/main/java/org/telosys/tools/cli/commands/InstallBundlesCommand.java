@@ -20,6 +20,7 @@ import java.util.List;
 import org.telosys.tools.api.InstallationType;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commands.commons.DepotAbstractCommand;
+import org.telosys.tools.cli.commands.commons.DepotContent;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.depot.DepotResponse;
 
@@ -82,7 +83,8 @@ public class InstallBundlesCommand extends DepotAbstractCommand {
 	}
 		
 	private void installBundles(String[] args) {
-		String depot = getTelosysProject().getTelosysToolsCfg().getDepotForBundles(); 
+//		String depot = getTelosysProject().getTelosysToolsCfg().getDepotForBundles(); 
+		String depot = getDepotDefinition(DepotContent.BUNDLES); // v 4.3.0
 		try {
 			DepotResponse depotResponse = getTelosysProject().getBundlesAvailableInDepot(depot); 
 			if (isDepotResponseOK(depotResponse)) {

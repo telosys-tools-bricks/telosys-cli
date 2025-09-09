@@ -20,6 +20,7 @@ import java.util.List;
 import org.telosys.tools.api.InstallationType;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commands.commons.DepotAbstractCommand;
+import org.telosys.tools.cli.commands.commons.DepotContent;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.depot.DepotResponse;
 
@@ -83,7 +84,8 @@ public class InstallModelsCommand extends DepotAbstractCommand {
 
 	private void install(String[] args) {
 		// SUGGESTION: if already exists : prompt "overwrite ? [y/n] : "
-		String depot = getTelosysProject().getTelosysToolsCfg().getDepotForModels(); 
+//		String depot = getTelosysProject().getTelosysToolsCfg().getDepotForModels(); 
+		String depot = getDepotDefinition(DepotContent.MODELS); // v 4.3.0
 		try {
 			DepotResponse depotResponse = getTelosysProject().getModelsAvailableInDepot(depot); 
 			if (isDepotResponseOK(depotResponse)) {

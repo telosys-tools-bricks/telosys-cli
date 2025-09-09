@@ -24,15 +24,18 @@ import java.util.Set;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.cli.commands.commons.DepotContent;
 import org.telosys.tools.cli.commands.git.GitClone;
 import org.telosys.tools.cli.commands.git.GitRemote;
+import org.telosys.tools.cli.commands.git.GitUtil;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.depot.Depot;
+import org.telosys.tools.commons.depot.DepotResponse;
 
 import jline.console.ConsoleReader;
 
 /**
- * 'm' command
+ * 'git' command
  * 
  * @author Laurent GUERIN
  *
@@ -82,35 +85,11 @@ public class GitCommand extends CommandLevel2 {
 			if ( ! argsWithoutOptions.isEmpty() ) {
 				String gitCommand = argsWithoutOptions.get(0);
 				if (CLONE_COMMANDS.contains(gitCommand) ) { // gitCommand.startsWith("clone")) {
-					clone(gitCommand, argsWithoutOptions);
+					cloneCommand(gitCommand, argsWithoutOptions);
 				}
 				else {
 					print("Unknown command '" + gitCommand + "'");
 				}
-				
-//				switch ( gitCommand ) {
-//				case "clonem" :
-//					if ( argsWithoutOptions.size() >= 2 ) {
-//						// fromRepoURL
-//						cloneModel(argsWithoutOptions.get(1));
-//					}
-//					else {
-//						print( REPO_URL_EXPECTED );
-//					}
-//					break;
-//				case "cloneb" :
-//					if ( argsWithoutOptions.size() >= 2 ) {
-//						// fromRepoURL
-//						cloneBundle(argsWithoutOptions.get(1));
-//					}
-//					else {
-//						print( REPO_URL_EXPECTED );
-//					}
-//					break;
-//				default:
-//					print("Unknown command '" + gitCommand + "'");
-//					break;
-//				}
 			}
 //			Set<String> activeOptions = getOptions(commandArguments);
 //			if ( ! argsWithoutOptions.isEmpty() ) {
@@ -126,77 +105,83 @@ public class GitCommand extends CommandLevel2 {
 		return null ;
 	}
 	
-	private void clone(String gitCommand, List<String> argsWithoutOptions) {
+	private void cloneCommand(String gitCommand, List<String> argsWithoutOptions) {
 		if ( argsWithoutOptions.size() >= 2 ) {
-			String fromRepoURL = argsWithoutOptions.get(1);
-			if ( "clonem".equals(gitCommand) ) {
-				cloneModel(fromRepoURL);
-			}
-			else if ( "cloneb".equals(gitCommand) ) {
-				cloneBundle(fromRepoURL);
-			}
-			else {
-				// not supposed to happen 
-				print("Unknown command '" + gitCommand + "'");
-			}
+				String from = argsWithoutOptions.get(1);
+				if ( "clonem".equals(gitCommand) ) {
+					String depotDefinition = getDepotDefinition(DepotContent.MODELS);
+					tryToClone(from, depotDefinition, DepotContent.MODELS);
+				}
+				else if ( "cloneb".equals(gitCommand) ) {
+					String depotDefinition = getDepotDefinition(DepotContent.BUNDLES);
+					tryToClone(from, depotDefinition, DepotContent.BUNDLES);
+				}
+				else {
+					// not supposed to happen 
+					print("Unknown command '" + gitCommand + "'");
+				}
 		}
 		else {
 			print( REPO_URL_EXPECTED );
 		}
 	}
+	private void tryToClone(String from, String depotDefinition, DepotContent depotContent) {
+		try {
+			String url = getUsableURL(from, depotDefinition);
+			if ( url != null ) {
+				if ( depotContent == DepotContent.MODELS) {
+					cloneModelFromUrl( url, depotDefinition );
+				}
+				else if ( depotContent == DepotContent.BUNDLES) {
+					cloneBundleFromUrl( url, depotDefinition );
+				}
+			}
+		} catch (Exception e) {
+			printError(e); 
+		}
+	}
+	private String getUsableURL(String from, String depotDefinition) throws TelosysToolsException {
+		if ( GitUtil.isGitUrl(from) ) {
+			// Valid Git URL => usable as is => keep it
+			return from; 
+		}
+		else {
+			// just the repo-name => build URL for this repo in the given depot
+			DepotResponse depotResponse = getTelosysProject().getElementsAvailableInDepot(depotDefinition);
+			if ( depotResponse.contains(from) ) {
+				// OK this repo exists in the depot
+				Depot depot = new Depot(depotDefinition);
+				return depot.buildGitRepositoryURL(from);
+			}
+			else {
+				// this repo doesn't exist in the depot 
+				print("Repository '" + from + "' not found in depot '" + depotDefinition + "'");
+				return null ;
+			}
+		}
+	}
 	
-	private void cloneModel(String fromRepoUrl) {
+	private void cloneModelFromUrl(String fromRepoUrl, String depotDefinition) {
 		TelosysProject telosysProject = getTelosysProject();
 		String modelName = getRepoNameFromUrl(fromRepoUrl);
 		if ( ! telosysProject.modelFolderExists(modelName) ) {
 			File modelFolder = telosysProject.getModelFolder(modelName);
-//			print("Cloning model '" + modelName + "' ");
-//			gitClone(fromRepoUrl, modelFolder);
-			String depot = telosysProject.getTelosysToolsCfg().getDepotForModels();
-			gitCloneAndAddRemote(fromRepoUrl, modelFolder, depot);
+			gitCloneAndAddRemote(fromRepoUrl, modelFolder, depotDefinition);
 		}
 		else {
 			print("Model '" + modelName + "' already exists.");
 		}
 	}
 	
-	private void cloneBundle(String fromRepoUrl) {
+	private void cloneBundleFromUrl(String fromRepoUrl, String depotDefinition) {
 		TelosysProject telosysProject = getTelosysProject();
 		String bundleName = getRepoNameFromUrl(fromRepoUrl);
 		if ( ! telosysProject.bundleFolderExists(bundleName) ) {
 			File bundleFolder = telosysProject.getBundleFolder(bundleName);
-			print("Cloning bundle '" + bundleName + "' ");
-			gitClone(fromRepoUrl, bundleFolder);
+			gitCloneAndAddRemote(fromRepoUrl, bundleFolder, depotDefinition);
 		}
 		else {
 			print("Bundle '" + bundleName + "' already exists.");
-		}
-	}
-	
-	private void gitCloneAndAddRemote(String fromRepoUrl, File localRepoDir, String depotDefinition) {
-		// Step 1 - Clone
-		gitClone(fromRepoUrl, localRepoDir);
-		// Step 2 - Add remote
-		try {
-			Depot depot = new Depot(depotDefinition);
-			//String depotURL = buildDepotURL(depot, xxx);
-			String localRepoName = localRepoDir.getName(); 
-			String depotURL = depot.buildGitRepositoryURL(localRepoName);
-			setGitRemoteDepot(localRepoDir, depotURL);
-		} catch (TelosysToolsException e) {
-			printError("Cannot set depot");
-			printError(e);
-		}
-	}
-	private void gitClone(String fromRepoUrl, File toFolder) {
-		try {
-			print("Git clone from " + fromRepoUrl );
-			print("to " + toFolder.getAbsolutePath() );
-			GitClone.cloneRepository(fromRepoUrl, toFolder.getAbsolutePath() );
-			print("Git repository successfully cloned." );
-		} catch (Exception e) { // All exceptions (including GitAPIException)
-			printError("Cannot clone from '" + fromRepoUrl + "'");
-			printError(e);
 		}
 	}
 	
@@ -217,11 +202,44 @@ public class GitCommand extends CommandLevel2 {
 	    return name;
 	}
 
+	
+	private void gitCloneAndAddRemote(String fromRepoUrl, File localRepoDir, String depotDefinition) {
+		// Step 1 - Clone
+		if ( gitClone(fromRepoUrl, localRepoDir) ) {
+			// Step 2 - Add remote
+			gitAddRemote(localRepoDir, depotDefinition);
+		}
+	}
+	private void gitAddRemote(File localRepoDir, String depotDefinition) {
+		try {
+			Depot depot = new Depot(depotDefinition);
+			String localRepoName = localRepoDir.getName(); 
+			String depotURL = depot.buildGitRepositoryURL(localRepoName);
+			setGitRemoteDepot(localRepoDir, depotURL);
+		} catch (TelosysToolsException e) {
+			printError("Cannot add remote 'depot'");
+			printError(e);
+		}
+	}
+	private boolean gitClone(String fromRepoUrl, File toFolder) {
+		try {
+			print("Git clone from " + fromRepoUrl );
+			print("to " + toFolder.getAbsolutePath() );
+			GitClone.cloneRepository(fromRepoUrl, toFolder.getAbsolutePath() );
+			print("Git repository successfully cloned." );
+			return true;
+		} catch (Exception e) { // All exceptions (including GitAPIException)
+			printError("Cannot clone from '" + fromRepoUrl + "'");
+			printError(e);
+			return false;
+		}
+	}
+	
 	private void setGitRemoteDepot(File gitRepoDir, String depotRemoteUrl) {
 		try {
 			print("Git add remote 'depot' (" + depotRemoteUrl + ")" );
 			GitRemote.setRemote(gitRepoDir, "depot", depotRemoteUrl);
-			print("Git remote added." );
+			print("Git remote 'depot' added." );
 		} catch (Exception e) { // All exceptions
 			printError("Cannot add remote in  '" + gitRepoDir.getAbsolutePath() + "'");
 			printError(e);

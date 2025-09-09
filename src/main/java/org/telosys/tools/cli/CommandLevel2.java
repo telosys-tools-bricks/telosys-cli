@@ -21,6 +21,9 @@ import java.util.List;
 
 import org.telosys.tools.api.TelosysModelException;
 import org.telosys.tools.api.TelosysProject;
+import org.telosys.tools.cli.commands.commons.DepotContent;
+import org.telosys.tools.commons.cfg.TelosysToolsCfg;
+import org.telosys.tools.commons.exception.TelosysRuntimeException;
 import org.telosys.tools.dsl.DslModelError;
 import org.telosys.tools.dsl.DslModelErrors;
 import org.telosys.tools.generic.model.Model;
@@ -65,7 +68,7 @@ public abstract class CommandLevel2 extends Command {
 	 * @return
 	 * @since 4.2.0
 	 */
-	protected boolean checkModelExists(String modelName) {
+	protected final boolean checkModelExists(String modelName) {
 		if ( modelName != null ) {
 			if ( getTelosysProject().modelFolderExists(modelName) ) {
 				return true;
@@ -87,7 +90,7 @@ public abstract class CommandLevel2 extends Command {
 	 * @return
 	 * @since 4.2.0
 	 */
-	protected boolean checkCurrentModelDefinedAndExists() {
+	protected final boolean checkCurrentModelDefinedAndExists() {
 		if ( checkModelDefined() ) {
 			return checkModelExists(getCurrentModel()); 
 		}
@@ -101,7 +104,7 @@ public abstract class CommandLevel2 extends Command {
 	 * @param modelNamePattern
 	 * @return the model folder (or null if not found or not unique)
 	 */
-	protected File findModelFolder(String modelNamePattern) {
+	protected final File findModelFolder(String modelNamePattern) {
 		List<File> allModels = getTelosysProject().getModels();
 		return findFile(allModels, modelNamePattern, "model");		
 	}
@@ -110,7 +113,7 @@ public abstract class CommandLevel2 extends Command {
 	 * @param modelNamePatterns
 	 * @return
 	 */
-	protected List<File> findModelFolders(List<String> modelNamePatterns) {
+	protected final List<File> findModelFolders(List<String> modelNamePatterns) {
 		List<File> allModels = getTelosysProject().getModels();
 		if ( modelNamePatterns.isEmpty() ) {
 			return allModels;
@@ -150,7 +153,7 @@ public abstract class CommandLevel2 extends Command {
 		return null;
 	}
 	
-	protected File getCurrentModelInfoFile() {
+	protected final File getCurrentModelInfoFile() {
 		String modelName = getCurrentModel();
 		if ( modelName != null ) {
 			return getModelInfoFile(modelName);
@@ -158,7 +161,7 @@ public abstract class CommandLevel2 extends Command {
 		return null;
 	}
 
-	protected File getCurrentModelFolder() {
+	protected final File getCurrentModelFolder() {
 		String modelName = getCurrentModel();
 		if ( modelName != null ) {
 			return getModelFolder(modelName);
@@ -182,7 +185,7 @@ public abstract class CommandLevel2 extends Command {
 	 * Loads the current model (print model errors if any)
 	 * @return
 	 */
-	protected Model loadCurrentModel() {
+	protected final Model loadCurrentModel() {
 		return loadModel(getCurrentModel());
 	}
 
@@ -191,7 +194,7 @@ public abstract class CommandLevel2 extends Command {
 	 * @param modelName
 	 * @return
 	 */
-	protected Model loadModel(String modelName) {
+	protected final Model loadModel(String modelName) {
 		// 1) try to get the file 
 		File modelFile = getModelFolder(modelName);
 		if ( modelFile != null ) {
@@ -206,7 +209,7 @@ public abstract class CommandLevel2 extends Command {
 	 * @param modelFolder
 	 * @return the model loaded (or null if cannot be loaded)
 	 */
-	protected Model loadModel(File modelFolder) {
+	protected final Model loadModel(File modelFolder) {
 		try {
 			return getTelosysProject().loadModel(modelFolder);
 		} catch (TelosysModelException tme) {
@@ -215,7 +218,7 @@ public abstract class CommandLevel2 extends Command {
 		}
 	}
 
-	protected void printModelError(TelosysModelException tme) {
+	protected final void printModelError(TelosysModelException tme) {
 		printError("Invalid model '" + tme.getModelName() + "'");
 		// Print parsing errors
 		print(tme.getMessage());
@@ -247,7 +250,7 @@ public abstract class CommandLevel2 extends Command {
 	 * @return
 	 * @since 4.2.0
 	 */
-	protected boolean checkBundleExists(String bundleName) {
+	protected final boolean checkBundleExists(String bundleName) {
 		if ( bundleName != null ) {
 			if ( getTelosysProject().bundleFolderExists(bundleName) ) {
 				return true;
@@ -269,7 +272,7 @@ public abstract class CommandLevel2 extends Command {
 	 * @return
 	 * @since 4.2.0
 	 */
-	protected boolean checkCurrentBundleDefinedAndExists() {
+	protected final boolean checkCurrentBundleDefinedAndExists() {
 		if ( checkBundleDefined() ) {
 			return checkBundleExists(getCurrentBundle()); 
 		}
@@ -278,7 +281,7 @@ public abstract class CommandLevel2 extends Command {
 		}
 	}
 	
-	protected File getCurrentBundleConfigFile() {
+	protected final File getCurrentBundleConfigFile() {
 		String bundleName = getCurrentBundle();
 		if ( bundleName != null ) {
 			return getBundleConfigFile(bundleName);
@@ -308,7 +311,7 @@ public abstract class CommandLevel2 extends Command {
 		return null;
 	}
 
-	protected File getCurrentBundleFolder() {
+	protected final File getCurrentBundleFolder() {
 		String bundleName = getCurrentBundle();
 		if ( bundleName != null ) {
 			return getBundleFolder(bundleName);
@@ -332,7 +335,7 @@ public abstract class CommandLevel2 extends Command {
 	 * @param bundleNamePattern
 	 * @return the bundle folder (or null if not found or not unique)
 	 */
-	protected File findBundleFolder(String bundleNamePattern) {
+	protected final File findBundleFolder(String bundleNamePattern) {
 		List<File> allBundles = getTelosysProject().getBundles();
 		return findFile(allBundles, bundleNamePattern, "bundle");
 	}
@@ -341,7 +344,7 @@ public abstract class CommandLevel2 extends Command {
 	 * @param bundleNamePatterns
 	 * @return
 	 */
-	protected List<File> findBundleFolders(List<String> bundleNamePatterns) {
+	protected final List<File> findBundleFolders(List<String> bundleNamePatterns) {
 		List<File> allBundles = getTelosysProject().getBundles();
 		if ( bundleNamePatterns.isEmpty() ) {
 			return allBundles;
@@ -359,6 +362,24 @@ public abstract class CommandLevel2 extends Command {
 		}
 	}
 
+	//-----------------------------------------------------------------------------------------------
+	// DEPOTS 
+	//-----------------------------------------------------------------------------------------------
+
+	protected final String getDepotDefinition(DepotContent depotContent) {
+		TelosysToolsCfg config = getTelosysProject().getTelosysToolsCfg();
+		if ( depotContent == DepotContent.MODELS ) {
+			return config.getDepotForModels() ;
+		}
+		else if ( depotContent == DepotContent.BUNDLES ) {
+			return config.getDepotForBundles() ;
+		}
+		else {
+			// cannot happen (only 2 entries in enum)
+			throw new TelosysRuntimeException("Unexpected DepotContent"); 
+		}
+	}
+	
 	//-----------------------------------------------------------------------------------------------
 	// COMMONS 
 	//-----------------------------------------------------------------------------------------------
