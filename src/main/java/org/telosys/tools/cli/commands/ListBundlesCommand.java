@@ -65,19 +65,6 @@ public class ListBundlesCommand extends CommandLevel2 {
 	}
 
 	private void listBundles(List<String> commandArguments) {
-		
-//		try {
-//			List<String> bundleNames = getInstalledBundles(commandArguments);
-//			if ( bundleNames.isEmpty() ) {
-//				print("No bundle found.") ;
-//			}
-//			else {
-//				print( bundleNames.size() + " bundle(s) :") ;
-//				printList(bundleNames) ;
-//			}
-//		} catch (TelosysToolsException e) {
-//			printError(e);
-//		}
 		List<File> bundles = findBundleFolders(commandArguments);
 		if ( bundles.isEmpty() ) {
 			print("No bundle found.") ;

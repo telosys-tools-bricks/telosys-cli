@@ -74,23 +74,4 @@ public class ListModelsCommand extends CommandLevel2 {
 			printListOfFiles(models) ;
 		}
 	}
-
-//	private void listModels() {
-//		TelosysProject telosysProject = getTelosysProject();
-//		List<File> files = telosysProject.getModels();
-//		if ( files.isEmpty() ) {
-//			print("No model found.") ;
-//		}
-//		else {
-//			// Convert files to file names (strings)
-//			LinkedList<String> names = new LinkedList<>();
-//			for ( File f : files ) {
-//				names.add(f.getName());
-//			}
-//			// Print file names 
-//			print( names.size() + " model(s) :") ;
-//			printList(names) ;
-//		}
-//	}
-//
 }
