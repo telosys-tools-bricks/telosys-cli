@@ -18,7 +18,9 @@ package org.telosys.tools.cli;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -251,8 +253,15 @@ public abstract class Command {
 	 */
 	protected void printListOfFiles(List<File> files) {
 		if ( files != null ) {
-			for ( File f : files ) {
-				out.println(" . " + f.getName());
+			for ( File file : files ) {
+				String info = "";
+				if ( file.isDirectory() ) {
+					File subFolder = new File(file, ".git");
+					if ( subFolder.exists() && subFolder.isDirectory() ) {
+						info = " (GIT)";
+					}					
+				}
+				out.println(" . " + file.getName() + info);
 			}
 		}
 		out.flush();
@@ -334,13 +343,17 @@ public abstract class Command {
 	 * @return
 	 */
 	protected List<String> getArgumentsAsList(String[] args) {
-		List<String> list = new LinkedList<>();
-		if ( args != null ) {
-			for ( int i = 1 ; i < args.length ; i++ ) {
-				list.add(args[i]);
-			}
-		}
-		return list;
+//		List<String> list = new LinkedList<>();
+//		if ( args != null ) {
+//			for ( int i = 1 ; i < args.length ; i++ ) {
+//				list.add(args[i]);
+//			}
+//		}
+//		return list;
+	    if (args == null || args.length <= 1) {
+	        return Collections.emptyList();
+	    }
+	    return Arrays.asList(Arrays.copyOfRange(args, 1, args.length));
 	}
 	
 	/**
@@ -562,31 +575,6 @@ public abstract class Command {
 		}
 	}
 	
-//	//-------------------------------------------------------------------------
-//	// GitHub store
-//	//-------------------------------------------------------------------------
-//	protected boolean checkGitHubStoreDefined() {
-//		if ( environment.getCurrentGitHubStore() != null ) {
-//			return true ;
-//		}
-//		else {
-//			print( "GitHub store undefined (can be set with 'gh' command)" ) ;
-//			return false ;
-//		}
-//	}	
-//	
-//	protected void setCurrentGitHubStore(String storeName) {
-//		environment.setCurrentGitHubStore(storeName);
-//	}
-//
-//	protected String getCurrentGitHubStore() {
-//		return environment.getCurrentGitHubStore();
-//	}
-//	
-//	protected String getDefaultGitHubStore() {
-//		return environment.getDefaultGitHubStore();
-//	}
-	
 	//-------------------------------------------------------------------------
 	//-------------------------------------------------------------------------
 	
@@ -731,11 +719,15 @@ public abstract class Command {
 	 * @return
 	 */
 	protected List<String> buildCriteriaFromArgs( String[] commandArgs) {
-		List<String> criteria = new LinkedList<>();
-		for ( int i = 1 ; i < commandArgs.length ; i++ ) {
-				criteria.add(commandArgs[i]);
-		}
-		return criteria ;
+//		List<String> criteria = new LinkedList<>();
+//		for ( int i = 1 ; i < commandArgs.length ; i++ ) {
+//				criteria.add(commandArgs[i]);
+//		}
+//		return criteria ;
+	    if (commandArgs == null || commandArgs.length <= 1) {
+	        return Collections.emptyList();
+	    }
+	    return Arrays.asList(Arrays.copyOfRange(commandArgs, 1, commandArgs.length)); // fixed-size list backed by the array.
 	}
 
 }   
