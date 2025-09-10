@@ -47,9 +47,8 @@ public class GitCommand extends CommandLevel2 {
 	public static final String GIT = "git";
 	public static final String CLONE_ARG_EXPECTED = "argument expected (repo_url or bundle/model name)";
 	
-	//private static final Set<String> COMMAND_OPTIONS = new HashSet<>(Arrays.asList("-none")); 
-	private static final Set<String> CLONE_COMMANDS  = new HashSet<>(Arrays.asList("clonem",  "cloneb" )); 
-	private static final Set<String> INIT_COMMANDS   = new HashSet<>(Arrays.asList("initm",   "initb" )); 
+	private static final Set<String> CLONE_COMMANDS  = new HashSet<>(Arrays.asList("clonem",  "cloneb"  )); 
+	private static final Set<String> INIT_COMMANDS   = new HashSet<>(Arrays.asList("initm",   "initb"   )); 
 	private static final Set<String> REMOTE_COMMANDS = new HashSet<>(Arrays.asList("remotem", "remoteb" )); 
 	
     public enum ArgType {
@@ -72,25 +71,34 @@ public class GitCommand extends CommandLevel2 {
 
 	@Override
 	public String getShortDescription() {
-		return "Git like commands " ;
+		return "Git commands " ;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Execute git commands for models and bundles";
+		return "Git commands for managing model and bundle repositories ";
 	}
 	
 	@Override
 	public String getUsage() {
-		return GIT + " clonem|cloneb model-name|bundle-name|repo-url" + "\n  " 
-			 + GIT + " initm|initb   [model-name|bundle-name]" ;
+		final String EOL = "\n  ";
+		return "Git clone " + EOL
+			 + " " + GIT + " clonem  model-name-in-depot |or| any-repo-url" + EOL
+			 + " " + GIT + " cloneb  bundle-name-in-depot |or| any-repo-url" + EOL
+			 + "Git init " + EOL
+			 + " " + GIT + " initm  [model-name]  (current model by default) " + EOL
+			 + " " + GIT + " initb  [bundle-name] (current bundle by default)" + EOL
+			 + "Git remote (print remotes) " + EOL
+			 + " " + GIT + " remotem  [model-name]  (current model by default) " + EOL
+			 + " " + GIT + " remoteb  [bundle-name] (current bundle by default)" + EOL
+			 ;
 	}
 	
 	@Override
 	public String execute(String[] argsArray) {
 		List<String> commandArguments = getArgumentsAsList(argsArray);
 		
-		if ( checkArguments(commandArguments, 1, 2 ) ) { // && checkOptions(commandArguments, COMMAND_OPTIONS) ) {
+		if ( checkArguments(commandArguments, 1, 2 ) ) {
 			List<String> argsWithoutOptions = removeOptions(commandArguments);
 			if ( ! argsWithoutOptions.isEmpty() ) {
 				String gitCommand = argsWithoutOptions.get(0);
@@ -104,19 +112,9 @@ public class GitCommand extends CommandLevel2 {
 					executeRemoteCommand(gitCommand, argsWithoutOptions);
 				}
 				else {
-					print("Unknown command '" + gitCommand + "'");
+					printInvalidGitCommand(gitCommand);
 				}
 			}
-//			Set<String> activeOptions = getOptions(commandArguments);
-//			if ( ! argsWithoutOptions.isEmpty() ) {
-//				if ( checkHomeDirectoryDefined() ) {
-//					// 
-//				}
-//			}
-////			else if ( isOptionActive("-none", activeOptions) ) {
-////				unsetCurrentModel();
-////				print( NO_CURRENT_MODEL );
-////			}
 		}
 		return null ;
 	}
