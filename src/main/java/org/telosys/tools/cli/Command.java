@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.telosys.tools.api.TelosysProject;
+import org.telosys.tools.cli.commands.git.GitUtil;
 import org.telosys.tools.commons.FileUtil;
 import org.telosys.tools.commons.StrUtil;
 import org.telosys.tools.commons.TelosysToolsException;
@@ -254,13 +255,7 @@ public abstract class Command {
 	protected void printListOfFiles(List<File> files) {
 		if ( files != null ) {
 			for ( File file : files ) {
-				String info = "";
-				if ( file.isDirectory() ) {
-					File subFolder = new File(file, ".git");
-					if ( subFolder.exists() && subFolder.isDirectory() ) {
-						info = " (GIT)";
-					}					
-				}
+				String info = GitUtil.isGitRepository(file) ? " (GIT)" : "";
 				out.println(" . " + file.getName() + info);
 			}
 		}

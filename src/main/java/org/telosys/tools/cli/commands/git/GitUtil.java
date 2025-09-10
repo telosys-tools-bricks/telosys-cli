@@ -15,11 +15,32 @@
  */
 package org.telosys.tools.cli.commands.git;
 
+import java.io.File;
+
 public class GitUtil {
 
 	private GitUtil() {
 	}
 
+	/**
+	 * Returns true if the given file is a Git repository (a directory having a '.git' subdirectory)
+	 * @param file
+	 * @return
+	 */
+	public static boolean isGitRepository(File file) {
+        if (file == null) return false;
+		if ( file.exists() && file.isDirectory() ) {
+			File gitSubFolder = new File(file, ".git");
+			return gitSubFolder.exists() && gitSubFolder.isDirectory() ;
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns true if the given string is a valid Git URL
+	 * @param arg
+	 * @return
+	 */
 	public static boolean isGitUrl(String arg) {
         if (arg == null) return false;
         String s = arg.trim();

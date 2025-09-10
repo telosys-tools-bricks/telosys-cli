@@ -26,11 +26,13 @@ import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commands.commons.DepotContent;
 import org.telosys.tools.cli.commands.git.GitClone;
+import org.telosys.tools.cli.commands.git.GitInit;
 import org.telosys.tools.cli.commands.git.GitRemote;
 import org.telosys.tools.cli.commands.git.GitUtil;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.depot.Depot;
 import org.telosys.tools.commons.depot.DepotResponse;
+import org.telosys.tools.commons.exception.TelosysRuntimeException;
 
 import jline.console.ConsoleReader;
 
@@ -43,10 +45,16 @@ import jline.console.ConsoleReader;
 public class GitCommand extends CommandLevel2 {
 	
 	public static final String GIT = "git";
-	public static final String REPO_URL_EXPECTED = "repository URL expected";
+	public static final String CLONE_ARG_EXPECTED = "argument expected (repo_url or bundle/model name)";
 	
 	//private static final Set<String> COMMAND_OPTIONS = new HashSet<>(Arrays.asList("-none")); 
 	private static final Set<String> CLONE_COMMANDS = new HashSet<>(Arrays.asList("clonem", "cloneb" )); 
+	private static final Set<String> INIT_COMMANDS  = new HashSet<>(Arrays.asList("initm", "initb" )); 
+	
+    public enum ArgType {
+        MODEL,
+        BUNDLE
+    }
 
 	/**
 	 * Constructor
@@ -73,19 +81,23 @@ public class GitCommand extends CommandLevel2 {
 	
 	@Override
 	public String getUsage() {
-		return GIT + " clonem|cloneb fromRepoURL";
+		return GIT + " clonem|cloneb model-name|bundle-name|repo-url" + "\n  " 
+			 + GIT + " initm|initb   [model-name|bundle-name]" ;
 	}
 	
 	@Override
 	public String execute(String[] argsArray) {
 		List<String> commandArguments = getArgumentsAsList(argsArray);
 		
-		if ( checkArguments(commandArguments, 2 ) ) { // && checkOptions(commandArguments, COMMAND_OPTIONS) ) {
+		if ( checkArguments(commandArguments, 1, 2 ) ) { // && checkOptions(commandArguments, COMMAND_OPTIONS) ) {
 			List<String> argsWithoutOptions = removeOptions(commandArguments);
 			if ( ! argsWithoutOptions.isEmpty() ) {
 				String gitCommand = argsWithoutOptions.get(0);
-				if (CLONE_COMMANDS.contains(gitCommand) ) { // gitCommand.startsWith("clone")) {
-					cloneCommand(gitCommand, argsWithoutOptions);
+				if (CLONE_COMMANDS.contains(gitCommand) ) {
+					executeCloneCommand(gitCommand, argsWithoutOptions);
+				}
+				else if (INIT_COMMANDS.contains(gitCommand) ) { 
+					executeInitCommand(gitCommand, argsWithoutOptions);
 				}
 				else {
 					print("Unknown command '" + gitCommand + "'");
@@ -104,35 +116,125 @@ public class GitCommand extends CommandLevel2 {
 		}
 		return null ;
 	}
-	
-	private void cloneCommand(String gitCommand, List<String> argsWithoutOptions) {
-		if ( argsWithoutOptions.size() >= 2 ) {
-				String from = argsWithoutOptions.get(1);
-				if ( "clonem".equals(gitCommand) ) {
-					String depotDefinition = getDepotDefinition(DepotContent.MODELS);
-					tryToClone(from, depotDefinition, DepotContent.MODELS);
-				}
-				else if ( "cloneb".equals(gitCommand) ) {
-					String depotDefinition = getDepotDefinition(DepotContent.BUNDLES);
-					tryToClone(from, depotDefinition, DepotContent.BUNDLES);
-				}
-				else {
-					// not supposed to happen 
-					print("Unknown command '" + gitCommand + "'");
-				}
+
+	private String getDepotDefinition(ArgType argType) {
+		if ( argType == ArgType.MODEL ) {
+			return getDepotDefinition(DepotContent.MODELS);
+		}
+		else if ( argType == ArgType.BUNDLE ) {
+			return getDepotDefinition(DepotContent.BUNDLES);
 		}
 		else {
-			print( REPO_URL_EXPECTED );
+			throw new TelosysRuntimeException("Unexpected ArgType");
 		}
 	}
-	private void tryToClone(String from, String depotDefinition, DepotContent depotContent) {
+	private void executeCloneCommand(String gitCommand, List<String> argsWithoutOptions) {
+		if ( argsWithoutOptions.size() >= 2 ) { // (0)clone[m/b] (1)arg 
+			String arg = argsWithoutOptions.get(1);
+			if ( "clonem".equals(gitCommand) ) {
+				tryToClone(arg, ArgType.MODEL);
+			}
+			else if ( "cloneb".equals(gitCommand) ) {
+				tryToClone(arg, ArgType.BUNDLE);
+			}
+			else {
+				// not supposed to happen 
+				print("Unknown command '" + gitCommand + "'");
+			}
+		}
+		else {
+			print( CLONE_ARG_EXPECTED );
+		}
+	}
+
+	private void executeInitCommand(String gitCommand, List<String> argsWithoutOptions) {
+		String arg = null;
+		if ( argsWithoutOptions.size() >= 2 ) { // (0)init[m/b] [ (1)arg ] 
+			arg = argsWithoutOptions.get(1);
+		}
+		if ( "initm".equals(gitCommand) ) {
+			tryToInit(arg, ArgType.MODEL);
+		}
+		else if ( "initb".equals(gitCommand) ) {
+			tryToInit(arg, ArgType.BUNDLE);
+		}
+		else {
+			// not supposed to happen 
+			print("Unknown command '" + gitCommand + "'");
+		}
+	}
+	private void tryToInit(String arg, ArgType argType) {
+		try {
+			File directory = getDirectory(arg, argType); 
+			if ( directory != null ) {
+				if ( GitUtil.isGitRepository(directory) ) {
+					print("'" + directory.getName() + "' is already a Git repository");
+				}
+				else {
+					// Step #1 - Init
+					if ( gitInit(directory) ) {
+						// Step #2 - Add remote 'depot'
+						gitAddRemoteDepot(directory, getDepotDefinition(argType));
+					}
+				}
+			}
+		} catch (Exception e) {
+			printError(e); 
+		}
+	}
+	private boolean gitInit(File directory) {
+		try {
+			print("Git init '" + directory.getName() + "' ...");
+			GitInit.init(directory);
+			print("Git repository successfully initialized." );
+			return true;
+		} catch (Exception e) { // All exceptions (including GitAPIException)
+			printError("Cannot init '" + directory.getName() + "'");
+			printError(e);
+			return false;
+		}
+	}
+	
+	private File getDirectory(String arg, ArgType argType) {
+		File dir = null;
+		if ( argType == ArgType.MODEL) {
+			if ( arg != null ) {
+				dir = getTelosysProject().getModelFolder(arg);
+			}
+			else {
+				dir = getCurrentModelFolder(); // if doesn't exist return null
+				if (dir == null) print("No current model");
+			}
+		}
+		else if ( argType == ArgType.BUNDLE) {
+			if ( arg != null ) {
+				dir = getTelosysProject().getBundleFolder(arg);
+			}
+			else {
+				dir = getCurrentBundleFolder(); // if doesn't exist return null
+				if (dir == null) print("No current bundle");
+			}
+		}
+		if ( dir != null ) {
+			if ( dir.exists() && dir.isDirectory() ) {
+				return dir;
+			}
+			else {
+				print("Invalid directory: " + dir.getAbsolutePath() ) ;
+			}
+		}
+		return null;
+	}
+	
+	private void tryToClone(String from, ArgType argType) {
+		String depotDefinition = getDepotDefinition(argType);
 		try {
 			String url = getUsableURL(from, depotDefinition);
 			if ( url != null ) {
-				if ( depotContent == DepotContent.MODELS) {
+				if ( argType == ArgType.MODEL) {
 					cloneModelFromUrl( url, depotDefinition );
 				}
-				else if ( depotContent == DepotContent.BUNDLES) {
+				else if ( argType == ArgType.BUNDLE) {
 					cloneBundleFromUrl( url, depotDefinition );
 				}
 			}
@@ -207,10 +309,10 @@ public class GitCommand extends CommandLevel2 {
 		// Step 1 - Clone
 		if ( gitClone(fromRepoUrl, localRepoDir) ) {
 			// Step 2 - Add remote
-			gitAddRemote(localRepoDir, depotDefinition);
+			gitAddRemoteDepot(localRepoDir, depotDefinition);
 		}
 	}
-	private void gitAddRemote(File localRepoDir, String depotDefinition) {
+	private void gitAddRemoteDepot(File localRepoDir, String depotDefinition) {
 		try {
 			Depot depot = new Depot(depotDefinition);
 			String localRepoName = localRepoDir.getName(); 
