@@ -16,15 +16,18 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.cli.commands.commons.DepotContent;
+import org.telosys.tools.cli.commands.git.GitAdd;
 import org.telosys.tools.cli.commands.git.GitClone;
 import org.telosys.tools.cli.commands.git.GitInit;
 import org.telosys.tools.cli.commands.git.GitRemote;
@@ -111,6 +114,9 @@ public class GitCommand extends CommandLevel2 {
 				else if (REMOTE_COMMANDS.contains(gitCommand) ) { 
 					executeRemoteCommand(gitCommand, argsWithoutOptions);
 				}
+				else if ("add".equals(gitCommand) ) { 
+					executeAddCommand();
+				}
 				else {
 					printInvalidGitCommand(gitCommand);
 				}
@@ -183,7 +189,17 @@ public class GitCommand extends CommandLevel2 {
 			printInvalidGitCommand(gitCommand); // not supposed to happen 
 		}
 	}
-
+	
+	private void executeAddCommand() {
+		String currentDir = getCurrentDirectory();
+		try {
+			GitAdd.addAll(new File(currentDir));
+			print("All changes added in stage.");
+		} catch (Exception e) {
+			printError(e);
+		}
+	}
+	
 	private void tryToPrintRemotes(String arg, ArgType argType) {
 		try {
 			File directory = getDirectory(arg, argType); 

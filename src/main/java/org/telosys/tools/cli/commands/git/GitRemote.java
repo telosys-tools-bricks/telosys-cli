@@ -52,11 +52,6 @@ public class GitRemote {
 	}
 	
 	public static void setRemote(File gitRepoDir, String remoteName, String remoteUrl) throws IOException {
-//		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-//		Repository repository = builder.setGitDir( getGitSubDirectory(gitRepoDir) )
-//                .readEnvironment()
-//                .findGitDir()
-//                .build();
 		Repository repository = getRepository(gitRepoDir);
 		try {
 			StoredConfig storedConfig = repository.getConfig();
@@ -71,11 +66,6 @@ public class GitRemote {
 	}
 
 	public static List<String> getRemotes(File gitRepoDir) throws IOException, URISyntaxException {
-//		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-//		Repository repository = builder.setGitDir( getGitSubDirectory(gitRepoDir) )
-//                .readEnvironment()
-//                .findGitDir()
-//                .build();
 		Repository repository = getRepository(gitRepoDir);
 		try {
 			StoredConfig storedConfig = repository.getConfig();
