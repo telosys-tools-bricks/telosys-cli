@@ -17,30 +17,47 @@ package org.telosys.tools.cli.commands.git;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.transport.RemoteConfig;
+import org.eclipse.jgit.transport.URIish;
 
 public class GitRemote {
 
 	private GitRemote() {
 	}
 
-	public static void setRemote(File gitRepoDir, String remoteName, String remoteUrl) throws IOException {
+	private static File getGitSubDirectory(File gitRepoDir) {
 		// Path to .git directory ( eg "/path/to/your/repo/.git" )
 		File gitSubDir = new File(gitRepoDir, ".git"); // add "/.git" at the end of the repo dir 
 		if (!gitSubDir.exists()) {
 		    throw new IllegalArgumentException("No .git directory found in " + gitRepoDir.getAbsolutePath()) ;
 		}
-		
+		return gitSubDir;
+	}
+
+	private static Repository getRepository(File gitRepoDir) throws IOException {
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		
-		Repository repository = builder.setGitDir(gitSubDir)
+		return builder.setGitDir( getGitSubDirectory(gitRepoDir) )
                 .readEnvironment()
                 .findGitDir()
-                .build();		
-		
+                .build();
+	}
+	
+	public static void setRemote(File gitRepoDir, String remoteName, String remoteUrl) throws IOException {
+//		FileRepositoryBuilder builder = new FileRepositoryBuilder();
+//		Repository repository = builder.setGitDir( getGitSubDirectory(gitRepoDir) )
+//                .readEnvironment()
+//                .findGitDir()
+//                .build();
+		Repository repository = getRepository(gitRepoDir);
 		try {
 			StoredConfig storedConfig = repository.getConfig();
 			// Set "remote" (overwrite existing value if any)
@@ -51,5 +68,54 @@ public class GitRemote {
 		finally {
 			repository.close();
 		}
+	}
+
+	public static List<String> getRemotes(File gitRepoDir) throws IOException, URISyntaxException {
+//		FileRepositoryBuilder builder = new FileRepositoryBuilder();
+//		Repository repository = builder.setGitDir( getGitSubDirectory(gitRepoDir) )
+//                .readEnvironment()
+//                .findGitDir()
+//                .build();
+		Repository repository = getRepository(gitRepoDir);
+		try {
+			StoredConfig storedConfig = repository.getConfig();
+			List<RemoteConfig> remotes = RemoteConfig.getAllRemoteConfigs(storedConfig);
+            // TreeMap will sort by remote name
+            TreeMap<String, RemoteConfig> sortedRemotes = new TreeMap<>();
+            for (RemoteConfig remoteConfig : remotes) {
+                sortedRemotes.put(remoteConfig.getName(), remoteConfig);
+            }
+            // Populate the resulting list ordered by remote name
+            return populateRemoteList(sortedRemotes); 
+		}
+		finally {
+			repository.close();
+		}
+	}
+	
+	private static List<String> populateRemoteList(TreeMap<String, RemoteConfig> sortedRemotes) {
+		List<String> list = new LinkedList<>();
+        for (Map.Entry<String, RemoteConfig> entry : sortedRemotes.entrySet()) {
+            String remoteName = entry.getKey();
+            RemoteConfig remoteConfig = entry.getValue();
+            String paddedName = String.format("%-8s", remoteName); // pad to 8 chars (left aligned)
+            
+            // fetch first
+            for (URIish uri : remoteConfig.getURIs()) {
+            	list.add(paddedName + " : " + uri.toString() + " (fetch)" );
+            }
+
+            // push after 
+            // To mimic 'git remote -v' exactly, we need to fall back to getURIs() if there are no pushURIs defined
+            List<URIish> pushUris = remoteConfig.getPushURIs();
+            if (pushUris.isEmpty()) {
+            	// not defined (not explicitly configured) => fall back to getURIs() 
+                pushUris = remoteConfig.getURIs();
+            }
+            for (URIish uri : pushUris) {
+                list.add(paddedName + " : " + uri.toString() + " (push)");
+            }
+        }
+		return list;
 	}
 }

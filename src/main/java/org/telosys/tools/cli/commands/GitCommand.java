@@ -48,8 +48,9 @@ public class GitCommand extends CommandLevel2 {
 	public static final String CLONE_ARG_EXPECTED = "argument expected (repo_url or bundle/model name)";
 	
 	//private static final Set<String> COMMAND_OPTIONS = new HashSet<>(Arrays.asList("-none")); 
-	private static final Set<String> CLONE_COMMANDS = new HashSet<>(Arrays.asList("clonem", "cloneb" )); 
-	private static final Set<String> INIT_COMMANDS  = new HashSet<>(Arrays.asList("initm", "initb" )); 
+	private static final Set<String> CLONE_COMMANDS  = new HashSet<>(Arrays.asList("clonem",  "cloneb" )); 
+	private static final Set<String> INIT_COMMANDS   = new HashSet<>(Arrays.asList("initm",   "initb" )); 
+	private static final Set<String> REMOTE_COMMANDS = new HashSet<>(Arrays.asList("remotem", "remoteb" )); 
 	
     public enum ArgType {
         MODEL,
@@ -99,6 +100,9 @@ public class GitCommand extends CommandLevel2 {
 				else if (INIT_COMMANDS.contains(gitCommand) ) { 
 					executeInitCommand(gitCommand, argsWithoutOptions);
 				}
+				else if (REMOTE_COMMANDS.contains(gitCommand) ) { 
+					executeRemoteCommand(gitCommand, argsWithoutOptions);
+				}
 				else {
 					print("Unknown command '" + gitCommand + "'");
 				}
@@ -117,6 +121,10 @@ public class GitCommand extends CommandLevel2 {
 		return null ;
 	}
 
+	private void printInvalidGitCommand(String gitCommand) {
+		print("Invalid git command '" + gitCommand + "'");
+	}
+	
 	private String getDepotDefinition(ArgType argType) {
 		if ( argType == ArgType.MODEL ) {
 			return getDepotDefinition(DepotContent.MODELS);
@@ -138,8 +146,7 @@ public class GitCommand extends CommandLevel2 {
 				tryToClone(arg, ArgType.BUNDLE);
 			}
 			else {
-				// not supposed to happen 
-				print("Unknown command '" + gitCommand + "'");
+				printInvalidGitCommand(gitCommand); // not supposed to happen 
 			}
 		}
 		else {
@@ -159,10 +166,51 @@ public class GitCommand extends CommandLevel2 {
 			tryToInit(arg, ArgType.BUNDLE);
 		}
 		else {
-			// not supposed to happen 
-			print("Unknown command '" + gitCommand + "'");
+			printInvalidGitCommand(gitCommand); // not supposed to happen 
 		}
 	}
+
+	private void executeRemoteCommand(String gitCommand, List<String> argsWithoutOptions) {
+		String arg = null;
+		if ( argsWithoutOptions.size() >= 2 ) { // (0)remote[m/b] [ (1)arg ] 
+			arg = argsWithoutOptions.get(1);
+		}
+		if ( "remotem".equals(gitCommand) ) {
+			tryToPrintRemotes(arg, ArgType.MODEL);
+		}
+		else if ( "remoteb".equals(gitCommand) ) {
+			tryToPrintRemotes(arg, ArgType.BUNDLE);
+		}
+		else {
+			printInvalidGitCommand(gitCommand); // not supposed to happen 
+		}
+	}
+
+	private void tryToPrintRemotes(String arg, ArgType argType) {
+		try {
+			File directory = getDirectory(arg, argType); 
+			if ( directory != null ) {
+				if ( GitUtil.isGitRepository(directory) ) {
+					print("Remotes for '" + directory.getName() + "':");
+					List<String> remotes = GitRemote.getRemotes(directory);
+					if ( remotes.isEmpty() ) {
+						print("No remote");
+					}
+					else {
+						for ( String s : remotes ) {
+							print(s);
+						}
+					}
+				}
+				else {
+					print("Cannot find git repository");
+				}
+			}
+		} catch (Exception e) {
+			printError(e); 
+		}
+	}
+
 	private void tryToInit(String arg, ArgType argType) {
 		try {
 			File directory = getDirectory(arg, argType); 
@@ -195,11 +243,17 @@ public class GitCommand extends CommandLevel2 {
 		}
 	}
 	
-	private File getDirectory(String arg, ArgType argType) {
+	/**
+	 * Returns the directory for given model/bundle name
+	 * @param modelOrBundleName  model/bundle name or 'null' for current model/bundle
+	 * @param argType
+	 * @return
+	 */
+	private File getDirectory(String modelOrBundleName, ArgType argType) {
 		File dir = null;
 		if ( argType == ArgType.MODEL) {
-			if ( arg != null ) {
-				dir = getTelosysProject().getModelFolder(arg);
+			if ( modelOrBundleName != null ) {
+				dir = getTelosysProject().getModelFolder(modelOrBundleName);
 			}
 			else {
 				dir = getCurrentModelFolder(); // if doesn't exist return null
@@ -207,8 +261,8 @@ public class GitCommand extends CommandLevel2 {
 			}
 		}
 		else if ( argType == ArgType.BUNDLE) {
-			if ( arg != null ) {
-				dir = getTelosysProject().getBundleFolder(arg);
+			if ( modelOrBundleName != null ) {
+				dir = getTelosysProject().getBundleFolder(modelOrBundleName);
 			}
 			else {
 				dir = getCurrentBundleFolder(); // if doesn't exist return null
