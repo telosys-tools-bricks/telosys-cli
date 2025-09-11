@@ -83,7 +83,7 @@ public class CdCommand extends Command {
 			List<String> argsWithoutOptions = removeOptions(commandArguments);
 			if ( argsWithoutOptions.isEmpty() && options.isEmpty() ) {
 				// cd
-				return cd(null);
+				return cdHome();
 			}
 			else if ( ! argsWithoutOptions.isEmpty()  &&  options.isEmpty() ) {
 				// cd <dir-name>
@@ -105,6 +105,12 @@ public class CdCommand extends Command {
 		return null;
 	}
 
+	private String cdHome() {
+		Environment environment = getEnvironment();
+		environment.resetCurrentDirectoryToHomeIfDefined();
+		return environment.getCurrentDirectory();
+	}
+	
 	private String cd(String destination) {
 		printDebug("cd : '" + destination + "'");
 		Environment environment = getEnvironment();
@@ -126,8 +132,7 @@ public class CdCommand extends Command {
 				return cdPath(destination);
 			}
 		} else {
-			environment.resetCurrentDirectoryToHomeIfDefined();
-			return environment.getCurrentDirectory();
+			return "Invalid destination (null) !";
 		}
 	}
 	
