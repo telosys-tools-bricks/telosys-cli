@@ -16,12 +16,41 @@
 package org.telosys.tools.cli.commands.git;
 
 import java.io.File;
+import java.io.IOException;
+
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 public class GitUtil {
 
+	private static final String DOT_GIT = ".git";
+	
 	private GitUtil() {
 	}
 
+	/**
+	 * Builds a "git repository" (pointing to the ".git" directory) from the given working tree
+	 * @param workingTree
+	 * @return
+	 * @throws IOException
+	 */
+	public static Repository buildRepository(File workingTree) throws IOException  {
+		if (workingTree == null) throw new IllegalArgumentException("workingDir is null");
+		if (!workingTree.exists()) throw new IllegalArgumentException(workingTree.getAbsolutePath() + " doesn't exist");
+		if (!workingTree.isDirectory()) throw new IllegalArgumentException(workingTree.getAbsolutePath() + " is not a directory");
+		if ( DOT_GIT.equals(workingTree.getName()) ) throw new IllegalArgumentException(workingTree.getName() + " is not a working dir");
+		File gitDir = new File(workingTree, ".git");
+		if (!gitDir.exists()) throw new IllegalArgumentException(gitDir.getAbsolutePath() + " doesn't exist");
+		if (!gitDir.isDirectory()) throw new IllegalArgumentException(gitDir.getAbsolutePath() + " is not a directory");
+		
+		return new FileRepositoryBuilder()
+		        .setGitDir(gitDir) // always point to '.git'
+		        .setWorkTree(workingTree) // optional, points to working directory if non-bare
+		        .readEnvironment()
+		        .findGitDir()
+		        .build();
+	}
+	
 	/**
 	 * Returns true if the given file is a Git repository (a directory having a '.git' subdirectory)
 	 * @param file

@@ -25,7 +25,6 @@ import java.util.TreeMap;
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 
@@ -34,25 +33,8 @@ public class GitRemote {
 	private GitRemote() {
 	}
 
-	private static File getGitSubDirectory(File gitRepoDir) {
-		// Path to .git directory ( eg "/path/to/your/repo/.git" )
-		File gitSubDir = new File(gitRepoDir, ".git"); // add "/.git" at the end of the repo dir 
-		if (!gitSubDir.exists()) {
-		    throw new IllegalArgumentException("No .git directory found in " + gitRepoDir.getAbsolutePath()) ;
-		}
-		return gitSubDir;
-	}
-
-	private static Repository getRepository(File gitRepoDir) throws IOException {
-		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		return builder.setGitDir( getGitSubDirectory(gitRepoDir) )
-                .readEnvironment()
-                .findGitDir()
-                .build();
-	}
-	
 	public static void setRemote(File gitRepoDir, String remoteName, String remoteUrl) throws IOException {
-		Repository repository = getRepository(gitRepoDir);
+		Repository repository = GitUtil.buildRepository(gitRepoDir);
 		try {
 			StoredConfig storedConfig = repository.getConfig();
 			// Set "remote" (overwrite existing value if any)
@@ -66,7 +48,7 @@ public class GitRemote {
 	}
 
 	public static List<String> getRemotes(File gitRepoDir) throws IOException, URISyntaxException {
-		Repository repository = getRepository(gitRepoDir);
+		Repository repository = GitUtil.buildRepository(gitRepoDir);
 		try {
 			StoredConfig storedConfig = repository.getConfig();
 			List<RemoteConfig> remotes = RemoteConfig.getAllRemoteConfigs(storedConfig);

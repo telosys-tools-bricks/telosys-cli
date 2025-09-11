@@ -16,21 +16,22 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
+import org.telosys.tools.cli.LastError;
 import org.telosys.tools.cli.commands.commons.DepotContent;
 import org.telosys.tools.cli.commands.git.GitAdd;
 import org.telosys.tools.cli.commands.git.GitClone;
+import org.telosys.tools.cli.commands.git.GitCommit;
 import org.telosys.tools.cli.commands.git.GitInit;
 import org.telosys.tools.cli.commands.git.GitRemote;
+import org.telosys.tools.cli.commands.git.GitStatus;
 import org.telosys.tools.cli.commands.git.GitUtil;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.depot.Depot;
@@ -114,8 +115,15 @@ public class GitCommand extends CommandLevel2 {
 				else if (REMOTE_COMMANDS.contains(gitCommand) ) { 
 					executeRemoteCommand(gitCommand, argsWithoutOptions);
 				}
+				// hidden commands (just for test in current dir)
+				else if ("status".equals(gitCommand) ) { 
+					executeStatusCommand();
+				}
 				else if ("add".equals(gitCommand) ) { 
 					executeAddCommand();
+				}
+				else if ("commit".equals(gitCommand) ) { 
+					executeCommitCommand();
 				}
 				else {
 					printInvalidGitCommand(gitCommand);
@@ -190,13 +198,68 @@ public class GitCommand extends CommandLevel2 {
 		}
 	}
 	
+	private File getCurrentWorkingDir() {
+		File directory = new File( getCurrentDirectory() ); 
+		if ( GitUtil.isGitRepository(directory) ) {
+			return directory;
+		}
+		else {
+			printError("Current directory is not a Git repository");
+			return null;
+		}
+	}
+
+	private void executeStatusCommand() {
+		File workingDir = getCurrentWorkingDir();
+		if ( workingDir != null ) {
+			try {
+				print("git status (in current directory)...");
+				List<String> report = GitStatus.getStatusReport(workingDir);
+				if ( report != null && !report.isEmpty() ) {
+					for ( String s : report ) {
+						print(s);
+					}
+				}
+				else {
+					printError("No status report ");
+				}
+			} catch (Exception e) {
+				LastError.setError(e);
+				printError(e);
+			}
+		}
+	}
+
 	private void executeAddCommand() {
-		String currentDir = getCurrentDirectory();
-		try {
-			GitAdd.addAll(new File(currentDir));
-			print("All changes added in stage.");
-		} catch (Exception e) {
-			printError(e);
+		File workingDir = getCurrentWorkingDir();
+		if ( workingDir != null ) {
+			try {
+				print("git add (in current directory)...");
+				GitAdd.addAll(workingDir);
+				print("Add OK, all changes added in stage");
+			} catch (Exception e) {
+				LastError.setError(e);
+				printError(e);
+			}
+		}
+	}
+	
+	private void executeCommitCommand() {
+		File workingDir = getCurrentWorkingDir();
+		if (workingDir != null) {
+			try {
+				print("git commit (in current directory)...");
+				String result = GitCommit.commit(workingDir);
+				if ( result != null && !result.trim().isEmpty() ) {
+					print("Commit OK, id (sha) = " + result);
+				}
+				else {
+					print("Nothing to commit (staged changes = 0)" );
+				}
+			} catch (Exception e) {
+				LastError.setError(e);
+				printError(e);
+			}
 		}
 	}
 	
@@ -221,6 +284,7 @@ public class GitCommand extends CommandLevel2 {
 				}
 			}
 		} catch (Exception e) {
+			LastError.setError(e);
 			printError(e); 
 		}
 	}
@@ -241,6 +305,7 @@ public class GitCommand extends CommandLevel2 {
 				}
 			}
 		} catch (Exception e) {
+			LastError.setError(e);
 			printError(e); 
 		}
 	}
@@ -307,6 +372,7 @@ public class GitCommand extends CommandLevel2 {
 				}
 			}
 		} catch (Exception e) {
+			LastError.setError(e);
 			printError(e); 
 		}
 	}
@@ -399,6 +465,7 @@ public class GitCommand extends CommandLevel2 {
 			print("Git repository successfully cloned." );
 			return true;
 		} catch (Exception e) { // All exceptions (including GitAPIException)
+			LastError.setError(e);
 			printError("Cannot clone from '" + fromRepoUrl + "'");
 			printError(e);
 			return false;

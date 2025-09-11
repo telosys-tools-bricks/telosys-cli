@@ -26,8 +26,8 @@ public class GitAdd {
 	private GitAdd() {
 	}
 
-	public static void addAll(File gitRepoDir) throws GitAPIException, IOException {
-       try (Git git = Git.open(gitRepoDir)) {
+	public static void addAll(File workingTree) throws GitAPIException, IOException {
+       try (Git git = Git.open(workingTree)) {
             // Stage new and modified files
             git.add()
                .addFilepattern(".")
