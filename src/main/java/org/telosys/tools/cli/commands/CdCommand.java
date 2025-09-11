@@ -16,9 +16,14 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import jline.console.ConsoleReader;
 
+import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.Command;
 import org.telosys.tools.cli.Environment;
 import org.telosys.tools.commons.FileUtil;
@@ -30,6 +35,12 @@ import org.telosys.tools.commons.FileUtil;
  *
  */
 public class CdCommand extends Command {
+
+	private static final String M_OPTION = "-m" ;
+	private static final String B_OPTION = "-b" ;
+	private static final String L_OPTION = "-l" ;
+	
+	private static final Set<String> COMMAND_OPTIONS = new HashSet<>(Arrays.asList(M_OPTION, B_OPTION, L_OPTION )); 
 
 	/**
 	 * Constructor
@@ -60,14 +71,38 @@ public class CdCommand extends Command {
 	}
 	
 	@Override
-	public String execute(String[] args) {
+	public String execute(String[] argsArray) {
 		
-		if ( args.length > 1 ) {
-			return cd(args[1]);
+		List<String> commandArguments = getArgumentsAsList(argsArray);
+		// Check arguments :
+		// 0 : cd 
+		// 1 : cd <dest-dir> | cd -m | cd -t | cd -l
+		// 2 : cd -m <model-name> | cd -b <bundle-name>
+		if ( checkArguments(commandArguments, 0, 1, 2 ) && checkOptions(commandArguments, COMMAND_OPTIONS) ) {
+			Set<String> options = getOptions(commandArguments);
+			List<String> argsWithoutOptions = removeOptions(commandArguments);
+			if ( argsWithoutOptions.isEmpty() && options.isEmpty() ) {
+				// cd
+				return cd(null);
+			}
+			else if ( ! argsWithoutOptions.isEmpty()  &&  options.isEmpty() ) {
+				// cd <dir-name>
+				return cd(argsWithoutOptions.get(0));
+			}
+			else if ( ! options.isEmpty() ) { // cd with options (new in v 4.3.0)
+				if ( options.size() == 1 ) {
+					// cd -x  | cd -x <name>
+					return cdWithOption(options.iterator().next(), argsWithoutOptions );
+				}
+				else {
+					print("Use only one option (-m, -t, ..) ");
+				}
+			}
+			else {
+				print("Invalid 'cd' usage");
+			}
 		}
-		else {
-			return cd(null);
-		}
+		return null;
 	}
 
 	private String cd(String destination) {
@@ -139,11 +174,63 @@ public class CdCommand extends Command {
 	 * @return
 	 */
 	private String tryToChangeCurrentDirectory(File file) {
-		if ( checkDirectory(file) ) {
+		if ( checkDirectory(file) ) { // if valid directory
 			Environment environment = getEnvironment();
 			environment.setCurrentDirectory(file.getAbsolutePath());
 			return environment.getCurrentDirectory();
 		}
 		return null;
+	}
+
+	/**
+	 * Cd with options like "-m", "-t", ... with or without name argument
+	 * Example : cd -m, cd -m cars, cd -t, cd -t python-mvc  
+	 * @param option
+	 * @param argsWithoutOptions
+	 * @return
+	 * @since 4.3.0
+	 */
+	private String cdWithOption(String option, List<String> argsWithoutOptions) {
+		File destination = getDestination(option, argsWithoutOptions);
+		if ( destination != null ) {
+			return tryToChangeCurrentDirectory(destination);
+		}
+		else {
+			return null;
+		}
+	}
+
+	private File getDestination(String option, List<String> argsWithoutOptions) {
+		TelosysProject telosysProject = getTelosysProject();
+		String name = null ;
+		if ( ! argsWithoutOptions.isEmpty() ) {
+			name = argsWithoutOptions.get(0);
+		}
+		if ( M_OPTION.equals(option) ) {
+			// go to "models" dir => "(home)/TelosysTools/models" 
+			if ( name != null ) {
+				return telosysProject.getModelFolder(name);
+			} 
+			else {
+				return telosysProject.getModelsFolder();
+			}
+		}
+		else if ( B_OPTION.equals(option) ) {
+			// go to "bundles" dir => "(home)/TelosysTools/templates" 
+			if ( name != null ) {
+				return telosysProject.getBundleFolder(name);
+			} 
+			else {
+				return telosysProject.getBundlesFolder();
+			}
+		}
+		else if ( L_OPTION.equals(option) ) {
+			// go to "lib" dir => "(home)/TelosysTools/lib" 
+			return telosysProject.getLibFolder();
+		}
+		else {
+			printError("Invalid option '" + option + "'");
+			return null;
+		}
 	}
 }
