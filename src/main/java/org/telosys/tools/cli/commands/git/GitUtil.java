@@ -52,13 +52,14 @@ public class GitUtil {
 	}
 	
 	/**
-	 * Returns true if the given file is a Git repository (a directory having a '.git' subdirectory)
+	 * Returns true if the given file is a Git working tree (a directory having a '.git' subdirectory)
 	 * @param file
 	 * @return
 	 */
-	public static boolean isGitRepository(File file) {
+	public static boolean isGitWorkingTree(File file) {
         if (file == null) return false;
 		if ( file.exists() && file.isDirectory() ) {
+			// try to find a ".git" subfolder
 			File gitSubFolder = new File(file, ".git");
 			return gitSubFolder.exists() && gitSubFolder.isDirectory() ;
 		}

@@ -33,8 +33,8 @@ public class GitRemote {
 	private GitRemote() {
 	}
 
-	public static void setRemote(File gitRepoDir, String remoteName, String remoteUrl) throws IOException {
-		Repository repository = GitUtil.buildRepository(gitRepoDir);
+	public static void setRemote(File gitWorkingTreeDir, String remoteName, String remoteUrl) throws IOException {
+		Repository repository = GitUtil.buildRepository(gitWorkingTreeDir);
 		try {
 			StoredConfig storedConfig = repository.getConfig();
 			// Set "remote" (overwrite existing value if any)
@@ -47,8 +47,8 @@ public class GitRemote {
 		}
 	}
 
-	public static List<String> getRemotes(File gitRepoDir) throws IOException, URISyntaxException {
-		Repository repository = GitUtil.buildRepository(gitRepoDir);
+	public static List<String> getRemotes(File gitWorkingTreeDir) throws IOException, URISyntaxException {
+		Repository repository = GitUtil.buildRepository(gitWorkingTreeDir);
 		try {
 			StoredConfig storedConfig = repository.getConfig();
 			List<RemoteConfig> remotes = RemoteConfig.getAllRemoteConfigs(storedConfig);

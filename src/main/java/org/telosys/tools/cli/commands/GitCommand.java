@@ -51,11 +51,23 @@ public class GitCommand extends CommandLevel2 {
 	public static final String GIT = "git";
 	public static final String CLONE_ARG_EXPECTED = "argument expected (repo_url or bundle/model name)";
 	
-	private static final Set<String> CLONE_COMMANDS  = new HashSet<>(Arrays.asList("clonem",  "cloneb"  )); 
-	private static final Set<String> INIT_COMMANDS   = new HashSet<>(Arrays.asList("initm",   "initb"   )); 
-	private static final Set<String> REMOTE_COMMANDS = new HashSet<>(Arrays.asList("remotem", "remoteb" )); 
+	private static final String CLONEM = "clonem" ;
+	private static final String CLONEB = "cloneb" ;
+	private static final Set<String> CLONE_COMMANDS  = new HashSet<>(Arrays.asList(CLONEM,  CLONEB  )); 
 	
-    public enum ArgType {
+	private static final String INITM = "initm" ;
+	private static final String INITB = "initb" ;
+	private static final Set<String> INIT_COMMANDS   = new HashSet<>(Arrays.asList(INITM,   INITB   )); 
+	
+	private static final String REMOTEM = "remotem" ;
+	private static final String REMOTEB = "remoteb" ;
+	private static final Set<String> REMOTE_COMMANDS = new HashSet<>(Arrays.asList(REMOTEM, REMOTEB )); 
+	
+	private static final String STATUSM = "statusm" ;
+	private static final String STATUSB = "statusb" ;
+	private static final Set<String> STATUS_COMMANDS = new HashSet<>(Arrays.asList(STATUSM, STATUSB )); 
+	
+    private enum ArgType {
         MODEL,
         BUNDLE
     }
@@ -86,15 +98,18 @@ public class GitCommand extends CommandLevel2 {
 	@Override
 	public String getUsage() {
 		final String EOL = "\n  ";
-		return "Git clone " + EOL
-			 + " " + GIT + " clonem  model-name-in-depot |or| any-repo-url" + EOL
-			 + " " + GIT + " cloneb  bundle-name-in-depot |or| any-repo-url" + EOL
-			 + "Git init " + EOL
-			 + " " + GIT + " initm  [model-name]  (current model by default) " + EOL
-			 + " " + GIT + " initb  [bundle-name] (current bundle by default)" + EOL
+		return "Git clone model or bundle and add 'depot' remote " + EOL
+			 + " " + GIT + " clonem  model-name-in-depot  |or| any-repo-url  (clone a model)" + EOL
+			 + " " + GIT + " cloneb  bundle-name-in-depot |or| any-repo-url  (clone a bundle)" + EOL
+			 + "Git init model or bundle and add 'depot' remote " + EOL
+			 + " " + GIT + " initm  [model-name]  (init a model, current model by default) " + EOL
+			 + " " + GIT + " initb  [bundle-name] (init a bundle, current bundle by default)" + EOL
 			 + "Git remote (print remotes) " + EOL
-			 + " " + GIT + " remotem  [model-name]  (current model by default) " + EOL
-			 + " " + GIT + " remoteb  [bundle-name] (current bundle by default)" + EOL
+			 + " " + GIT + " remotem  [model-name]  (model remotes, current model by default) " + EOL
+			 + " " + GIT + " remoteb  [bundle-name] (bundle remotes, current bundle by default)" + EOL
+			 + "Git status (print status) " + EOL
+			 + " " + GIT + " statusm  [model-name]  (model status, current model by default) " + EOL
+			 + " " + GIT + " statusb  [bundle-name] (bundle status, current bundle by default)" + EOL
 			 ;
 	}
 	
@@ -115,15 +130,21 @@ public class GitCommand extends CommandLevel2 {
 				else if (REMOTE_COMMANDS.contains(gitCommand) ) { 
 					executeRemoteCommand(gitCommand, argsWithoutOptions);
 				}
+				else if (STATUS_COMMANDS.contains(gitCommand) ) { 
+					executeStatusCommand(gitCommand, argsWithoutOptions);
+				}
 				// hidden commands (just for test in current dir)
+				else if ("remote".equals(gitCommand) ) { 
+					executeRemoteCommand(getCurrentDirAsGitWorkingTree());
+				}
 				else if ("status".equals(gitCommand) ) { 
-					executeStatusCommand();
+					executeStatusCommand(getCurrentDirAsGitWorkingTree());
 				}
 				else if ("add".equals(gitCommand) ) { 
-					executeAddCommand();
+					executeAddCommand(getCurrentDirAsGitWorkingTree());
 				}
 				else if ("commit".equals(gitCommand) ) { 
-					executeCommitCommand();
+					executeCommitCommand(getCurrentDirAsGitWorkingTree());
 				}
 				else {
 					printInvalidGitCommand(gitCommand);
@@ -135,6 +156,52 @@ public class GitCommand extends CommandLevel2 {
 
 	private void printInvalidGitCommand(String gitCommand) {
 		print("Invalid git command '" + gitCommand + "'");
+	}
+	
+	private File getCurrentDirAsGitWorkingTree() {
+		File directory = new File( getCurrentDirectory() ); 
+		if ( GitUtil.isGitWorkingTree(directory) ) {
+			return directory;
+		}
+		else {
+			printError("Current directory is not a Git working tree");
+			return null;
+		}
+	}
+
+	private String getModelOrBundleArg(List<String> argsWithoutOptions) {
+		String arg = null;
+		if ( argsWithoutOptions.size() >= 2 ) { // (0)command[m/b] [ (1)arg ] 
+			arg = argsWithoutOptions.get(1);
+		}
+		return arg;
+	}
+	private String getDefaultArgIfNone(String arg, ArgType argType) {
+		if ( arg == null ) {
+			if ( argType == ArgType.MODEL ) {
+				// default is current model
+				String currentModel = getCurrentModel();
+				if ( currentModel == null ) {
+					print("No current model");
+				}
+				return currentModel;
+			}
+			else if ( argType == ArgType.BUNDLE ) {
+				// default is current bundle
+				String currentBundle = getCurrentBundle();
+				if ( currentBundle == null ) {
+					print("No current bundle");
+				}
+				return currentBundle;
+			}
+			else {
+				printError("Unexpected arument type");
+				return null;
+			}
+		}
+		else {
+			return arg; // OK, not null
+		}
 	}
 	
 	private String getDepotDefinition(ArgType argType) {
@@ -151,10 +218,10 @@ public class GitCommand extends CommandLevel2 {
 	private void executeCloneCommand(String gitCommand, List<String> argsWithoutOptions) {
 		if ( argsWithoutOptions.size() >= 2 ) { // (0)clone[m/b] (1)arg 
 			String arg = argsWithoutOptions.get(1);
-			if ( "clonem".equals(gitCommand) ) {
+			if ( CLONEM.equals(gitCommand) ) {
 				tryToClone(arg, ArgType.MODEL);
 			}
-			else if ( "cloneb".equals(gitCommand) ) {
+			else if ( CLONEB.equals(gitCommand) ) {
 				tryToClone(arg, ArgType.BUNDLE);
 			}
 			else {
@@ -171,10 +238,10 @@ public class GitCommand extends CommandLevel2 {
 		if ( argsWithoutOptions.size() >= 2 ) { // (0)init[m/b] [ (1)arg ] 
 			arg = argsWithoutOptions.get(1);
 		}
-		if ( "initm".equals(gitCommand) ) {
+		if ( INITM.equals(gitCommand) ) {
 			tryToInit(arg, ArgType.MODEL);
 		}
-		else if ( "initb".equals(gitCommand) ) {
+		else if ( INITB.equals(gitCommand) ) {
 			tryToInit(arg, ArgType.BUNDLE);
 		}
 		else {
@@ -183,38 +250,54 @@ public class GitCommand extends CommandLevel2 {
 	}
 
 	private void executeRemoteCommand(String gitCommand, List<String> argsWithoutOptions) {
-		String arg = null;
-		if ( argsWithoutOptions.size() >= 2 ) { // (0)remote[m/b] [ (1)arg ] 
-			arg = argsWithoutOptions.get(1);
+		if ( REMOTEM.equals(gitCommand) ) {
+			tryToPrintRemotes( getModelOrBundleArg(argsWithoutOptions), ArgType.MODEL);
 		}
-		if ( "remotem".equals(gitCommand) ) {
-			tryToPrintRemotes(arg, ArgType.MODEL);
-		}
-		else if ( "remoteb".equals(gitCommand) ) {
-			tryToPrintRemotes(arg, ArgType.BUNDLE);
+		else if ( REMOTEB.equals(gitCommand) ) {
+			tryToPrintRemotes( getModelOrBundleArg(argsWithoutOptions), ArgType.BUNDLE);
 		}
 		else {
 			printInvalidGitCommand(gitCommand); // not supposed to happen 
 		}
 	}
 	
-	private File getCurrentWorkingDir() {
-		File directory = new File( getCurrentDirectory() ); 
-		if ( GitUtil.isGitRepository(directory) ) {
-			return directory;
+	private void executeStatusCommand(String gitCommand, List<String> argsWithoutOptions) {
+		if ( STATUSM.equals(gitCommand) ) {
+			tryToPrintStatus( getModelOrBundleArg(argsWithoutOptions), ArgType.MODEL);
+		}
+		else if ( STATUSB.equals(gitCommand) ) {
+			tryToPrintStatus( getModelOrBundleArg(argsWithoutOptions), ArgType.BUNDLE);
 		}
 		else {
-			printError("Current directory is not a Git repository");
-			return null;
+			printInvalidGitCommand(gitCommand); // not supposed to happen 
+		}
+	}
+	
+	private void executeRemoteCommand(File workingTreeDirectory) {
+		if ( workingTreeDirectory != null ) {
+			try {
+				print("git remotes for '" + workingTreeDirectory.getName() + "' ");
+				List<String> remotes = GitRemote.getRemotes(workingTreeDirectory);
+				if ( remotes.isEmpty() ) {
+					print("No remote");
+				}
+				else {
+					for ( String s : remotes ) {
+						print(s);
+					}
+				}
+			} catch (Exception e) {
+				LastError.setError(e);
+				printError(e);
+			}
 		}
 	}
 
-	private void executeStatusCommand() {
-		File workingDir = getCurrentWorkingDir();
-		if ( workingDir != null ) {
+	private void executeStatusCommand(File workingTreeDirectory) {
+		if ( workingTreeDirectory != null ) {
 			try {
-				print("git status (in current directory)...");
-				List<String> report = GitStatus.getStatusReport(workingDir);
+				print("git status for '" + workingTreeDirectory.getName() +"' ");
+				List<String> report = GitStatus.getStatusReport(workingTreeDirectory);
 				if ( report != null && !report.isEmpty() ) {
 					for ( String s : report ) {
 						print(s);
@@ -230,12 +313,11 @@ public class GitCommand extends CommandLevel2 {
 		}
 	}
 
-	private void executeAddCommand() {
-		File workingDir = getCurrentWorkingDir();
-		if ( workingDir != null ) {
+	private void executeAddCommand(File workingTreeDirectory) {
+		if ( workingTreeDirectory != null ) {
 			try {
-				print("git add (in current directory)...");
-				GitAdd.addAll(workingDir);
+				print("git add for '" + workingTreeDirectory.getName() +"' ");
+				GitAdd.addAll(workingTreeDirectory);
 				print("Add OK, all changes added in stage");
 			} catch (Exception e) {
 				LastError.setError(e);
@@ -244,12 +326,11 @@ public class GitCommand extends CommandLevel2 {
 		}
 	}
 	
-	private void executeCommitCommand() {
-		File workingDir = getCurrentWorkingDir();
-		if (workingDir != null) {
+	private void executeCommitCommand(File workingTreeDirectory) {
+		if ( workingTreeDirectory != null ) {
 			try {
-				print("git commit (in current directory)...");
-				String result = GitCommit.commit(workingDir);
+				print("git commit (dir '" + workingTreeDirectory.getName() +"')...");
+				String result = GitCommit.commit(workingTreeDirectory);
 				if ( result != null && !result.trim().isEmpty() ) {
 					print("Commit OK, id (sha) = " + result);
 				}
@@ -264,49 +345,56 @@ public class GitCommand extends CommandLevel2 {
 	}
 	
 	private void tryToPrintRemotes(String arg, ArgType argType) {
-		try {
-			File directory = getDirectory(arg, argType); 
-			if ( directory != null ) {
-				if ( GitUtil.isGitRepository(directory) ) {
-					print("Remotes for '" + directory.getName() + "':");
-					List<String> remotes = GitRemote.getRemotes(directory);
-					if ( remotes.isEmpty() ) {
-						print("No remote");
-					}
-					else {
-						for ( String s : remotes ) {
-							print(s);
-						}
-					}
+		String modelOrBundleName = getDefaultArgIfNone(arg, argType);
+		if ( modelOrBundleName != null ) {
+			try {
+				File workingTreeDirectory = getWorkingTreeDirectory(modelOrBundleName, argType); 
+				if ( workingTreeDirectory != null ) {
+					executeRemoteCommand(workingTreeDirectory);				
 				}
-				else {
-					print("Cannot find git repository");
-				}
+			} catch (Exception e) {
+				LastError.setError(e);
+				printError(e); 
 			}
-		} catch (Exception e) {
-			LastError.setError(e);
-			printError(e); 
+		}
+	}
+
+	private void tryToPrintStatus(String arg, ArgType argType) {
+		String modelOrBundleName = getDefaultArgIfNone(arg, argType);
+		if ( modelOrBundleName != null ) {
+			try {
+				File workingTreeDirectory = getWorkingTreeDirectory(modelOrBundleName, argType); 
+				if ( workingTreeDirectory != null ) {
+					executeStatusCommand(workingTreeDirectory);
+				}
+			} catch (Exception e) {
+				LastError.setError(e);
+				printError(e); 
+			}
 		}
 	}
 
 	private void tryToInit(String arg, ArgType argType) {
-		try {
-			File directory = getDirectory(arg, argType); 
-			if ( directory != null ) {
-				if ( GitUtil.isGitRepository(directory) ) {
-					print("'" + directory.getName() + "' is already a Git repository");
-				}
-				else {
-					// Step #1 - Init
-					if ( gitInit(directory) ) {
-						// Step #2 - Add remote 'depot'
-						gitAddRemoteDepot(directory, getDepotDefinition(argType));
+		String modelOrBundleName = getDefaultArgIfNone(arg, argType);
+		if ( modelOrBundleName != null ) {
+			try {
+				File directory = getDirectory(modelOrBundleName, argType); 
+				if ( directory != null ) {
+					if ( GitUtil.isGitWorkingTree(directory) ) {
+						print("'" + directory.getName() + "' is already a Git repository");
+					}
+					else {
+						// Step #1 - Init
+						if ( gitInit(directory) ) {
+							// Step #2 - Add remote 'depot'
+							gitAddRemoteDepot(directory, getDepotDefinition(argType));
+						}
 					}
 				}
+			} catch (Exception e) {
+				LastError.setError(e);
+				printError(e); 
 			}
-		} catch (Exception e) {
-			LastError.setError(e);
-			printError(e); 
 		}
 	}
 	private boolean gitInit(File directory) {
@@ -320,6 +408,19 @@ public class GitCommand extends CommandLevel2 {
 			printError(e);
 			return false;
 		}
+	}
+	
+	private File getWorkingTreeDirectory(String modelOrBundleName, ArgType argType) {
+		File directory = getDirectory(modelOrBundleName, argType); 
+		if ( directory != null ) {
+			if ( GitUtil.isGitWorkingTree(directory) ) {
+				return directory;
+			}
+			else {
+				print("'" + modelOrBundleName + "' directory is not a git working tree");
+			}
+		}
+		return null;		
 	}
 	
 	/**

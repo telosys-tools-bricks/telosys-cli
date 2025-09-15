@@ -255,7 +255,7 @@ public abstract class Command {
 	protected void printListOfFiles(List<File> files) {
 		if ( files != null ) {
 			for ( File file : files ) {
-				String info = GitUtil.isGitRepository(file) ? " (GIT)" : "";
+				String info = GitUtil.isGitWorkingTree(file) ? " (GIT)" : "";
 				out.println(" . " + file.getName() + info);
 			}
 		}
