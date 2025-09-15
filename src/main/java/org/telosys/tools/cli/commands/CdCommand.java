@@ -67,8 +67,15 @@ public class CdCommand extends Command {
 	
 	@Override
 	public String getUsage() {
-		return "cd [directory]";
-	}
+		final String EOL = "\n  ";
+		return "cd sub-directory-name " + EOL
+			 + "cd .." + EOL
+			 + "cd ../.." + EOL
+			 + "cd -m [model-name]   (direct change to 'models' directory)" + EOL
+			 + "cd -b [bundle-name]  (direct change to 'bundles/templates' directory)" + EOL
+			 + "cd -l                (direct change to 'lib' directory)" 
+			 ;
+	}	
 	
 	@Override
 	public String execute(String[] argsArray) {
@@ -82,17 +89,17 @@ public class CdCommand extends Command {
 			Set<String> options = getOptions(commandArguments);
 			List<String> argsWithoutOptions = removeOptions(commandArguments);
 			if ( argsWithoutOptions.isEmpty() && options.isEmpty() ) {
-				// cd
-				return cdHome();
+				// cd without arg => back to home
+				setCurrentDirectoryToHomeIfDefined();
 			}
 			else if ( ! argsWithoutOptions.isEmpty()  &&  options.isEmpty() ) {
 				// cd <dir-name>
-				return cd(argsWithoutOptions.get(0));
+				cd(argsWithoutOptions.get(0));
 			}
 			else if ( ! options.isEmpty() ) { // cd with options (new in v 4.3.0)
 				if ( options.size() == 1 ) {
 					// cd -x  | cd -x <name>
-					return cdWithOption(options.iterator().next(), argsWithoutOptions );
+					cdWithOption(options.iterator().next(), argsWithoutOptions );
 				}
 				else {
 					print("Use only one option (-m, -t, ..) ");
@@ -105,70 +112,68 @@ public class CdCommand extends Command {
 		return null;
 	}
 
-	private String cdHome() {
-		Environment environment = getEnvironment();
-		environment.resetCurrentDirectoryToHomeIfDefined();
-		return environment.getCurrentDirectory();
-	}
-	
-	private String cd(String destination) {
+	private void cd(String destination) {
 		printDebug("cd : '" + destination + "'");
-		Environment environment = getEnvironment();
 		if (destination != null) {
 			if ("..".equals(destination)) {
-				printDebug("cd : '..' => change to parent dir ");
-				return cdParent();
+				cdParent();
+			}
+			else if ("../..".equals(destination)) {
+				cdParentParent();
 			}
 			else if (".".equals(destination)) {
-				printDebug("cd : '.' => stay in the current dir ");
 				// No change (stay in the current directory )
-				return environment.getCurrentDirectory();
 			}
 			else if (destination.contains("..")) {
-				printDebug("cd : contains '..' => invalid directory ");
-				return "Invalid directory ('..' in the path) !";
+				print("Invalid destination ('..' in the path) !");
 			}
 			else {
-				return cdPath(destination);
+				cdPath(destination);
 			}
 		} else {
-			return "Invalid destination (null) !";
+			print("Invalid destination (null) !");
 		}
 	}
 	
-	private File getCurrentDir() {
-		Environment environment = getEnvironment();
-		return new File(environment.getCurrentDirectory());
+	private File getCurrentDirAsFile() {
+		return new File(getCurrentDirectory());
 	}
 	
-	private String cdParent() {
-		File current = getCurrentDir();
-		File parent = current.getParentFile();
+	private void cdParent() {
+		File parent = getCurrentDirAsFile().getParentFile();
 		if (parent != null) {
-			return tryToChangeCurrentDirectory(current.getParentFile());
+			tryToChangeCurrentDirectory(parent);
 		} else {
-			return "No parent directory.";
+			print("No '..' directory.");
 		}
 	}
+	private void cdParentParent() {
+		File parent = getCurrentDirAsFile().getParentFile();
+		if (parent != null) {
+			File parentParent = parent.getParentFile();
+			if (parentParent != null) {
+				tryToChangeCurrentDirectory(parentParent);
+				return;
+			}
+		}
+		print("No '../..' directory.");
+	}
 	
-	private String cdPath(String destination) {
+	private void cdPath(String destination) {
 		if ( destination.startsWith("/") ) {
-			printDebug("cd : absolute path");
-			return tryToChangeCurrentDirectory(new File(destination));
+			tryToChangeCurrentDirectory(new File(destination));
 		}
 		else {
 			// Can be an absolute path and not starts with "/", eg "C:\tmp" with Windows )
 			File file = new File(destination);
 			if ( file.isAbsolute() ) { 
-				printDebug("cd : absolute path");
 				// Build the full path from the current directory
-				return tryToChangeCurrentDirectory(file);
+				tryToChangeCurrentDirectory(file);
 			}
 			else {
-				printDebug("cd : subfolder");
 				// Build the full path from the current directory
-				String destPath = FileUtil.buildFilePath(getCurrentDir().getAbsolutePath(), destination);
-				return tryToChangeCurrentDirectory(new File(destPath));
+				String destPath = FileUtil.buildFilePath(getCurrentDirAsFile().getAbsolutePath(), destination);
+				tryToChangeCurrentDirectory(new File(destPath));
 			}
 		}
 	}
@@ -178,13 +183,10 @@ public class CdCommand extends Command {
 	 * @param file
 	 * @return
 	 */
-	private String tryToChangeCurrentDirectory(File file) {
+	private void tryToChangeCurrentDirectory(File file) {
 		if ( checkDirectory(file) ) { // if valid directory
-			Environment environment = getEnvironment();
-			environment.setCurrentDirectory(file.getAbsolutePath());
-			return environment.getCurrentDirectory();
+			setCurrentDirectory(file.getAbsolutePath());
 		}
-		return null;
 	}
 
 	/**
@@ -195,13 +197,10 @@ public class CdCommand extends Command {
 	 * @return
 	 * @since 4.3.0
 	 */
-	private String cdWithOption(String option, List<String> argsWithoutOptions) {
+	private void cdWithOption(String option, List<String> argsWithoutOptions) {
 		File destination = getDestination(option, argsWithoutOptions);
 		if ( destination != null ) {
-			return tryToChangeCurrentDirectory(destination);
-		}
-		else {
-			return null;
+			tryToChangeCurrentDirectory(destination);
 		}
 	}
 

@@ -322,6 +322,23 @@ public abstract class Command {
 		// Propagation to the Text Editor if any
 		TextEditorManager.setHomeDirectory(environment.getHomeDirectory() );
 	}
+
+	/**
+	 * @param directory
+	 * @since 4.3.0
+	 */
+	protected void setCurrentDirectory(String directory) {
+		environment.setCurrentDirectory(directory);
+		updatePrompt();
+	}
+	
+	/**
+	 * @since 4.3.0
+	 */
+	protected void setCurrentDirectoryToHomeIfDefined() {
+		environment.resetCurrentDirectoryToHomeIfDefined();
+		updatePrompt();
+	}
 	
 	/**
 	 * Returns the current home directory
@@ -338,13 +355,6 @@ public abstract class Command {
 	 * @return
 	 */
 	protected List<String> getArgumentsAsList(String[] args) {
-//		List<String> list = new LinkedList<>();
-//		if ( args != null ) {
-//			for ( int i = 1 ; i < args.length ; i++ ) {
-//				list.add(args[i]);
-//			}
-//		}
-//		return list;
 	    if (args == null || args.length <= 1) {
 	        return Collections.emptyList();
 	    }
@@ -573,7 +583,19 @@ public abstract class Command {
 	//-------------------------------------------------------------------------
 	//-------------------------------------------------------------------------
 	
-	protected void updatePrompt() {
+	private String getPromptLine1() {
+		String currentDir = environment.getCurrentDirectory() ;
+		String homeDir = environment.getHomeDirectory() ;
+		if ( ! StrUtil.nullOrVoid(homeDir) && homeDir.equals(currentDir)  ) {
+			// current dir is home dir => keep the prompt color 
+			return Color.colorize( currentDir, Const.PROMPT_COLOR  ) ;
+		}
+		else {
+			// current dir is not home => use a different color
+			return Color.colorize( currentDir, Color.YELLOW ) ;
+		}
+	}
+	private String getPromptLine2() {
 		String prompt = Const.PROMPT_TEXT ;
 		if ( environment.getHomeDirectory() != null ) {
 			prompt = prompt + "#" ;
@@ -585,7 +607,10 @@ public abstract class Command {
 			prompt = prompt + "[" + environment.getCurrentBundle() + "]" ;
 		}
 		prompt = prompt + Const.PROMPT_CHAR ;
-		consoleReader.setPrompt(Color.colorize(prompt, Const.PROMPT_COLOR));
+		return Color.colorize(prompt, Const.PROMPT_COLOR);
+	}
+	protected void updatePrompt() {
+		consoleReader.setPrompt("\n"+getPromptLine1()+"\n"+getPromptLine2());
 	}
 	
 	/**
@@ -714,11 +739,6 @@ public abstract class Command {
 	 * @return
 	 */
 	protected List<String> buildCriteriaFromArgs( String[] commandArgs) {
-//		List<String> criteria = new LinkedList<>();
-//		for ( int i = 1 ; i < commandArgs.length ; i++ ) {
-//				criteria.add(commandArgs[i]);
-//		}
-//		return criteria ;
 	    if (commandArgs == null || commandArgs.length <= 1) {
 	        return Collections.emptyList();
 	    }
