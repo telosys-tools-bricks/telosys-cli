@@ -21,6 +21,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
@@ -30,6 +32,7 @@ import org.telosys.tools.cli.commands.git.GitAdd;
 import org.telosys.tools.cli.commands.git.GitClone;
 import org.telosys.tools.cli.commands.git.GitCommit;
 import org.telosys.tools.cli.commands.git.GitInit;
+import org.telosys.tools.cli.commands.git.GitPush;
 import org.telosys.tools.cli.commands.git.GitRemote;
 import org.telosys.tools.cli.commands.git.GitStatus;
 import org.telosys.tools.cli.commands.git.GitUtil;
@@ -66,6 +69,8 @@ public class GitCommand extends CommandLevel2 {
 	private static final String STATUSM = "statusm" ;
 	private static final String STATUSB = "statusb" ;
 	private static final Set<String> STATUS_COMMANDS = new HashSet<>(Arrays.asList(STATUSM, STATUSB )); 
+	
+	public static final String DEPOT = "depot";
 	
     private enum ArgType {
         MODEL,
@@ -145,6 +150,9 @@ public class GitCommand extends CommandLevel2 {
 				}
 				else if ("commit".equals(gitCommand) ) { 
 					executeCommitCommand(getCurrentDirAsGitWorkingTree());
+				}
+				else if ("push".equals(gitCommand) ) { 
+					executePushCommand(getCurrentDirAsGitWorkingTree());
 				}
 				else {
 					printInvalidGitCommand(gitCommand);
@@ -316,7 +324,7 @@ public class GitCommand extends CommandLevel2 {
 	private void executeAddCommand(File workingTreeDirectory) {
 		if ( workingTreeDirectory != null ) {
 			try {
-				print("git add for '" + workingTreeDirectory.getName() +"' ");
+				print("git add for '" + workingTreeDirectory.getName() + "' ");
 				GitAdd.addAll(workingTreeDirectory);
 				print("Add OK, all changes added in stage");
 			} catch (Exception e) {
@@ -329,13 +337,38 @@ public class GitCommand extends CommandLevel2 {
 	private void executeCommitCommand(File workingTreeDirectory) {
 		if ( workingTreeDirectory != null ) {
 			try {
-				print("git commit (dir '" + workingTreeDirectory.getName() +"')...");
+				print("git commit for '" + workingTreeDirectory.getName() + "' ");
 				String result = GitCommit.commit(workingTreeDirectory);
 				if ( result != null && !result.trim().isEmpty() ) {
 					print("Commit OK, id (sha) = " + result);
 				}
 				else {
 					print("Nothing to commit (staged changes = 0)" );
+				}
+			} catch (Exception e) {
+				LastError.setError(e);
+				printError(e);
+			}
+		}
+	}
+	private void executePushCommand(File workingTreeDirectory) {
+		if ( workingTreeDirectory != null ) {
+			
+			// TODO xxxxxxxxxxxxxxxxxxxx
+			String username = "";
+			String tokenOrPassword = "";
+			// xxxxxxxxxxxxxxxxxxxx
+			CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(username, tokenOrPassword );
+			try {
+				print("git push for '" + workingTreeDirectory.getName() +"' ");
+				List<String> resultList = GitPush.pushAllBranches(workingTreeDirectory, DEPOT, credentialsProvider );
+				if ( resultList != null && !resultList.isEmpty() ) {
+					for ( String s : resultList ) {
+						print(s);
+					}
+				}
+				else {
+					printError("Push done. No result. ");
 				}
 			} catch (Exception e) {
 				LastError.setError(e);
@@ -576,7 +609,7 @@ public class GitCommand extends CommandLevel2 {
 	private void setGitRemoteDepot(File gitRepoDir, String depotRemoteUrl) {
 		try {
 			print("Git add remote 'depot' (" + depotRemoteUrl + ")" );
-			GitRemote.setRemote(gitRepoDir, "depot", depotRemoteUrl);
+			GitRemote.setRemote(gitRepoDir, DEPOT, depotRemoteUrl);
 			print("Git remote 'depot' added." );
 		} catch (Exception e) { // All exceptions
 			printError("Cannot add remote in  '" + gitRepoDir.getAbsolutePath() + "'");

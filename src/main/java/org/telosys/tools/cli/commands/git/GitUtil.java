@@ -29,20 +29,31 @@ public class GitUtil {
 	}
 
 	/**
+	 * Returns the ".git" directory for the given working tree
+	 * @param workingTree
+	 * @return
+	 */
+	public static File getRepositoryDir(File workingTree) {
+		if (workingTree == null) throw new IllegalArgumentException("working tree parameter is null");
+		if (!workingTree.exists()) throw new IllegalArgumentException(workingTree.getAbsolutePath() + " doesn't exist");
+		if (!workingTree.isDirectory()) throw new IllegalArgumentException(workingTree.getAbsolutePath() + " is not a directory");
+		if ( DOT_GIT.equals(workingTree.getName()) ) throw new IllegalArgumentException(workingTree.getAbsolutePath() + " is a '.git' directory");
+		// build the ".git" directory 
+		File gitDir = new File(workingTree, DOT_GIT);
+		if (!gitDir.exists()) throw new IllegalArgumentException(gitDir.getAbsolutePath() + " doesn't exist");
+		if (!gitDir.isDirectory()) throw new IllegalArgumentException(gitDir.getAbsolutePath() + " is not a directory");
+		return gitDir;
+	}
+	
+	/**
 	 * Builds a "git repository" (pointing to the ".git" directory) from the given working tree
 	 * @param workingTree
 	 * @return
 	 * @throws IOException
 	 */
 	public static Repository buildRepository(File workingTree) throws IOException  {
-		if (workingTree == null) throw new IllegalArgumentException("workingDir is null");
-		if (!workingTree.exists()) throw new IllegalArgumentException(workingTree.getAbsolutePath() + " doesn't exist");
-		if (!workingTree.isDirectory()) throw new IllegalArgumentException(workingTree.getAbsolutePath() + " is not a directory");
-		if ( DOT_GIT.equals(workingTree.getName()) ) throw new IllegalArgumentException(workingTree.getName() + " is not a working dir");
-		File gitDir = new File(workingTree, ".git");
-		if (!gitDir.exists()) throw new IllegalArgumentException(gitDir.getAbsolutePath() + " doesn't exist");
-		if (!gitDir.isDirectory()) throw new IllegalArgumentException(gitDir.getAbsolutePath() + " is not a directory");
-		
+		File gitDir = getRepositoryDir(workingTree);
+		// Build the 'Repository' object
 		return new FileRepositoryBuilder()
 		        .setGitDir(gitDir) // always point to '.git'
 		        .setWorkTree(workingTree) // optional, points to working directory if non-bare
