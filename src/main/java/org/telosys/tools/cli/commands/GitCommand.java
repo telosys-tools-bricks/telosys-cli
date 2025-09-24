@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.telosys.tools.api.TelosysGlobal;
 import org.telosys.tools.api.TelosysProject;
 import org.telosys.tools.cli.CommandLevel2;
 import org.telosys.tools.cli.Environment;
@@ -36,7 +37,10 @@ import org.telosys.tools.cli.commands.git.GitPush;
 import org.telosys.tools.cli.commands.git.GitRemote;
 import org.telosys.tools.cli.commands.git.GitStatus;
 import org.telosys.tools.cli.commands.git.GitUtil;
+import org.telosys.tools.commons.StrUtil;
 import org.telosys.tools.commons.TelosysToolsException;
+import org.telosys.tools.commons.credentials.GitCredentials;
+import org.telosys.tools.commons.credentials.GitCredentialsScope;
 import org.telosys.tools.commons.depot.Depot;
 import org.telosys.tools.commons.depot.DepotResponse;
 import org.telosys.tools.commons.exception.TelosysRuntimeException;
@@ -69,12 +73,31 @@ public class GitCommand extends CommandLevel2 {
 	private static final String STATUSM = "statusm" ;
 	private static final String STATUSB = "statusb" ;
 	private static final Set<String> STATUS_COMMANDS = new HashSet<>(Arrays.asList(STATUSM, STATUSB )); 
+
+	private static final String CRED  = "cred" ;
+	private static final String CREDG = "credg" ;
+	private static final String CREDM = "credm" ;
+	private static final String CREDB = "credb" ;
+	private static final Set<String> CRED_COMMANDS = new HashSet<>(Arrays.asList(CRED, CREDM, CREDB, CREDG )); 
+	private static final Set<String> CRED_OPTIONS  = new HashSet<>(Arrays.asList("-set", "-none")); 
+
 	
 	public static final String DEPOT = "depot";
 	
     private enum ArgType {
         MODEL,
-        BUNDLE
+        BUNDLE,
+        GLOBAL,
+        UNDEFINED
+    }
+    
+    private ArgType getArgTypeFromCommand(String commandName) {
+    	if ( commandName != null ) {
+    		if ( commandName.endsWith("g") ) return ArgType.GLOBAL ;
+    		if ( commandName.endsWith("m") ) return ArgType.MODEL ;
+    		if ( commandName.endsWith("b") ) return ArgType.BUNDLE ;
+    	}
+    	return ArgType.UNDEFINED;
     }
 
 	/**
@@ -104,17 +127,22 @@ public class GitCommand extends CommandLevel2 {
 	public String getUsage() {
 		final String EOL = "\n  ";
 		return "Git clone model or bundle and add 'depot' remote " + EOL
-			 + " " + GIT + " clonem  model-name-in-depot  |or| any-repo-url  (clone a model)" + EOL
-			 + " " + GIT + " cloneb  bundle-name-in-depot |or| any-repo-url  (clone a bundle)" + EOL
+			 + "  " + GIT + " " + CLONEM + "  model-name-in-depot  |or| any-repo-url  (clone a model)" + EOL
+			 + "  " + GIT + " " + CLONEB + "  bundle-name-in-depot |or| any-repo-url  (clone a bundle)" + EOL
 			 + "Git init model or bundle and add 'depot' remote " + EOL
-			 + " " + GIT + " initm  [model-name]  (init a model, current model by default) " + EOL
-			 + " " + GIT + " initb  [bundle-name] (init a bundle, current bundle by default)" + EOL
+			 + "  " + GIT + " " + INITM + "  [model-name]  (init a model, current model by default) " + EOL
+			 + "  " + GIT + " " + INITB + "  [bundle-name] (init a bundle, current bundle by default)" + EOL
 			 + "Git remote (print remotes) " + EOL
-			 + " " + GIT + " remotem  [model-name]  (model remotes, current model by default) " + EOL
-			 + " " + GIT + " remoteb  [bundle-name] (bundle remotes, current bundle by default)" + EOL
+			 + "  " + GIT + " " + REMOTEM + "  [model-name]  (model remotes, current model by default) " + EOL
+			 + "  " + GIT + " " + REMOTEB + "  [bundle-name] (bundle remotes, current bundle by default)" + EOL
 			 + "Git status (print status) " + EOL
-			 + " " + GIT + " statusm  [model-name]  (model status, current model by default) " + EOL
-			 + " " + GIT + " statusb  [bundle-name] (bundle status, current bundle by default)" + EOL
+			 + "  " + GIT + " " + STATUSM + "  [model-name]  (model status, current model by default) " + EOL
+			 + "  " + GIT + " " + STATUSB + "  [bundle-name] (bundle status, current bundle by default)" + EOL
+			 + "Git credentials (print/set/remove credentials) " + EOL
+//			 + "  " + GIT + " " + CRED + "   xxxx" + EOL
+			 + "  " + GIT + " " + CREDG + "  [-set or -none] (git credentials for global level) " + EOL
+			 + "  " + GIT + " " + CREDM + "  [-set or -none] (git credentials for model repositories) " + EOL
+			 + "  " + GIT + " " + CREDB + "  [-set or -none] (git credentials for bundle repositories)" 
 			 ;
 	}
 	
@@ -137,6 +165,9 @@ public class GitCommand extends CommandLevel2 {
 				}
 				else if (STATUS_COMMANDS.contains(gitCommand) ) { 
 					executeStatusCommand(gitCommand, argsWithoutOptions);
+				}
+				else if (CRED_COMMANDS.contains(gitCommand) ) { 
+					executeCredCommand(gitCommand, commandArguments);
 				}
 				// hidden commands (just for test in current dir)
 				else if ("remote".equals(gitCommand) ) { 
@@ -281,6 +312,132 @@ public class GitCommand extends CommandLevel2 {
 		}
 	}
 	
+	private void executeCredCommand(String gitCommand, List<String> commandArguments) {
+		if ( CRED.equals(gitCommand) ) {
+			executeCredPrintAll();
+		}
+		else {  // credg, credm, credb
+			ArgType argType = getArgTypeFromCommand(gitCommand) ;
+			if ( checkOptions(commandArguments, CRED_OPTIONS) ) {
+				Set<String> activeOptions = getOptions(commandArguments);
+				executeCredCommand(argType, activeOptions);
+			}
+		}
+	}
+	private void executeCredCommand(ArgType argType, Set<String> activeOptions) {
+		if ( activeOptions.isEmpty() ) {
+			// No option => just print 
+			executeCredPrint(argType) ;
+		}
+		else {
+			if ( activeOptions.size() == 1 ) {
+				if ( isOptionActive("-none", activeOptions) ) {
+					executeCredNone(argType) ;
+				}
+				else if ( isOptionActive("-set", activeOptions) ) {
+					executeCredSet(argType) ;
+				}
+			}
+			else {
+				print("invalid options, single option expected");
+			}
+		}
+	}
+	
+	private void executeCredPrintAll() {
+		executeCredPrint(ArgType.GLOBAL);
+		executeCredPrint(ArgType.MODEL);
+		executeCredPrint(ArgType.BUNDLE);
+	}
+
+	private GitCredentialsScope getScope(ArgType argType) {
+		switch(argType) {
+		case MODEL:
+			return GitCredentialsScope.MODELS;
+		case BUNDLE:
+			return GitCredentialsScope.BUNDLES;
+		case GLOBAL:
+			return GitCredentialsScope.GLOBAL;
+		default:
+			return GitCredentialsScope.GLOBAL;
+		}
+	}
+	private String getGitCredentialsMessage(ArgType argType) {
+		String s = "Git credentials for ";
+		switch(argType) {
+		case MODEL:
+			return s + "models";
+		case BUNDLE:
+			return s + "bundles";
+		default:
+			return s + "global level";
+		}
+	}
+	private void executeCredPrint(ArgType argType) {
+		print(getGitCredentialsMessage(argType)+":");
+    	try {
+        	// Load credentials
+			GitCredentials gitCredentials = TelosysGlobal.getGitCredentials(getScope(argType));
+	    	// Print credentials
+			if ( gitCredentials != null ) {
+				String passwordOrTokenStatus = "not set";
+				if ( ! StrUtil.nullOrVoid(gitCredentials.getPasswordOrToken() ) ) {
+					passwordOrTokenStatus = "set";
+				}
+				print(" . user name     : '" + gitCredentials.getUserName() + "'") ;
+				print(" . passord/token : " + passwordOrTokenStatus );
+			}
+			else {
+				print(" No credentials") ;
+			}
+		} catch (TelosysToolsException e) {
+			printError("Cannot load Git credentials");
+			printError(e);
+		}
+	}
+	private void executeCredSet(ArgType argType) {
+    	// Input credentials
+    	String level = "" ; 
+    	switch(argType) {
+    	case BUNDLE :
+    		level = "'BUNDLE' type repositories";
+    		break;
+    	case MODEL:
+    		level = "'MODEL' type repositories";
+    		break;
+    	default:
+    		level = "'GLOBAL' level (all repositories)";
+    		break;
+    	}
+    	print("Enter the Git credentials for " + level);
+    	String userName = readResponse("User name: ") ;
+    	String passwordOrToken = readSecret("Password or personal access token (PAT): ") ;
+    	// Save credentials
+    	try {
+			TelosysGlobal.setGitCredentials(getScope(argType), userName, passwordOrToken );
+		} catch (TelosysToolsException e) {
+			printError("Cannot set Git credentials");
+			printError(e);
+		}
+	}
+	private void executeCredNone(ArgType argType) {
+    	// Confirm ?
+    	if ( confirm("Do you really want to remove " + getGitCredentialsMessage(argType) ) ) {
+        	// Remove credentials
+        	try {
+				if ( TelosysGlobal.removeGitCredentials(getScope(argType)) ) {
+					print("Credentials have been removed.");
+				}
+				else {
+					print("No credentials found.");
+				}
+			} catch (TelosysToolsException e) {
+				printError("Cannot remove Git credentials");
+				printError(e);
+			}
+    	}
+	}
+	
 	private void executeRemoteCommand(File workingTreeDirectory) {
 		if ( workingTreeDirectory != null ) {
 			try {
@@ -354,21 +511,24 @@ public class GitCommand extends CommandLevel2 {
 	private void executePushCommand(File workingTreeDirectory) {
 		if ( workingTreeDirectory != null ) {
 			
-			// TODO xxxxxxxxxxxxxxxxxxxx
-			String username = "";
-			String tokenOrPassword = "";
-			// xxxxxxxxxxxxxxxxxxxx
-			CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(username, tokenOrPassword );
 			try {
-				print("git push for '" + workingTreeDirectory.getName() +"' ");
-				List<String> resultList = GitPush.pushAllBranches(workingTreeDirectory, DEPOT, credentialsProvider );
-				if ( resultList != null && !resultList.isEmpty() ) {
-					for ( String s : resultList ) {
-						print(s);
+				// Try to get credentials for 'global' scope
+				GitCredentials gitCredentials = TelosysGlobal.searchUsableCredentials(GitCredentialsScope.GLOBAL);
+				if ( gitCredentials != null ) {
+					CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(gitCredentials.getUserName(), gitCredentials.getPasswordOrToken() );
+					print("git push for '" + workingTreeDirectory.getName() +"' ");
+					List<String> resultList = GitPush.pushAllBranches(workingTreeDirectory, DEPOT, credentialsProvider );
+					if ( resultList != null && !resultList.isEmpty() ) {
+						for ( String s : resultList ) {
+							print(s);
+						}
+					}
+					else {
+						printError("Push done. No result. ");
 					}
 				}
 				else {
-					printError("Push done. No result. ");
+					print("No Git credentials for 'global' scope. Cannot push without credentials");
 				}
 			} catch (Exception e) {
 				LastError.setError(e);

@@ -131,12 +131,19 @@ public abstract class Command {
 		}
 	}
 	
-	/**
-	 * Read user response 
-	 * @return
-	 */
-	protected String readResponse() {
-		return readString(true);
+//	/**
+//	 * Read user response 
+//	 * @return
+//	 */
+//	protected String readResponse() {
+//		return readString(true);
+//	}
+	
+	protected String readResponse(String message) {
+		if ( message != null ) {
+			printAndStayAtTheEndOfLine(message);
+		}
+		return readString(true); 
 	}
 	
 	/**
@@ -145,8 +152,9 @@ public abstract class Command {
 	 */
 	protected String readSecret(String message) {
 		if ( message != null ) {
-			out.print( message );
-			out.flush();			
+//			out.print( message );
+//			out.flush();			
+			printAndStayAtTheEndOfLine(message);
 		}
 		return readString(false);
 	}
@@ -196,13 +204,18 @@ public abstract class Command {
 			return true ;
 		}
 		else {
-			out.print( message + " [y/n] ? " );
-			out.flush();
-			String r = readResponse() ;
+//			out.print( message + " [y/n] ? " );
+//			out.flush();
+			// String r = readResponse() ;
+			String r = readResponse(message + " [y/n] ? ");
 			return "Y".equalsIgnoreCase(r) ;
 		}
 	}
-
+	private void printAndStayAtTheEndOfLine(String message) {
+		out.print( message );
+		out.flush();
+	}
+	
 	protected void print(String message) {
 		out.println(message);
 		out.flush();
