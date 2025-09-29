@@ -500,13 +500,13 @@ public class GitCommand extends CommandLevel2 {
 		}
 	}
 
-	private void executePublishCommand(File workingTreeDirectory, String remoteName, GitCredentialsScope scope) {
+	private void executePublishCommand(File workingTreeDirectory, String remote, GitCredentialsScope scope) {
 		if ( workingTreeDirectory != null ) {
 			try {
 				CredentialsProvider credentialsProvider = searchCredentialsProvider(scope) ;
 				if ( credentialsProvider != null) {
-					print("git publish '" + workingTreeDirectory.getName() +"' to remote '" + remoteName + "'");
-					List<String> report = GitPublish.publish(workingTreeDirectory, remoteName, credentialsProvider);
+					print("git publish '" + workingTreeDirectory.getName() +"' to remote '" + remote + "'");
+					List<String> report = GitPublish.publish(workingTreeDirectory, remote, credentialsProvider);
 					if ( report != null && !report.isEmpty() ) {
 						for ( String s : report ) {
 							print(s);
@@ -630,9 +630,12 @@ public class GitCommand extends CommandLevel2 {
 		String modelOrBundleName = getDefaultArgIfNone(arg, argType);
 		if ( modelOrBundleName != null ) {
 			try {
+				String depotDefinition = getDepotDefinition(argType);
+				Depot depot = new Depot(depotDefinition);
+				String gitRemoteURL = depot.buildGitRepositoryURL(modelOrBundleName);
 				File workingTreeDirectory = getWorkingTreeDirectory(modelOrBundleName, argType); 
 				if ( workingTreeDirectory != null ) {
-					executePublishCommand(workingTreeDirectory, DEPOT, scope);
+					executePublishCommand(workingTreeDirectory, gitRemoteURL, scope);
 				}
 			} catch (Exception e) {
 				LastError.setError(e);

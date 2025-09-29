@@ -36,13 +36,13 @@ public class GitPush {
 	/**
 	 * Pushes all branches to the given remote-name
 	 * @param gitWorkingTreeDir
-	 * @param remoteName
+	 * @param remote remote alias name or URL
 	 * @param credentialsProvider user name + personal access token (for GitHub or GitLab with 2FA)
 	 * @return
 	 * @throws IOException
 	 * @throws GitAPIException
 	 */
-	public static List<String> pushAllBranches(File gitWorkingTreeDir, String remoteName, CredentialsProvider credentialsProvider) throws IOException, GitAPIException {
+	public static List<String> pushAllBranches(File gitWorkingTreeDir, String remote, CredentialsProvider credentialsProvider) throws IOException, GitAPIException {
 		List<String> resultList = new LinkedList<>();
 		// "/aaa/bbb/ccc/.git" directory 
 		File gitRepoDir = GitUtil.getRepositoryDir(gitWorkingTreeDir);
@@ -50,7 +50,10 @@ public class GitPush {
 		try (Git git = Git.open(gitRepoDir)) {
 			// Setup push command
 			PushCommand pushCommand = git.push();
-			pushCommand.setRemote(remoteName); // remote name ( eg "origin", "depot", etc)
+			// Define the 'remote', it can be 
+			//  . a remote alias name ( eg "origin", "depot", etc)
+			//  . a URL instead of a remote name
+			pushCommand.setRemote(remote); 
 			
 			// If you use 2FA on GitHub or GitLab, you must use a personal access token, not your password
 			pushCommand.setCredentialsProvider(credentialsProvider);

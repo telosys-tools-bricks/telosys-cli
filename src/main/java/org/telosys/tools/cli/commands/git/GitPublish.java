@@ -30,9 +30,16 @@ public class GitPublish {
 	}
 
 	/**
-	 * Publish the given working tree to the given remote
+	 * Publish the given working tree to the given remote 
+	 * @param gitWorkingTreeDir
+	 * @param remote alias or URL
+	 * @param credentialsProvider
+	 * @return
+	 * @throws IOException
+	 * @throws GitAPIException
+	 * @throws TelosysToolsException
 	 */
-	public static List<String> publish(File gitWorkingTreeDir, String remoteName, CredentialsProvider credentialsProvider) throws IOException, GitAPIException, TelosysToolsException {
+	public static List<String> publish(File gitWorkingTreeDir, String remote, CredentialsProvider credentialsProvider) throws IOException, GitAPIException, TelosysToolsException {
 		if (gitWorkingTreeDir == null) {
 			throw new TelosysToolsException("gitWorkingTreeDir argument is null");
 		}
@@ -55,8 +62,8 @@ public class GitPublish {
 		}
 		
 		//--- Step 3 : push to remote 
-		resultList.add("Pushing to remote '" + remoteName + "' ...");
-		List<String> pushResult = GitPush.pushAllBranches(gitWorkingTreeDir, remoteName, credentialsProvider);
+		resultList.add("Pushing to remote '" + remote + "' ...");
+		List<String> pushResult = GitPush.pushAllBranches(gitWorkingTreeDir, remote, credentialsProvider);
 		for( String s : pushResult ) {
 			resultList.add("  " + s);
 		}
