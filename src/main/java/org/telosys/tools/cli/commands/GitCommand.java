@@ -33,6 +33,7 @@ import org.telosys.tools.cli.commands.git.GitAdd;
 import org.telosys.tools.cli.commands.git.GitClone;
 import org.telosys.tools.cli.commands.git.GitCommit;
 import org.telosys.tools.cli.commands.git.GitInit;
+import org.telosys.tools.cli.commands.git.GitPublish;
 import org.telosys.tools.cli.commands.git.GitPush;
 import org.telosys.tools.cli.commands.git.GitRemote;
 import org.telosys.tools.cli.commands.git.GitStatus;
@@ -81,6 +82,9 @@ public class GitCommand extends CommandLevel2 {
 	private static final Set<String> CRED_COMMANDS = new HashSet<>(Arrays.asList(CRED, CREDM, CREDB, CREDG )); 
 	private static final Set<String> CRED_OPTIONS  = new HashSet<>(Arrays.asList("-set", "-none")); 
 
+	private static final String PUBM = "pubm" ;
+	private static final String PUBB = "pubb" ;
+	private static final Set<String> PUB_COMMANDS = new HashSet<>(Arrays.asList(PUBM, PUBB )); 
 	
 	public static final String DEPOT = "depot";
 	
@@ -139,10 +143,13 @@ public class GitCommand extends CommandLevel2 {
 			 + "  " + GIT + " " + STATUSM + "  [model-name]  (model status, current model by default) " + EOL
 			 + "  " + GIT + " " + STATUSB + "  [bundle-name] (bundle status, current bundle by default)" + EOL
 			 + "Git credentials (print/set/remove credentials) " + EOL
-//			 + "  " + GIT + " " + CRED + "   xxxx" + EOL
+			 + "  " + GIT + " " + CRED + "   print all current credentials" + EOL
 			 + "  " + GIT + " " + CREDG + "  [-set or -none] (git credentials for global level) " + EOL
 			 + "  " + GIT + " " + CREDM + "  [-set or -none] (git credentials for model repositories) " + EOL
-			 + "  " + GIT + " " + CREDB + "  [-set or -none] (git credentials for bundle repositories)" 
+			 + "  " + GIT + " " + CREDB + "  [-set or -none] (git credentials for bundle repositories)" + EOL
+			 + "Git publish (add changes, commit and push) " + EOL
+			 + "  " + GIT + " " + PUBM + "  [model-name]  (publish a model, current model by default) " + EOL
+			 + "  " + GIT + " " + PUBB + "  [bundle-name] (publish a bundle, current bundle by default)" 
 			 ;
 	}
 	
@@ -168,6 +175,9 @@ public class GitCommand extends CommandLevel2 {
 				}
 				else if (CRED_COMMANDS.contains(gitCommand) ) { 
 					executeCredCommand(gitCommand, commandArguments);
+				}
+				else if (PUB_COMMANDS.contains(gitCommand) ) { 
+					executePubCommand(gitCommand, commandArguments);
 				}
 				// hidden commands (just for test in current dir)
 				else if ("remote".equals(gitCommand) ) { 
@@ -306,6 +316,18 @@ public class GitCommand extends CommandLevel2 {
 		}
 		else if ( STATUSB.equals(gitCommand) ) {
 			tryToPrintStatus( getModelOrBundleArg(argsWithoutOptions), ArgType.BUNDLE);
+		}
+		else {
+			printInvalidGitCommand(gitCommand); // not supposed to happen 
+		}
+	}
+	
+	private void executePubCommand(String gitCommand, List<String> argsWithoutOptions) {
+		if ( PUBM.equals(gitCommand) ) {
+			tryToPublish( getModelOrBundleArg(argsWithoutOptions), ArgType.MODEL);
+		}
+		else if ( PUBB.equals(gitCommand) ) {
+			tryToPublish( getModelOrBundleArg(argsWithoutOptions), ArgType.BUNDLE);
 		}
 		else {
 			printInvalidGitCommand(gitCommand); // not supposed to happen 
@@ -478,6 +500,42 @@ public class GitCommand extends CommandLevel2 {
 		}
 	}
 
+	private void executePublishCommand(File workingTreeDirectory, String remoteName, GitCredentialsScope scope) {
+		if ( workingTreeDirectory != null ) {
+			try {
+				CredentialsProvider credentialsProvider = searchCredentialsProvider(scope) ;
+				if ( credentialsProvider != null) {
+					print("git publish '" + workingTreeDirectory.getName() +"' to remote '" + remoteName + "'");
+					List<String> report = GitPublish.publish(workingTreeDirectory, remoteName, credentialsProvider);
+					if ( report != null && !report.isEmpty() ) {
+						for ( String s : report ) {
+							print(s);
+						}
+					}
+					else {
+						printError("No status report ");
+					}
+				}
+				else {
+					print("No Git credentials for " + scope + ". Cannot push without credentials.");
+				}
+			} catch (Exception e) {
+				LastError.setError(e);
+				printError(e);
+			}
+		}
+	}
+	private CredentialsProvider searchCredentialsProvider(GitCredentialsScope scope) throws TelosysToolsException {
+		GitCredentials gitCredentials = TelosysGlobal.searchUsableCredentials(scope);
+		if ( gitCredentials != null ) {
+			// create the CredentialsProvider
+			return new UsernamePasswordCredentialsProvider(gitCredentials.getUserName(), gitCredentials.getPasswordOrToken() );
+		}
+		else {
+			return null;
+		}
+	}
+
 	private void executeAddCommand(File workingTreeDirectory) {
 		if ( workingTreeDirectory != null ) {
 			try {
@@ -559,6 +617,22 @@ public class GitCommand extends CommandLevel2 {
 				File workingTreeDirectory = getWorkingTreeDirectory(modelOrBundleName, argType); 
 				if ( workingTreeDirectory != null ) {
 					executeStatusCommand(workingTreeDirectory);
+				}
+			} catch (Exception e) {
+				LastError.setError(e);
+				printError(e); 
+			}
+		}
+	}
+
+	private void tryToPublish(String arg, ArgType argType) {
+		GitCredentialsScope scope = getScope(argType); 
+		String modelOrBundleName = getDefaultArgIfNone(arg, argType);
+		if ( modelOrBundleName != null ) {
+			try {
+				File workingTreeDirectory = getWorkingTreeDirectory(modelOrBundleName, argType); 
+				if ( workingTreeDirectory != null ) {
+					executePublishCommand(workingTreeDirectory, DEPOT, scope);
 				}
 			} catch (Exception e) {
 				LastError.setError(e);

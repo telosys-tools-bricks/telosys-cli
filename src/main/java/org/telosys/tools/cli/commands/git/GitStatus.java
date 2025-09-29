@@ -25,35 +25,39 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.StoredConfig;
 
 public class GitStatus {
 
 	private GitStatus() {
 	}
 
-	private static Status getStatus(File workingTree) throws IOException, GitAPIException  {
-		Repository repository = GitUtil.buildRepository(workingTree);
+	private static String getCurrentLocalBranch(Repository repository) throws IOException  {
 		try (Git git = new Git(repository)) {
-			return git.status().call();
+			// Get the current local branch
+            return repository.getBranch();
 		}
 	}
+	
+    private static String getUpstreamBranch(Repository repository, String localBranchName) throws IOException {
+        StoredConfig config = repository.getConfig();
+        String remoteName = config.getString("branch", localBranchName, "remote");
+        String mergeRef   = config.getString("branch", localBranchName, "merge");
 
+        if (remoteName != null && mergeRef != null) {
+            // Format: "refs/heads/<branch-name>" -> "<remote-name>/<branch-name>"
+            String branchName = mergeRef.replace("refs/heads/", "");
+            return remoteName + "/" + branchName;
+        }
+        return null;
+    }
+    
 	private static Status getStatus(Repository repository) throws GitAPIException  {
 		try (Git git = new Git(repository)) {
 			return git.status().call();
 		}
 	}
 	
-	/**
-	 * Get number of 'staged' elements that would be included in a 'commit'
-	 * @param workingTree
-	 * @return
-	 * @throws IOException
-	 * @throws GitAPIException
-	 */
-	public static int getStagedCount(File workingTree) throws IOException, GitAPIException {
-		return getStagedCount( getStatus(workingTree) );
-	}
 	/**
 	 * Get number of 'staged' elements that would be included in a 'commit'
 	 * @param repository
@@ -72,17 +76,10 @@ public class GitStatus {
 	}
 	
 	/**
-	 * Get number of 'unstaged' elements that would be added to 'index' 
-	 * @param workingTree
+	 * Get number of 'unstaged' elements that would be added to 'index'
+	 * @param status
 	 * @return
-	 * @throws IOException
-	 * @throws GitAPIException
 	 */
-	protected static int getUnstagedCount(File workingTree) throws IOException, GitAPIException {
-		Status status = getStatus(workingTree);
-		return getUnstagedCount(status);
-		// Check only the "unstaged" elements
-	}
 	protected static int getUnstagedCount(Status status) {
 		// Check only the "unstaged" elements
 		return    status.getModified().size() // modified but not staged (changed in the working tree but not staged)
@@ -94,7 +91,25 @@ public class GitStatus {
 
 	public static List<String> getStatusReport(File workingTree) throws GitAPIException, IOException {
 		List<String> report = new LinkedList<>();
-		Status status = getStatus(workingTree);
+		Repository repository = GitUtil.buildRepository(workingTree);
+		// Current local branch
+		String currentLocalBranch = getCurrentLocalBranch(repository);
+		if ( currentLocalBranch != null ) {
+			report.add("Current local branch '" + currentLocalBranch + "'");
+			String upstreamBranch = getUpstreamBranch(repository, currentLocalBranch);
+			if (upstreamBranch != null) {
+				report.add(" (tracks remote branch '" + upstreamBranch + "')");
+			}
+			else {
+				report.add(" (no upstream branch)");
+			}
+		}
+		else {
+			report.add("No current local branch");
+		}
+		
+		// Status / changes 
+		Status status = getStatus(repository);
 
 		int stagedCount = getStagedCount(status);
 		report.add("Staged changes (to be committed): " + stagedCount );
