@@ -64,13 +64,21 @@ public class GitPush {
 			
 			Iterable<PushResult> results = pushCommand.call();
 			
-			for (PushResult result : results) {
-				String messages = result.getMessages();
+			boolean somethingPushed = false;
+			for (PushResult pushResult : results) {
+				// Messages
+				String messages = pushResult.getMessages();
 				if ( ! StrUtil.nullOrVoid(messages) ) {
 					resultList.add(messages);
 				}
-				for (RemoteRefUpdate update : result.getRemoteUpdates()) {
-					resultList.add(update.getRemoteName() + " -> " + update.getStatus());
+				// Remote updates
+				for (RemoteRefUpdate remoteRefUpdate : pushResult.getRemoteUpdates()) {
+					RemoteRefUpdate.Status status = remoteRefUpdate.getStatus();
+					resultList.add(remoteRefUpdate.getRemoteName() + " -> " + status);
+					// Check status
+					if (status == RemoteRefUpdate.Status.OK) {
+                        somethingPushed = true;
+                    }
 				}
 			}
 		}

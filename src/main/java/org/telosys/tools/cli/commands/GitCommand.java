@@ -16,11 +16,13 @@
 package org.telosys.tools.cli.commands;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.telosys.tools.api.TelosysGlobal;
@@ -33,7 +35,7 @@ import org.telosys.tools.cli.commands.git.GitAdd;
 import org.telosys.tools.cli.commands.git.GitClone;
 import org.telosys.tools.cli.commands.git.GitCommit;
 import org.telosys.tools.cli.commands.git.GitInit;
-import org.telosys.tools.cli.commands.git.GitPublish;
+import org.telosys.tools.cli.commands.git.GitLsRemote;
 import org.telosys.tools.cli.commands.git.GitPush;
 import org.telosys.tools.cli.commands.git.GitRemote;
 import org.telosys.tools.cli.commands.git.GitStatus;
@@ -147,7 +149,7 @@ public class GitCommand extends CommandLevel2 {
 			 + "  " + GIT + " " + CREDG + "  [-set or -none] (git credentials for global level) " + EOL
 			 + "  " + GIT + " " + CREDM + "  [-set or -none] (git credentials for model repositories) " + EOL
 			 + "  " + GIT + " " + CREDB + "  [-set or -none] (git credentials for bundle repositories)" + EOL
-			 + "Git publish (add changes, commit and push) " + EOL
+			 + "Git publish (stage the changes, commit and push to the remote repository in the current depot) " + EOL
 			 + "  " + GIT + " " + PUBM + "  [model-name]  (publish a model, current model by default) " + EOL
 			 + "  " + GIT + " " + PUBB + "  [bundle-name] (publish a bundle, current bundle by default)" 
 			 ;
@@ -505,19 +507,11 @@ public class GitCommand extends CommandLevel2 {
 			try {
 				CredentialsProvider credentialsProvider = searchCredentialsProvider(scope) ;
 				if ( credentialsProvider != null) {
-					print("git publish '" + workingTreeDirectory.getName() +"' to remote '" + remote + "'");
-					List<String> report = GitPublish.publish(workingTreeDirectory, remote, credentialsProvider);
-					if ( report != null && !report.isEmpty() ) {
-						for ( String s : report ) {
-							print(s);
-						}
-					}
-					else {
-						printError("No status report ");
-					}
+					publish(workingTreeDirectory, remote, credentialsProvider);
 				}
 				else {
-					print("No Git credentials for " + scope + ". Cannot push without credentials.");
+					print("No Git credentials for " + scope + "");
+					print("Unable to publish without credentials");
 				}
 			} catch (Exception e) {
 				LastError.setError(e);
@@ -535,6 +529,37 @@ public class GitCommand extends CommandLevel2 {
 			return null;
 		}
 	}
+	private void publish(File gitWorkingTreeDir, String remote, CredentialsProvider credentialsProvider) throws IOException, GitAPIException, TelosysToolsException {
+		//--- Check if remote exists 
+		if ( GitLsRemote.exists(remote, credentialsProvider) ) {
+			print("Publishing '" + gitWorkingTreeDir.getName() +"' to remote '" + remote + "'");
+			//--- Step 1 : add all changes to index (staging)
+			print("- Adding all changes to index...");
+			GitAdd.addAll(gitWorkingTreeDir);
+			print("  changes added.");
+			//--- Step 2 : commit 
+			print("- Committing changes to repository...");
+			String commitResult = GitCommit.commit(gitWorkingTreeDir);
+			if ( commitResult != null && !commitResult.trim().isEmpty() ) {
+				print("  commit OK, id (sha) = " + commitResult);
+			}
+			else {
+				print("  nothing to commit" );
+			}
+			//--- Step 3 : push to remote 
+			print("- Pushing to remote '" + remote + "' ...");
+			List<String> pushResult = GitPush.pushAllBranches(gitWorkingTreeDir, remote, credentialsProvider);
+			for( String s : pushResult ) {
+				print("  " + s);
+			}
+			print("Repository successfully published");
+		}
+		else {
+			print("Repository does not exist on the remote server");
+			print("Unable to publish");
+		}
+	}	
+	
 
 	private void executeAddCommand(File workingTreeDirectory) {
 		if ( workingTreeDirectory != null ) {
