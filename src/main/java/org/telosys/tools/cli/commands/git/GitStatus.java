@@ -95,14 +95,15 @@ public class GitStatus {
 		// Current local branch
 		String currentLocalBranch = getCurrentLocalBranch(repository);
 		if ( currentLocalBranch != null ) {
-			report.add("Current local branch '" + currentLocalBranch + "'");
+			String branch = "Current local branch '" + currentLocalBranch + "'";
 			String upstreamBranch = getUpstreamBranch(repository, currentLocalBranch);
 			if (upstreamBranch != null) {
-				report.add(" (tracks remote branch '" + upstreamBranch + "')");
+				branch = branch + " (tracks remote branch '" + upstreamBranch + "')";
 			}
 			else {
-				report.add(" (no upstream branch)");
+				branch = branch + " (no upstream branch)";
 			}
+			report.add(branch);
 		}
 		else {
 			report.add("No current local branch");

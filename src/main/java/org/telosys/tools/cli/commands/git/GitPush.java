@@ -66,15 +66,20 @@ public class GitPush {
 			
 			boolean somethingPushed = false;
 			for (PushResult pushResult : results) {
-				// Messages
+				// --- Messages (additional messages, if any, returned by the remote process)
+				// informational or error messages, sent by the remote peer, 
+				// to help the end-user correct any problems that may have prevented the operation from completing successfully. 
+				// Application UIs should try to show these in an appropriate context.
 				String messages = pushResult.getMessages();
 				if ( ! StrUtil.nullOrVoid(messages) ) {
 					resultList.add(messages);
 				}
-				// Remote updates
+				//--- Remote updates
 				for (RemoteRefUpdate remoteRefUpdate : pushResult.getRemoteUpdates()) {
 					RemoteRefUpdate.Status status = remoteRefUpdate.getStatus();
-					resultList.add(remoteRefUpdate.getRemoteName() + " -> " + status);
+					// RemoteName is the name of remote ref to update ( for exampl "refs/heads/master" )
+					String commitId = remoteRefUpdate.getNewObjectId() != null ? remoteRefUpdate.getNewObjectId().getName() : "(no id)" ;
+					resultList.add(remoteRefUpdate.getSrcRef() + " -> " + remoteRefUpdate.getRemoteName() + " (" + commitId + ") : " + status);
 					// Check status
 					if (status == RemoteRefUpdate.Status.OK) {
                         somethingPushed = true;

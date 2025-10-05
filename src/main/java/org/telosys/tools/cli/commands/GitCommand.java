@@ -536,8 +536,19 @@ public class GitCommand extends CommandLevel2 {
 			//--- Step 1 : add all changes to index (staging)
 			print("- Adding all changes to index...");
 			GitAdd.addAll(gitWorkingTreeDir);
-			print("  changes added.");
-			//--- Step 2 : commit 
+			print("  done " );
+			//--- Step 2 : status 
+			print("- Getting status ");
+			List<String> report = GitStatus.getStatusReport(gitWorkingTreeDir);
+			if ( report != null && !report.isEmpty() ) {
+				for ( String s : report ) {
+					print("  " + s);
+				}
+			}
+			else {
+				printError("no status report ");
+			}
+			//--- Step 3 : commit 
 			print("- Committing changes to repository...");
 			String commitResult = GitCommit.commit(gitWorkingTreeDir);
 			if ( commitResult != null && !commitResult.trim().isEmpty() ) {
@@ -546,16 +557,15 @@ public class GitCommand extends CommandLevel2 {
 			else {
 				print("  nothing to commit" );
 			}
-			//--- Step 3 : push to remote 
+			//--- Step 4 : push to remote 
 			print("- Pushing to remote '" + remote + "' ...");
 			List<String> pushResult = GitPush.pushAllBranches(gitWorkingTreeDir, remote, credentialsProvider);
 			for( String s : pushResult ) {
 				print("  " + s);
 			}
-			print("Repository successfully published");
 		}
 		else {
-			print("Repository does not exist on the remote server");
+			print("Repository does not exist on remote server '" + remote + "'");
 			print("Unable to publish");
 		}
 	}	

@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.dircache.DirCache;
 
 public class GitAdd {
 
@@ -35,10 +36,20 @@ public class GitAdd {
                .call();
 
             // Stage deletions (like `git add -u .`)
-            git.add()
+            DirCache dirCache = git.add()
                .addFilepattern(".")
-               .setUpdate(true)
+               .setUpdate(true) // stages deletions and modifications of tracked files
                .call();
+            
+            // Returned "DirCache" (DirCache models the Git index/staging area)
+            // The DirCache from the first call  --> index state after adding untracked + modified files.
+            // The DirCache from the second call --> index state after also staging deletions (final result)
+            // To get final staging state => just use the DirCache returned from the SECOND CALL
+            
+            // Removed because return 1 even if noting in index (known problem with JGit)
+            // return dirCache.getEntryCount(); // Total number of file entries stored in the index
+            // Sometimes that single entry is the HEAD or .gitignore entry.
+            
         } 
 	}
 }
