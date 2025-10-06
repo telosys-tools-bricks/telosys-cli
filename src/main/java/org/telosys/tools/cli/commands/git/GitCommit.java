@@ -60,7 +60,7 @@ public class GitCommit {
 			throw new TelosysToolsException("workingTree argument is null");
 		}
 
-		try( Repository repository = GitUtil.buildRepository(workingTree) ) {
+		try ( Repository repository = GitUtil.buildRepository(workingTree) ) {
 			// Check if something to commit (via Git Status) 
 			int stagedCount = GitStatus.getStagedCount(repository);
 			if ( stagedCount > 0 ) {
@@ -78,7 +78,7 @@ public class GitCommit {
 			else {
 				return "" ; // No commit => no commit id
 			}
-		}
+		} // close Repository
 	}
 	
 	private static String executeCommit(File workingTree, PersonIdent author, String commitMessage) throws IOException, GitAPIException {

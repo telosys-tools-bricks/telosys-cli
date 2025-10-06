@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.dircache.DirCache;
 
 public class GitAdd {
 
@@ -36,7 +35,7 @@ public class GitAdd {
                .call();
 
             // Stage deletions (like `git add -u .`)
-            DirCache dirCache = git.add()
+            git.add()
                .addFilepattern(".")
                .setUpdate(true) // stages deletions and modifications of tracked files
                .call();

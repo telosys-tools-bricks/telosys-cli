@@ -32,14 +32,7 @@ public class GitStatus {
 	private GitStatus() {
 	}
 
-	private static String getCurrentLocalBranch(Repository repository) throws IOException  {
-		try (Git git = new Git(repository)) {
-			// Get the current local branch
-            return repository.getBranch();
-		}
-	}
-	
-    private static String getUpstreamBranch(Repository repository, String localBranchName) throws IOException {
+    private static String getUpstreamBranch(Repository repository, String localBranchName) {
         StoredConfig config = repository.getConfig();
         String remoteName = config.getString("branch", localBranchName, "remote");
         String mergeRef   = config.getString("branch", localBranchName, "merge");
@@ -90,45 +83,48 @@ public class GitStatus {
 	}
 
 	public static List<String> getStatusReport(File workingTree) throws GitAPIException, IOException {
-		List<String> report = new LinkedList<>();
-		Repository repository = GitUtil.buildRepository(workingTree);
-		// Current local branch
-		String currentLocalBranch = getCurrentLocalBranch(repository);
-		if ( currentLocalBranch != null ) {
-			String branch = "Current local branch '" + currentLocalBranch + "'";
-			String upstreamBranch = getUpstreamBranch(repository, currentLocalBranch);
-			if (upstreamBranch != null) {
-				branch = branch + " (tracks remote branch '" + upstreamBranch + "')";
+
+		try ( Repository repository = GitUtil.buildRepository(workingTree) ) {
+
+			List<String> report = new LinkedList<>();
+			// Current local branch
+			String currentLocalBranch = repository.getBranch();
+			if ( currentLocalBranch != null ) {
+				String branch = "Current local branch '" + currentLocalBranch + "'";
+				String upstreamBranch = getUpstreamBranch(repository, currentLocalBranch);
+				if (upstreamBranch != null) {
+					branch = branch + " (tracks remote branch '" + upstreamBranch + "')";
+				}
+				else {
+					branch = branch + " (no upstream branch)";
+				}
+				report.add(branch);
 			}
 			else {
-				branch = branch + " (no upstream branch)";
+				report.add("No current local branch");
 			}
-			report.add(branch);
+			
+			// Status / changes 
+			Status status = getStatus(repository);
+	
+			int stagedCount = getStagedCount(status);
+			report.add("Staged changes (to be committed): " + stagedCount );
+			add(report, status.getAdded(),   "new:      "); // not in HEAD 
+			add(report, status.getChanged(), "modified: "); // changed from HEAD to index 
+			add(report, status.getRemoved(), "deleted:  "); // removed from index, but in HEAD 
+			
+			int unstagedCount = getUnstagedCount(status);
+			report.add("Unstaged changes: " + unstagedCount );
+			add(report, status.getModified(),         "modified: ");  // modified on disk relative to the index 
+			add(report, status.getMissing(),          "deleted:  ");  // in index, but not filesystem 
+			add(report, status.getUntracked(),        "untracked:");  // files not ignored, and not in the index
+			add(report, status.getUntrackedFolders(), "untracked:");  // directories not ignored, and not in the index
+			
+			report.add("Ignored (in .gitignore): " + status.getIgnoredNotInIndex().size() );
+			add(report, status.getIgnoredNotInIndex(), "ignored:  ");  //  ignored files which are not in the index
+			
+			return report;
 		}
-		else {
-			report.add("No current local branch");
-		}
-		
-		// Status / changes 
-		Status status = getStatus(repository);
-
-		int stagedCount = getStagedCount(status);
-		report.add("Staged changes (to be committed): " + stagedCount );
-		add(report, status.getAdded(),   "new:      "); // not in HEAD 
-		add(report, status.getChanged(), "modified: "); // changed from HEAD to index 
-		add(report, status.getRemoved(), "deleted:  "); // removed from index, but in HEAD 
-		
-		int unstagedCount = getUnstagedCount(status);
-		report.add("Unstaged changes: " + unstagedCount );
-		add(report, status.getModified(),         "modified: ");  // modified on disk relative to the index 
-		add(report, status.getMissing(),          "deleted:  ");  // in index, but not filesystem 
-		add(report, status.getUntracked(),        "untracked:");  // files not ignored, and not in the index
-		add(report, status.getUntrackedFolders(), "untracked:");  // directories not ignored, and not in the index
-		
-		report.add("Ignored (in .gitignore): " + status.getIgnoredNotInIndex().size() );
-		add(report, status.getIgnoredNotInIndex(), "ignored:  ");  //  ignored files which are not in the index
-		
-		return report;
 	}
 	
 	private static void add(List<String> report, Set<String> set, String type) {

@@ -34,22 +34,17 @@ public class GitRemote {
 	}
 
 	public static void setRemote(File gitWorkingTreeDir, String remoteName, String remoteUrl) throws IOException {
-		Repository repository = GitUtil.buildRepository(gitWorkingTreeDir);
-		try {
+		try ( Repository repository = GitUtil.buildRepository(gitWorkingTreeDir) ) {
 			StoredConfig storedConfig = repository.getConfig();
 			// Set "remote" (overwrite existing value if any)
 			storedConfig.setString("remote", remoteName, "url",   remoteUrl);
 			storedConfig.setString("remote", remoteName, "fetch", "+refs/heads/*:refs/remotes/" + remoteName + "/*");
 			storedConfig.save();
-		}
-		finally {
-			repository.close();
-		}
+		} // close Repository
 	}
 
 	public static List<String> getRemotes(File gitWorkingTreeDir) throws IOException, URISyntaxException {
-		Repository repository = GitUtil.buildRepository(gitWorkingTreeDir);
-		try {
+		try ( Repository repository = GitUtil.buildRepository(gitWorkingTreeDir) ) {
 			StoredConfig storedConfig = repository.getConfig();
 			List<RemoteConfig> remotes = RemoteConfig.getAllRemoteConfigs(storedConfig);
             // TreeMap will sort by remote name
@@ -59,10 +54,7 @@ public class GitRemote {
             }
             // Populate the resulting list ordered by remote name
             return populateRemoteList(sortedRemotes); 
-		}
-		finally {
-			repository.close();
-		}
+		} // close Repository
 	}
 	
 	private static List<String> populateRemoteList(TreeMap<String, RemoteConfig> sortedRemotes) {

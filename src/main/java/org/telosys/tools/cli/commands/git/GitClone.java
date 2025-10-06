@@ -21,6 +21,7 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.CredentialsProvider;
+import org.telosys.tools.commons.TelosysToolsException;
 
 public class GitClone {
 
@@ -28,24 +29,21 @@ public class GitClone {
 	}
 
 	/**
-	 * Clone a repository into a new working directory
-	 * @param fromRepoUrl
-	 * @param toLocalDir
-	 * @throws GitAPIException
-	 */
-	public static void cloneRepository(String fromRepoUrl, String toLocalDir) throws GitAPIException {
-		cloneRepository(fromRepoUrl, toLocalDir, null);
-	}
-	
-	/**
 	 * Clone a repository into a new working directory using the given credentials
 	 * @param fromRepoUrl
 	 * @param toLocalDir
-	 * @param credentialsProvider 
+	 * @param credentialsProvider (can be null)
 	 * @return
 	 * @throws GitAPIException
+	 * @throws TelosysToolsException 
 	 */
-	public static boolean cloneRepository(String fromRepoUrl, String toLocalDir, CredentialsProvider credentialsProvider) throws GitAPIException {
+	public static boolean cloneRepository(String fromRepoUrl, String toLocalDir, CredentialsProvider credentialsProvider) throws GitAPIException, TelosysToolsException {
+		if (fromRepoUrl == null) {
+			throw new TelosysToolsException("fromRepoUrl argument is null");
+		}
+		if (toLocalDir == null) {
+			throw new TelosysToolsException("toLocalDir argument is null");
+		}
 		boolean cloned = false;
         CloneCommand cloneCommand = Git.cloneRepository();
         cloneCommand.setURI(fromRepoUrl);

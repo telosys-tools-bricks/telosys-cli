@@ -64,7 +64,6 @@ public class GitPush {
 			
 			Iterable<PushResult> results = pushCommand.call();
 			
-			boolean somethingPushed = false;
 			for (PushResult pushResult : results) {
 				// --- Messages (additional messages, if any, returned by the remote process)
 				// informational or error messages, sent by the remote peer, 
@@ -80,10 +79,6 @@ public class GitPush {
 					// RemoteName is the name of remote ref to update ( for exampl "refs/heads/master" )
 					String commitId = remoteRefUpdate.getNewObjectId() != null ? remoteRefUpdate.getNewObjectId().getName() : "(no id)" ;
 					resultList.add(remoteRefUpdate.getSrcRef() + " -> " + remoteRefUpdate.getRemoteName() + " (" + commitId + ") : " + status);
-					// Check status
-					if (status == RemoteRefUpdate.Status.OK) {
-                        somethingPushed = true;
-                    }
 				}
 			}
 		}

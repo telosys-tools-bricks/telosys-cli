@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.telosys.tools.api.TelosysGlobal;
@@ -34,10 +35,12 @@ import org.telosys.tools.cli.commands.commons.DepotContent;
 import org.telosys.tools.cli.commands.git.GitAdd;
 import org.telosys.tools.cli.commands.git.GitClone;
 import org.telosys.tools.cli.commands.git.GitCommit;
+import org.telosys.tools.cli.commands.git.GitFetch;
 import org.telosys.tools.cli.commands.git.GitInit;
 import org.telosys.tools.cli.commands.git.GitLsRemote;
 import org.telosys.tools.cli.commands.git.GitPush;
 import org.telosys.tools.cli.commands.git.GitRemote;
+import org.telosys.tools.cli.commands.git.GitReset;
 import org.telosys.tools.cli.commands.git.GitResponse;
 import org.telosys.tools.cli.commands.git.GitStatus;
 import org.telosys.tools.cli.commands.git.GitUtil;
@@ -46,7 +49,6 @@ import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.credentials.GitCredentials;
 import org.telosys.tools.commons.credentials.GitCredentialsScope;
 import org.telosys.tools.commons.depot.Depot;
-import org.telosys.tools.commons.depot.DepotResponse;
 import org.telosys.tools.commons.exception.TelosysRuntimeException;
 
 import jline.console.ConsoleReader;
@@ -88,6 +90,10 @@ public class GitCommand extends CommandLevel2 {
 	private static final String PUBM = "pubm" ;
 	private static final String PUBB = "pubb" ;
 	private static final Set<String> PUB_COMMANDS = new HashSet<>(Arrays.asList(PUBM, PUBB )); 
+	
+	private static final String RESETM = "resetm" ;
+	private static final String RESETB = "resetb" ;
+	private static final Set<String> RESET_COMMANDS = new HashSet<>(Arrays.asList(RESETM, RESETB )); 
 	
 	public static final String DEPOT = "depot";
 	
@@ -152,7 +158,10 @@ public class GitCommand extends CommandLevel2 {
 			 + "  " + GIT + " " + CREDB + "  [-set or -none] (git credentials for bundle repositories)" + EOL
 			 + "Git publish (stage the changes, commit and push to the remote repository in the current depot) " + EOL
 			 + "  " + GIT + " " + PUBM + "  [model-name]  (publish a model, current model by default) " + EOL
-			 + "  " + GIT + " " + PUBB + "  [bundle-name] (publish a bundle, current bundle by default)" 
+			 + "  " + GIT + " " + PUBB + "  [bundle-name] (publish a bundle, current bundle by default)" + EOL
+			 + "Git reset ('fetch' and 'reset hard' from the remote repository in the current depot) " + EOL
+			 + "  " + GIT + " " + RESETM + "  [model-name]  (reset a model, current model by default) " + EOL
+			 + "  " + GIT + " " + RESETB + "  [bundle-name] (reset a bundle, current bundle by default)" 
 			 ;
 	}
 	
@@ -181,6 +190,9 @@ public class GitCommand extends CommandLevel2 {
 				}
 				else if (PUB_COMMANDS.contains(gitCommand) ) { 
 					executePubCommand(gitCommand, commandArguments);
+				}
+				else if (RESET_COMMANDS.contains(gitCommand) ) { 
+					executeResetCommand(gitCommand, commandArguments);
 				}
 				// hidden commands (just for test in current dir)
 				else if ("remote".equals(gitCommand) ) { 
@@ -331,6 +343,18 @@ public class GitCommand extends CommandLevel2 {
 		}
 		else if ( PUBB.equals(gitCommand) ) {
 			tryToPublish( getModelOrBundleArg(argsWithoutOptions), ArgType.BUNDLE);
+		}
+		else {
+			printInvalidGitCommand(gitCommand); // not supposed to happen 
+		}
+	}
+	
+	private void executeResetCommand(String gitCommand, List<String> argsWithoutOptions) {
+		if ( RESETM.equals(gitCommand) ) {
+			tryToReset( getModelOrBundleArg(argsWithoutOptions), ArgType.MODEL);
+		}
+		else if ( RESETB.equals(gitCommand) ) {
+			tryToReset( getModelOrBundleArg(argsWithoutOptions), ArgType.BUNDLE);
 		}
 		else {
 			printInvalidGitCommand(gitCommand); // not supposed to happen 
@@ -520,6 +544,25 @@ public class GitCommand extends CommandLevel2 {
 			}
 		}
 	}
+
+	private void executeResetCommand(File workingTreeDirectory, String remote, GitCredentialsScope scope) {
+		if ( workingTreeDirectory != null ) {
+			try {
+				CredentialsProvider credentialsProvider = searchCredentialsProvider(scope) ;
+				if ( credentialsProvider != null) {
+					reset(workingTreeDirectory, remote, credentialsProvider);
+				}
+				else {
+					print("No Git credentials for " + scope + "");
+					print("Unable to publish without credentials");
+				}
+			} catch (Exception e) {
+				LastError.setError(e);
+				printError(e);
+			}
+		}
+	}
+
 	private CredentialsProvider searchCredentialsProvider(GitCredentialsScope scope) throws TelosysToolsException {
 		GitCredentials gitCredentials = TelosysGlobal.searchUsableCredentials(scope);
 		if ( gitCredentials != null ) {
@@ -532,8 +575,7 @@ public class GitCommand extends CommandLevel2 {
 	}
 	private void publish(File gitWorkingTreeDir, String remote, CredentialsProvider credentialsProvider) throws IOException, GitAPIException, TelosysToolsException {
 		//--- Check if remote exists 
-		GitResponse gitResponse = GitLsRemote.isAccessible(remote, credentialsProvider);
-		if ( gitResponse.isOk() ) {
+		if ( isAccessible(remote, credentialsProvider) ) {
 			print("Publishing '" + gitWorkingTreeDir.getName() +"' to remote '" + remote + "'");
 			//--- Step 1 : add all changes to index (staging)
 			print("- Adding all changes to index...");
@@ -567,18 +609,28 @@ public class GitCommand extends CommandLevel2 {
 			}
 		}
 		else {
-			print("No accessible repository on remote server '" + remote + "'");
 			print("Unable to publish");
-			Exception e = gitResponse.getException();
-			if ( e != null ) {
-				print("Exception:" );
-				print(" " + e.getClass().getCanonicalName() );
-				print(" " + e.getMessage() );
-			}
 		}
 	}	
-	
 
+	private void reset(File gitWorkingTreeDir, String remote, CredentialsProvider credentialsProvider) throws IOException, GitAPIException, TelosysToolsException {
+		//--- Check if remote exists 
+		if ( isAccessible(remote, credentialsProvider) ) {
+			print("Reseting '" + gitWorkingTreeDir.getName() +"' from remote '" + remote + "'");
+			//--- Step 1 : fetch 
+			print("- Git fetch from remote...");
+			ObjectId objectId = GitFetch.fetch(gitWorkingTreeDir, remote, credentialsProvider);
+			print("  done, commit id = " + objectId.getName() );
+			//--- Step 2 : reset --hard
+			print("- Git reset hard from ref " + objectId.getName() );
+			GitReset.resetHard(gitWorkingTreeDir, objectId);
+			print("  done " );
+		}
+		else {
+			print("Unable to reset (cannot fetch from remote)");
+		}
+	}
+	
 	private void executeAddCommand(File workingTreeDirectory) {
 		if ( workingTreeDirectory != null ) {
 			try {
@@ -687,6 +739,25 @@ public class GitCommand extends CommandLevel2 {
 		}
 	}
 
+	private void tryToReset(String arg, ArgType argType) {
+		GitCredentialsScope scope = getScope(argType); 
+		String modelOrBundleName = getDefaultArgIfNone(arg, argType);
+		if ( modelOrBundleName != null ) {
+			try {
+				String depotDefinition = getDepotDefinition(argType);
+				Depot depot = new Depot(depotDefinition);
+				String gitRemoteURL = depot.buildGitRepositoryURL(modelOrBundleName);
+				File workingTreeDirectory = getWorkingTreeDirectory(modelOrBundleName, argType); 
+				if ( workingTreeDirectory != null ) {
+					executeResetCommand(workingTreeDirectory, gitRemoteURL, scope);
+				}
+			} catch (Exception e) {
+				LastError.setError(e);
+				printError(e); 
+			}
+		}
+	}
+
 	private void tryToInit(String arg, ArgType argType) {
 		String modelOrBundleName = getDefaultArgIfNone(arg, argType);
 		if ( modelOrBundleName != null ) {
@@ -762,6 +833,9 @@ public class GitCommand extends CommandLevel2 {
 				if (dir == null) print("No current bundle");
 			}
 		}
+		return validDirectory(dir);
+	}
+	private File validDirectory(File dir) {
 		if ( dir != null ) {
 			if ( dir.exists() && dir.isDirectory() ) {
 				return dir;
@@ -776,13 +850,16 @@ public class GitCommand extends CommandLevel2 {
 	private void tryToClone(String from, ArgType argType) {
 		String depotDefinition = getDepotDefinition(argType);
 		try {
-			String url = getUsableURL(from, depotDefinition);
-			if ( url != null ) {
+			GitCredentialsScope scope = getScope(argType);
+			// credentialsProvider can be null (not used if null)
+			CredentialsProvider credentialsProvider = searchCredentialsProvider(scope) ;
+			String remoteUrl = getRemoteURL(from, depotDefinition);
+			if ( isAccessible(remoteUrl, credentialsProvider) ) {
 				if ( argType == ArgType.MODEL) {
-					cloneModelFromUrl( url, depotDefinition );
+					cloneModelFromUrl( remoteUrl, depotDefinition, credentialsProvider );
 				}
 				else if ( argType == ArgType.BUNDLE) {
-					cloneBundleFromUrl( url, depotDefinition );
+					cloneBundleFromUrl( remoteUrl, depotDefinition, credentialsProvider );
 				}
 			}
 		} catch (Exception e) {
@@ -790,45 +867,52 @@ public class GitCommand extends CommandLevel2 {
 			printError(e); 
 		}
 	}
-	private String getUsableURL(String from, String depotDefinition) throws TelosysToolsException {
+	private String getRemoteURL(String from, String depotDefinition) throws TelosysToolsException {
 		if ( GitUtil.isGitUrl(from) ) {
 			// Valid Git URL => usable as is => keep it
 			return from; 
 		}
 		else {
 			// just the repo-name => build URL for this repo in the given depot
-			DepotResponse depotResponse = getTelosysProject().getElementsAvailableInDepot(depotDefinition);
-			if ( depotResponse.contains(from) ) {
-				// OK this repo exists in the depot
-				Depot depot = new Depot(depotDefinition);
-				return depot.buildGitRepositoryURL(from);
+			Depot depot = new Depot(depotDefinition);
+			return depot.buildGitRepositoryURL(from);
+		}
+	}
+	private boolean isAccessible(String remote, CredentialsProvider credentialsProvider) {
+		GitResponse gitResponse = GitLsRemote.isAccessible(remote, credentialsProvider);
+		if ( gitResponse.isOk() ) {
+			return true;
+		}
+		else {
+			print("No accessible repository on remote server '" + remote + "'");
+			Exception e = gitResponse.getException();
+			if ( e != null ) {
+				print("Exception:" );
+				print(" " + e.getClass().getCanonicalName() );
+				print(" " + e.getMessage() );
 			}
-			else {
-				// this repo doesn't exist in the depot 
-				print("Repository '" + from + "' not found in depot '" + depotDefinition + "'");
-				return null ;
-			}
+			return false;
 		}
 	}
 	
-	private void cloneModelFromUrl(String fromRepoUrl, String depotDefinition) {
+	private void cloneModelFromUrl(String fromRepoUrl, String depotDefinition, CredentialsProvider credentialsProvider) {
 		TelosysProject telosysProject = getTelosysProject();
 		String modelName = getRepoNameFromUrl(fromRepoUrl);
 		if ( ! telosysProject.modelFolderExists(modelName) ) {
 			File modelFolder = telosysProject.getModelFolder(modelName);
-			gitCloneAndAddRemote(fromRepoUrl, modelFolder, depotDefinition);
+			gitCloneAndAddRemote(fromRepoUrl, modelFolder, depotDefinition, credentialsProvider);
 		}
 		else {
 			print("Model '" + modelName + "' already exists.");
 		}
 	}
 	
-	private void cloneBundleFromUrl(String fromRepoUrl, String depotDefinition) {
+	private void cloneBundleFromUrl(String fromRepoUrl, String depotDefinition, CredentialsProvider credentialsProvider) {
 		TelosysProject telosysProject = getTelosysProject();
 		String bundleName = getRepoNameFromUrl(fromRepoUrl);
 		if ( ! telosysProject.bundleFolderExists(bundleName) ) {
 			File bundleFolder = telosysProject.getBundleFolder(bundleName);
-			gitCloneAndAddRemote(fromRepoUrl, bundleFolder, depotDefinition);
+			gitCloneAndAddRemote(fromRepoUrl, bundleFolder, depotDefinition, credentialsProvider);
 		}
 		else {
 			print("Bundle '" + bundleName + "' already exists.");
@@ -853,9 +937,9 @@ public class GitCommand extends CommandLevel2 {
 	}
 
 	
-	private void gitCloneAndAddRemote(String fromRepoUrl, File localRepoDir, String depotDefinition) {
+	private void gitCloneAndAddRemote(String fromRepoUrl, File localRepoDir, String depotDefinition, CredentialsProvider credentialsProvider) {
 		// Step 1 - Clone
-		if ( gitClone(fromRepoUrl, localRepoDir) ) {
+		if ( gitClone(fromRepoUrl, localRepoDir, credentialsProvider) ) {
 			// Step 2 - Add remote
 			gitAddRemoteDepot(localRepoDir, depotDefinition);
 		}
@@ -871,11 +955,11 @@ public class GitCommand extends CommandLevel2 {
 			printError(e);
 		}
 	}
-	private boolean gitClone(String fromRepoUrl, File toFolder) {
+	private boolean gitClone(String fromRepoUrl, File toFolder, CredentialsProvider credentialsProvider) {
 		try {
 			print("Git clone from " + fromRepoUrl );
 			print("to " + toFolder.getAbsolutePath() );
-			GitClone.cloneRepository(fromRepoUrl, toFolder.getAbsolutePath() );
+			GitClone.cloneRepository(fromRepoUrl, toFolder.getAbsolutePath(), credentialsProvider );
 			print("Git repository successfully cloned." );
 			return true;
 		} catch (Exception e) { // All exceptions (including GitAPIException)
