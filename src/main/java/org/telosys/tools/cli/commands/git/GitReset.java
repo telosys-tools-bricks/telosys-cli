@@ -31,7 +31,7 @@ public class GitReset {
 	private GitReset() {
 	}
 
-	public static void resetHard(File workingTree, ObjectId commitId) throws TelosysToolsException, IOException, GitAPIException {
+	public static void reset(File workingTree, ResetType resetType, ObjectId commitId) throws TelosysToolsException, IOException, GitAPIException {
 		if (workingTree == null) {
 			throw new TelosysToolsException("workingTree argument is null");
 		}
@@ -43,7 +43,7 @@ public class GitReset {
 				// Hard reset local branch to fetched commit
 				ResetCommand resetCommand = git.reset();
 				
-				resetCommand.setMode(ResetType.HARD); // Set reset "--hard"
+				resetCommand.setMode(resetType); // Set reset type: SOFT, MIXED, HARD
 				
 				resetCommand.setRef(commitId.getName()); // Set the name of the Ref to reset to
 				

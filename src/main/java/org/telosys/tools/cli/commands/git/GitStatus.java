@@ -17,6 +17,7 @@ package org.telosys.tools.cli.commands.git;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -26,12 +27,34 @@ import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
+import org.eclipse.jgit.revwalk.RevCommit;
 
 public class GitStatus {
 
 	private GitStatus() {
 	}
 
+	private static String getBranch(Repository repository) {
+		String currentLocalBranch;
+		try {
+			currentLocalBranch = repository.getBranch();
+		} catch (IOException e) {
+			return "Cannot get branch. IOException: " + e.getMessage();
+		}
+		if ( currentLocalBranch != null ) {
+			String branch = "Current local branch '" + currentLocalBranch + "'";
+			String upstreamBranch = getUpstreamBranch(repository, currentLocalBranch);
+			if (upstreamBranch != null) {
+				branch = branch + " (tracks remote branch '" + upstreamBranch + "')";
+			}
+			else {
+				branch = branch + " (no upstream branch)";
+			}
+			return branch;
+		}
+		return null;
+    }
+    
     private static String getUpstreamBranch(Repository repository, String localBranchName) {
         StoredConfig config = repository.getConfig();
         String remoteName = config.getString("branch", localBranchName, "remote");
@@ -45,6 +68,24 @@ public class GitStatus {
         return null;
     }
     
+	private static RevCommit getLastCommit(Repository repository) {
+		try (Git git = new Git(repository)) {
+			try {
+				// Get the last commit for the current branch
+				Iterable<RevCommit> commits = git.log()
+				        .setMaxCount(1)  // Only the last commit
+				        .call();
+				Iterator<RevCommit> iterator = commits.iterator();
+				if ( iterator.hasNext() ) {
+					return iterator.next();
+				}
+			} catch (Exception e) {
+				return null;
+			}
+		}
+		return null;
+	}
+	
 	private static Status getStatus(Repository repository) throws GitAPIException  {
 		try (Git git = new Git(repository)) {
 			return git.status().call();
@@ -82,28 +123,35 @@ public class GitStatus {
 				;
 	}
 
+	/**
+	 * Returns a status report for the given working tree 
+	 * @param workingTree
+	 * @return
+	 * @throws GitAPIException
+	 * @throws IOException
+	 */
 	public static List<String> getStatusReport(File workingTree) throws GitAPIException, IOException {
 
 		try ( Repository repository = GitUtil.buildRepository(workingTree) ) {
 
 			List<String> report = new LinkedList<>();
 			// Current local branch
-			String currentLocalBranch = repository.getBranch();
-			if ( currentLocalBranch != null ) {
-				String branch = "Current local branch '" + currentLocalBranch + "'";
-				String upstreamBranch = getUpstreamBranch(repository, currentLocalBranch);
-				if (upstreamBranch != null) {
-					branch = branch + " (tracks remote branch '" + upstreamBranch + "')";
-				}
-				else {
-					branch = branch + " (no upstream branch)";
-				}
+			String branch = getBranch(repository);
+			if ( branch != null ) {
 				report.add(branch);
 			}
 			else {
 				report.add("No current local branch");
 			}
-			
+			// Last commit 
+			RevCommit lastCommit = getLastCommit(repository);
+			if ( lastCommit != null) {
+				report.add("Last commit: " + lastCommit.getName() );
+				report.add("             " + lastCommit.getFullMessage() );
+			}
+			else {
+				report.add("No commit");
+			}
 			// Status / changes 
 			Status status = getStatus(repository);
 	
@@ -132,4 +180,6 @@ public class GitStatus {
 		    report.add("  . " + type +  " " + s);
 		}
 	}
+	
+
 }

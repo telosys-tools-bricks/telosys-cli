@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.transport.CredentialsProvider;
@@ -139,10 +140,10 @@ public class GitCommand extends CommandLevel2 {
 	@Override
 	public String getUsage() {
 		final String EOL = "\n  ";
-		return "Git clone model or bundle and add 'depot' remote " + EOL
+		return "Git clone model or bundle " + EOL
 			 + "  " + GIT + " " + CLONEM + "  model-name-in-depot  |or| any-repo-url  (clone a model)" + EOL
 			 + "  " + GIT + " " + CLONEB + "  bundle-name-in-depot |or| any-repo-url  (clone a bundle)" + EOL
-			 + "Git init model or bundle and add 'depot' remote " + EOL
+			 + "Git init model or bundle " + EOL
 			 + "  " + GIT + " " + INITM + "  [model-name]  (init a model, current model by default) " + EOL
 			 + "  " + GIT + " " + INITB + "  [bundle-name] (init a bundle, current bundle by default)" + EOL
 			 + "Git remote (print remotes) " + EOL
@@ -159,7 +160,7 @@ public class GitCommand extends CommandLevel2 {
 			 + "Git publish (stage the changes, commit and push to the remote repository in the current depot) " + EOL
 			 + "  " + GIT + " " + PUBM + "  [model-name]  (publish a model, current model by default) " + EOL
 			 + "  " + GIT + " " + PUBB + "  [bundle-name] (publish a bundle, current bundle by default)" + EOL
-			 + "Git reset ('fetch' and 'reset hard' from the remote repository in the current depot) " + EOL
+			 + "Git reset ('fetch' and 'reset' from the remote repository in the current depot) " + EOL
 			 + "  " + GIT + " " + RESETM + "  [model-name]  (reset a model, current model by default) " + EOL
 			 + "  " + GIT + " " + RESETB + "  [bundle-name] (reset a bundle, current bundle by default)" 
 			 ;
@@ -621,9 +622,9 @@ public class GitCommand extends CommandLevel2 {
 			print("- Git fetch from remote...");
 			ObjectId objectId = GitFetch.fetch(gitWorkingTreeDir, remote, credentialsProvider);
 			print("  done, commit id = " + objectId.getName() );
-			//--- Step 2 : reset --hard
-			print("- Git reset hard from ref " + objectId.getName() );
-			GitReset.resetHard(gitWorkingTreeDir, objectId);
+			//--- Step 2 : reset 
+			print("- Git reset from ref " + objectId.getName() );
+			GitReset.reset(gitWorkingTreeDir, ResetType.MIXED, objectId);
 			print("  done " );
 		}
 		else {
@@ -771,7 +772,7 @@ public class GitCommand extends CommandLevel2 {
 						// Step #1 - Init
 						if ( gitInit(directory) ) {
 							// Step #2 - Add remote 'depot'
-							gitAddRemoteDepot(directory, getDepotDefinition(argType));
+							//gitAddRemoteDepot(directory, getDepotDefinition(argType));
 						}
 					}
 				}
@@ -941,20 +942,20 @@ public class GitCommand extends CommandLevel2 {
 		// Step 1 - Clone
 		if ( gitClone(fromRepoUrl, localRepoDir, credentialsProvider) ) {
 			// Step 2 - Add remote
-			gitAddRemoteDepot(localRepoDir, depotDefinition);
+			// gitAddRemoteDepot(localRepoDir, depotDefinition);
 		}
 	}
-	private void gitAddRemoteDepot(File localRepoDir, String depotDefinition) {
-		try {
-			Depot depot = new Depot(depotDefinition);
-			String localRepoName = localRepoDir.getName(); 
-			String depotURL = depot.buildGitRepositoryURL(localRepoName);
-			setGitRemoteDepot(localRepoDir, depotURL);
-		} catch (TelosysToolsException e) {
-			printError("Cannot add remote 'depot'");
-			printError(e);
-		}
-	}
+//	private void gitAddRemoteDepot(File localRepoDir, String depotDefinition) {
+//		try {
+//			Depot depot = new Depot(depotDefinition);
+//			String localRepoName = localRepoDir.getName(); 
+//			String depotURL = depot.buildGitRepositoryURL(localRepoName);
+//			setGitRemoteDepot(localRepoDir, depotURL);
+//		} catch (TelosysToolsException e) {
+//			printError("Cannot add remote 'depot'");
+//			printError(e);
+//		}
+//	}
 	private boolean gitClone(String fromRepoUrl, File toFolder, CredentialsProvider credentialsProvider) {
 		try {
 			print("Git clone from " + fromRepoUrl );
