@@ -38,6 +38,7 @@ import org.telosys.tools.cli.commands.git.GitInit;
 import org.telosys.tools.cli.commands.git.GitLsRemote;
 import org.telosys.tools.cli.commands.git.GitPush;
 import org.telosys.tools.cli.commands.git.GitRemote;
+import org.telosys.tools.cli.commands.git.GitResponse;
 import org.telosys.tools.cli.commands.git.GitStatus;
 import org.telosys.tools.cli.commands.git.GitUtil;
 import org.telosys.tools.commons.StrUtil;
@@ -531,7 +532,8 @@ public class GitCommand extends CommandLevel2 {
 	}
 	private void publish(File gitWorkingTreeDir, String remote, CredentialsProvider credentialsProvider) throws IOException, GitAPIException, TelosysToolsException {
 		//--- Check if remote exists 
-		if ( GitLsRemote.exists(remote, credentialsProvider) ) {
+		GitResponse gitResponse = GitLsRemote.isAccessible(remote, credentialsProvider);
+		if ( gitResponse.isOk() ) {
 			print("Publishing '" + gitWorkingTreeDir.getName() +"' to remote '" + remote + "'");
 			//--- Step 1 : add all changes to index (staging)
 			print("- Adding all changes to index...");
@@ -565,8 +567,14 @@ public class GitCommand extends CommandLevel2 {
 			}
 		}
 		else {
-			print("Repository does not exist on remote server '" + remote + "'");
+			print("No accessible repository on remote server '" + remote + "'");
 			print("Unable to publish");
+			Exception e = gitResponse.getException();
+			if ( e != null ) {
+				print("Exception:" );
+				print(" " + e.getClass().getCanonicalName() );
+				print(" " + e.getMessage() );
+			}
 		}
 	}	
 	

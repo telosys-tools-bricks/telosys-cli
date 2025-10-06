@@ -39,14 +39,14 @@ public class GitLsRemote {
 		return lsRemoteCommand.call();
 	}
 	
-	public static boolean exists(String remote, CredentialsProvider credentialsProvider) {
+	public static GitResponse isAccessible(String remote, CredentialsProvider credentialsProvider) {
 		try {
 			lsRemote(remote, credentialsProvider);
 			// Repository exists and is accessible
-			return true;
+			return new GitResponse(GitResponse.Status.OK);
 		} catch (Exception e) {
 			// Repository does not exist or is not accessible
-			return false;
+			return new GitResponse(GitResponse.Status.ERROR, e);
 		}
 	}
 
