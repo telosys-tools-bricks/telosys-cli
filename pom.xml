@@ -30,7 +30,7 @@
 			<groupId>org.eclipse.jgit</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
 			<!-- <version>7.3.0.202506031305-r</version> -->
-			<version>5.13.3.202401111512-r</version> <!-- latest version for Java 8 (before JGit 6.x)-->
+			<version>6.10.1.202505221210-r</version> <!-- latest version for Java 8 (before JGit 6.x)-->
 		</dependency>
 		<dependency> <!-- "no-op" binding to avoid SLF4J logger warning (SLF4J is used by JGit) -->
 			<groupId>org.slf4j</groupId>
